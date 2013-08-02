@@ -65,6 +65,7 @@ import java.io.OutputStream;
 
 		(new Thread(new SerialReader(in))).start();
 		(new Thread(new SerialWriter(out))).start();
+		
 
 	    } else {
 		System.out
@@ -104,6 +105,21 @@ import java.io.OutputStream;
 		while ((len = this.in.read(buffer)) > -1) {
 		    // FILTRO DE ENTRADA
 		    System.out.print(new String(buffer, 0, len));
+		    
+		    //Capturar lo que manda tinyG
+		    //Bucle de escucha a la tinyg y le pida su estado
+		    byte[] estado=null;
+		    boolean finalizado=false;
+		    
+		   while (!finalizado)
+		   {
+		       //conexion.getOut().write("$sr".getBytes());
+		       
+		       if (buffer.toString().contains("stat:3"))
+			   finalizado=true;
+		       
+		   }
+		    
 		}
 	    } catch (IOException e) {
 		e.printStackTrace();
@@ -125,7 +141,7 @@ import java.io.OutputStream;
 	    try {
 		int c = 0;
 		while ((c = System.in.read()) > -1) {
-
+		    
 		    this.out.write(c);
 		}
 	    } catch (IOException e) {
@@ -134,17 +150,5 @@ import java.io.OutputStream;
 	}
     }
 
-    // public static void main ( String[] args )
-    // {
-    // try
-    // {
-    // (new rwserial()).connect("/dev/pts/2");
-    // }
-    // catch ( Exception e )
-    // {
-    // // TODO Auto-generated catch block
-    // e.printStackTrace();
-    // }
-    // }
 
 }

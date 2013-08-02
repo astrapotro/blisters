@@ -5,9 +5,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
@@ -17,6 +19,7 @@ public class DBFacade implements TableModelListener {
     private Connection conexion = null;
     private PreparedStatement sentenciapre = null;
     private ResultSet resultados = null;
+    private JOptionPane panel;
 
     private Connection conectar() throws ClassNotFoundException, SQLException {
 
@@ -192,40 +195,79 @@ public class DBFacade implements TableModelListener {
 	    }
 	}
     }
-    
-    public void getIdCorte(DefaultComboBoxModel modeloCombo){
-    try {
+
+    public void getIdCorte(DefaultComboBoxModel modeloCombo) {
+	
+	try {
 	    conexion = conectar();
 	    // Sentencia preparada
-	    sentenciapre = conexion
-		    .prepareStatement("select DISTINCT idcorte from medicamentos;");
+	    //sentenciapre = conexion
+	    // .prepareStatement("select DISTINCT idcorte from medicamentos;");
+	    sentenciapre = conexion.prepareStatement("select idcorte from cortes;");
 	    resultados = sentenciapre.executeQuery();
 
-	 
 	    while (resultados.next()) {
-//		Medicamento medicamento = new Medicamento();
+		// Medicamento medicamento = new Medicamento();
 
-//		medicamento.setId(resultados.getInt("medicamentos_id"));
-//		medicamento.setNombre(resultados.getString("nombre"));
-//		medicamento.setCodnac(resultados.getInt("codnac"));
-//		medicamento.setRutaimg(resultados.getString("rutaimg"));
-//		medicamento.setIdcorte(resultados.getInt("idcorte"));
-	
-		NuevoMed.modeloCombo.addElement(resultados.getInt("idcorte"));
+		// medicamento.setId(resultados.getInt("medicamentos_id"));
+		// medicamento.setNombre(resultados.getString("nombre"));
+		// medicamento.setCodnac(resultados.getInt("codnac"));
+		// medicamento.setRutaimg(resultados.getString("rutaimg"));
+		// medicamento.setIdcorte(resultados.getInt("idcorte"));
+
+		modeloCombo.addElement(resultados.getInt("idcorte"));
 
 	    }
-	   
+
 	} catch (Exception e) {
 
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	    System.out.println(Messages
 		    .getString("DBFacade.ErrorMedicamntosTabla")); //$NON-NLS-1$
-	    
 
 	} finally // CErrar conexion con BBDD
 	{
 	    try {
+		conexion.close();
+
+	    } catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	    }
+	}
+    }
+
+    public int insertarIdCorte(String gcode) {
+	
+	int i=0;
+	
+	try {
+	    conexion = conectar();
+	    // Sentencia preparada
+	    sentenciapre = conexion
+		    .prepareStatement("insert into cortes (gcode)"
+			    + "	VALUES (?)", Statement.RETURN_GENERATED_KEYS);
+	    
+	
+		sentenciapre.setString(1, gcode);
+		sentenciapre.executeUpdate();
+		
+		ResultSet res = sentenciapre.getGeneratedKeys();
+		res.last();
+		i = res.getInt(1);
+		
+		
+
+	} catch (Exception e) {
+
+	    e.printStackTrace();
+	    System.out.println(Messages.getString("DBFacade.ErrorID")); //$NON-NLS-1$
+
+	} finally // CErrar conexion con BBDD
+	{
+	    try {
+		sentenciapre.close(); // NOS FALTA EN TODO
 		conexion.close();
 		
 	    } catch (SQLException e) {
@@ -233,8 +275,8 @@ public class DBFacade implements TableModelListener {
 		e.printStackTrace();
 	    }
 	}
+	return i;
     }
-    
 
     public void getUsuarios(ModeloTablaUsr modelotablao) {
 	try {
@@ -427,37 +469,38 @@ public class DBFacade implements TableModelListener {
 
     }
 
-    public void insertarMed(String nombre, int codnac, int idcorte, String rutaimg){
-	    
+    public void insertarMed(String nombre, int codnac, int idcorte,
+	    String rutaimg) {
+
+	try {
+	    conexion = conectar();
+	    // Sentencia preparada
+	    sentenciapre = conexion
+		    .prepareStatement("insert into medicamentos (nombre, codnac, rutaimg, idcorte)"
+			    + "	VALUES (?,?,?,?)");
+	    sentenciapre.setString(1, nombre);
+	    sentenciapre.setInt(2, codnac);
+	    sentenciapre.setString(3, rutaimg);
+	    sentenciapre.setInt(4, idcorte);
+
+	    sentenciapre.executeUpdate();
+
+	} catch (Exception e) {
+
+	    e.printStackTrace();
+	    System.out.println(Messages.getString("DBFacade.ErrorNuevoMed")); //$NON-NLS-1$
+
+	} finally // CErrar conexion con BBDD
+	{
 	    try {
-		    conexion = conectar();
-		    // Sentencia preparada
-		    sentenciapre = conexion
-			    .prepareStatement("insert into medicamentos (nombre, codnac, rutaimg, idcorte)"
-				    + "	VALUES (?,?,?,?)");
-		    sentenciapre.setString(1, nombre);
-		    sentenciapre.setInt(2, codnac);
-		    sentenciapre.setString(3, rutaimg);
-		    sentenciapre.setInt(4, idcorte);
+		sentenciapre.close(); // NOS FALTA EN TODO
+		conexion.close();
 
-
-		    sentenciapre.executeUpdate();
-
-		} catch (Exception e) {
-
-		    e.printStackTrace();
-		    System.out.println(Messages.getString("DBFacade.ErrorNuevoMed")); //$NON-NLS-1$
-
-		} finally // CErrar conexion con BBDD
-		{
-		    try {
-			sentenciapre.close(); // NOS FALTA EN TODO
-			conexion.close();
-
-		    } catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		    }
-		}
+	    } catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	    }
+	}
     }
+
 }

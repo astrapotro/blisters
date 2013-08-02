@@ -99,7 +99,6 @@ class ModeloTablaMeds extends AbstractTableModel implements TableModel {
 	avisaSuscriptores(evento);
     }
     
-    //NADIE LLAMA A ESTOS DOS !!!
     public void addTableModelListener(TableModelListener l) {
 	suscriptores.add(l);
     }

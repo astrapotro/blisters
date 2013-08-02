@@ -66,11 +66,16 @@ public class VMed extends JPanel {
 				e2.printStackTrace();
 			    } //$NON-NLS-1$
 
+			    
+			    //Forzar el filtrado para que solo nos devuelva reportes breves
+			    conexion.getOut().write("$sv=1".getBytes());
         
         		    // ESCRIBIR AL PUERTO
         		    // escribir al puerto el med.corte
         		    conexion.getOut()
         			    .write(corte.getBytes(), 0, corte.length());
+        		  
+        		
         
         		    System.out.println(corte);
         		    
@@ -93,7 +98,7 @@ public class VMed extends JPanel {
 
 	    }
 	});
-	cortarBtn.setBounds(202, 563, 109, 25);
+	cortarBtn.setBounds(294, 563, 109, 25);
 	add(cortarBtn);
 
 	JLabel lblNewLabel_1 = new JLabel(med.toString());
@@ -121,12 +126,12 @@ public class VMed extends JPanel {
 		    
 		}
 	});
-	btnCancelar.setBounds(327, 563, 96, 25);
+	btnCancelar.setBounds(419, 563, 96, 25);
 	add(btnCancelar);
 	
 	JToggleButton pausa = new JToggleButton("PAUSAR");
 	pausa.setEnabled(false);
-	pausa.setBounds(435, 563, 89, 25);
+	pausa.setBounds(527, 563, 89, 25);
 	pausa.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 		  
@@ -163,6 +168,21 @@ public class VMed extends JPanel {
 		}
 	});
 	add(pausa);
+	
+	JButton btnAtras = new JButton(Messages.getString("VMed.btnAtras.text")); //$NON-NLS-1$
+	btnAtras.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+		   
+		    VMed.this.setVisible(false);
+		    
+		    if (VLogin.UsuarioLogueado.getRoot()) 
+			VLogin.vadmin.vprocesocorte.setVisible(true);
+		    else
+			VLogin.vprocesocorte.setVisible(true);
+		}
+	});
+	btnAtras.setBounds(173, 563, 109, 25);
+	add(btnAtras);
 
     }
 }

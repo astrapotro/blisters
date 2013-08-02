@@ -32,8 +32,9 @@ public class VLogin extends JPanel {
     private JButton btnNewButton;
     private DBFacade login;
     //static VLogin frame = new VLogin();
-    static VAdmin vadmin = new VAdmin();
-    static Usuario UsuarioLogueado;
+    protected static VAdmin vadmin = new VAdmin();
+    protected static Usuario UsuarioLogueado;
+    protected static VProcesoCorte vprocesocorte;
     private JPasswordField passwordField;
 
     public VLogin() {
@@ -149,8 +150,8 @@ public class VLogin extends JPanel {
 			// Aki habría que llamar a la siguiente ventana
 			// listamedicamentos
 			setVisible(false);
-			VProcesoCorte vprocesocorte = new VProcesoCorte();
-			vprocesocorte.setBounds((Principal.d.width/2)-250, (Principal.d.height/2)-200, 500, 400);
+			vprocesocorte = new VProcesoCorte();
+			vprocesocorte.setBounds((Principal.d.width/2)-400, (Principal.d.height/2)-300, 800, 600);
 			Principal.Panel.add(vprocesocorte);
 			vprocesocorte.repaint();
 			vprocesocorte.validate();
@@ -178,6 +179,7 @@ public class VLogin extends JPanel {
 	btnSalir.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
 		// Hay que depurar y cerrar posibles conexiones abiertas
+		VLogin.this.removeAll();
 		System.exit(0);
 	    }
 	});

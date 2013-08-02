@@ -22,9 +22,9 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
      */
     private static final long serialVersionUID = 1L;
     private JTable table;
-    private ModeloTablaMeds modelotablao;
-    private Medicamento medselect;
-    private DBFacade consultameds;
+    private ModeloTablaMeds modelotablao = new ModeloTablaMeds();
+    private Medicamento medselect ;
+    private DBFacade consultameds = new DBFacade();
 
     /**
      * Create the frame.
@@ -41,8 +41,8 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 	add(medslb);
 	add(scrollPane);
 
-	modelotablao = new ModeloTablaMeds();
-	consultameds = new DBFacade();
+	//modelotablao = new ModeloTablaMeds();
+	//consultameds = new DBFacade();
 	// rellenar modelo
 	consultameds.getMedicamentos(modelotablao);
 
@@ -70,9 +70,9 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 		Messages.getString("VTablaMedicamentos.NuevoMedicamento")); //$NON-NLS-1$
 	btnNuevoMed.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
-		// TODO
 		
-		NuevoMed nuevomed = new NuevoMed();
+		
+		NuevoMed nuevomed = new NuevoMed(modelotablao);
 		nuevomed.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 		nuevomed.setVisible(true);
 	    }
@@ -128,4 +128,19 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 	}
 
     }
+
+//    @Override
+//    public void repaint() {
+//	// TODO Auto-generated method stub
+//	//Consulta y modificación
+//        System.out.println(this.consultameds);
+//        System.out.println(this.modelotablao);
+//        
+//        this.
+//
+//	super.repaint();
+//    }
+   
+ 
+
 }

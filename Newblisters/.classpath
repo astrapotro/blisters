@@ -2,14 +2,14 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="com.exadel.ide.javafx.launching.JFXRE_CONTAINER"/>
-	<classpathentry exported="true" kind="lib" path="/home/mikel/Dev/mariadb-java-client-1.1.2.jar"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry exported="true" kind="lib" path="/home/mikel/Dev/blisters/rxtx-2.2pre2-bins/RXTXcomm.jar">
-		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/home/mikel/Dev/blisters/rxtx-2.2pre2-bins/x86_64-unknown-linux-gnu"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="miglayout15-swing.jar" sourcepath="miglayout-src.zip"/>
 	<classpathentry kind="lib" path="forms-1.3.0.jar" sourcepath="forms-1.3.0-src.zip"/>
+	<classpathentry kind="lib" path="lib/mariadb-java-client-1.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/rxtx-2.2pre2-bins/RXTXcomm.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Newblisters/lib/rxtx-2.2pre2-bins/x86_64-unknown-linux-gnu"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

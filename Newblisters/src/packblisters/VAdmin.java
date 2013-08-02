@@ -5,6 +5,8 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
 
 
 
@@ -15,6 +17,7 @@ public  class VAdmin extends JPanel {
     public VTablaUsuarios vtablausuarios ;
     public VTablaHistorico vtablahistorico;
     public VTablaMedicamentos vtablamedicamentos;
+    public VProcesoCorte vprocesocorte;
     
   
 
@@ -42,6 +45,24 @@ public  class VAdmin extends JPanel {
 	JButton btnSalir = new JButton("Salir");
 	btnSalir.setBounds(175, 205, 108, 47);
 	add(btnSalir);
+	
+	JSeparator separator = new JSeparator();
+	separator.setBounds(0, 0, 450, 2);
+	add(separator);
+	
+	JSeparator separator_1 = new JSeparator();
+	separator_1.setOrientation(SwingConstants.VERTICAL);
+	separator_1.setBounds(0, 0, 2, 280);
+	add(separator_1);
+	
+	JSeparator separator_2 = new JSeparator();
+	separator_2.setOrientation(SwingConstants.VERTICAL);
+	separator_2.setBounds(448, 0, 2, 280);
+	add(separator_2);
+	
+	JSeparator separator_3 = new JSeparator();
+	separator_3.setBounds(0, 278, 450, 2);
+	add(separator_3);
 	btnSalir.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 		    
@@ -53,7 +74,10 @@ public  class VAdmin extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 		    
 		    setVisible(false);
-		    vtablamedicamentos = new VTablaMedicamentos();
+		    if (vtablamedicamentos == null){
+			vtablamedicamentos = new VTablaMedicamentos();
+		    }
+		    
 		    vtablamedicamentos.setBounds((Principal.d.width/2)-250, (Principal.d.height/2)-250, 500, 500);
 		    Principal.Panel.add(vtablamedicamentos);
 		    vtablamedicamentos.repaint();
@@ -90,8 +114,8 @@ public  class VAdmin extends JPanel {
 	btnProcesoCorte.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 		    	setVisible(false);
-			VProcesoCorte vprocesocorte = new VProcesoCorte();
-			vprocesocorte.setBounds((Principal.d.width/2)-250, (Principal.d.height/2)-200, 500, 400);
+			vprocesocorte = new VProcesoCorte();
+			vprocesocorte.setBounds((Principal.d.width/2)-400, (Principal.d.height/2)-300, 800, 600);
 			Principal.Panel.add(vprocesocorte);
 			vprocesocorte.repaint();
 			vprocesocorte.validate();
@@ -100,6 +124,4 @@ public  class VAdmin extends JPanel {
 		}
 	});
     }
-
-
 }
