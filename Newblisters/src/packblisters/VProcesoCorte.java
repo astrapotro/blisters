@@ -27,6 +27,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Font;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 
 public class VProcesoCorte extends JPanel implements ListSelectionListener {
 
@@ -47,6 +50,8 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
     private JTextField busqueda;
     private JRadioButton rdbtnNombre;
     private JRadioButton rdbtnCodigoNacinal;
+    private JRadioButton rdbttCodBar;
+    private final Action action = new SwingAction();
 
     public VProcesoCorte() {
 
@@ -62,7 +67,7 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 	setLayout(null);
 
 	JScrollPane tablapane = new JScrollPane();
-	tablapane.setBounds(12, 159, 306, 430);
+	tablapane.setBounds(12, 157, 353, 432);
 	add(tablapane);
 	tablapane
 		.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -116,58 +121,77 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 	add(lblNewLabel);
 
 	imagen = new JLabel("");
-	imagen.setBounds(349, 12, 439, 522);
+	imagen.setBounds(383, 12, 430, 522);
 	add(imagen);
 
 	JSeparator separator = new JSeparator();
 	separator.setOrientation(SwingConstants.VERTICAL);
-	separator.setBounds(52, 56, 1, 72);
+	separator.setBounds(13, 58, 1, 72);
 	add(separator);
 
 	JSeparator separator_1 = new JSeparator();
 	separator_1.setOrientation(SwingConstants.VERTICAL);
-	separator_1.setBounds(290, 56, 1, 72);
+	separator_1.setBounds(364, 58, 1, 72);
 	add(separator_1);
 
 	JSeparator separator_2 = new JSeparator();
-	separator_2.setBounds(52, 56, 239, 2);
+	separator_2.setBounds(13, 58, 352, 2);
 	add(separator_2);
 
 	JLabel lblNewLabel_1 = new JLabel(
 		Messages.getString("VProcesoCorte.lblNewLabel_1.text_1")); //$NON-NLS-1$
-	lblNewLabel_1.setBounds(52, 40, 93, 15);
+	lblNewLabel_1.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 16));
+	lblNewLabel_1.setBounds(22, 34, 133, 23);
 	add(lblNewLabel_1);
 
 	busqueda = new JTextField();
 
 	rdbtnNombre = new JRadioButton(
 		Messages.getString("VProcesoCorte.rdbtnNombre.text")); //$NON-NLS-1$
+	rdbtnNombre.setSelected(true);
 	rdbtnNombre.addMouseListener(new MouseAdapter() {
 	    @Override
 	    public void mouseClicked(MouseEvent e) {
 		rdbtnCodigoNacinal.setSelected(false);
+		rdbttCodBar.setSelected(false);
 
 	    }
 	});
-	rdbtnNombre.setBounds(62, 67, 87, 23);
+	rdbtnNombre.setBounds(21, 67, 87, 23);
 	add(rdbtnNombre);
 
 	rdbtnCodigoNacinal = new JRadioButton(
 		Messages.getString("VProcesoCorte.rdbtnCodigoNacinal.text")); //$NON-NLS-1$
-	rdbtnCodigoNacinal.setSelected(true);
+	rdbtnCodigoNacinal.setSelected(false);
 	rdbtnCodigoNacinal.addMouseListener(new MouseAdapter() {
 	    @Override
 	    public void mouseClicked(MouseEvent e) {
+		rdbtnNombre.setSelected(false);
+		rdbttCodBar.setSelected(false);
+		// busqueda.setText(null);
+
+	    }
+	});
+	rdbtnCodigoNacinal.setBounds(104, 67, 121, 23);
+	add(rdbtnCodigoNacinal);
+
+	
+	rdbttCodBar = new JRadioButton(Messages.getString("VProcesoCorte.rdbttCodBar.text"));
+	rdbttCodBar.setSelected(false);
+	rdbttCodBar.addMouseListener(new MouseAdapter() {
+	    @Override
+	    public void mouseClicked(MouseEvent e) {
+		rdbtnCodigoNacinal.setSelected(false);
 		rdbtnNombre.setSelected(false);
 		// busqueda.setText(null);
 
 	    }
 	});
-	rdbtnCodigoNacinal.setBounds(153, 67, 129, 23);
-	add(rdbtnCodigoNacinal);
-
+	rdbttCodBar.setBounds(223, 67, 129, 23);
+	add(rdbttCodBar);
+	
 	JSeparator separator_3 = new JSeparator();
-	separator_3.setBounds(52, 129, 239, 2);
+	separator_3.setBounds(13, 131, 352, 2);
 	add(separator_3);
 
 	busqueda.addKeyListener(new KeyAdapter() {
@@ -191,7 +215,26 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 			    table.setRowSelectionInterval(row, row);
 			}
 		    }
-		} else {
+		} else if (rdbtnCodigoNacinal.isSelected()) {
+		    for (int row = 0; row <= table.getRowCount() - 1; row++) {
+			try {
+			    if ((((Integer) (modelotablao.getmed(row)
+				    .getCodnac())).toString().startsWith(value))) {
+				// this will automatically set the view of the
+				// scroll in
+				// the location of the value
+				table.scrollRectToVisible(table.getCellRect(
+					row, 0, true));
+				// this will automatically set the focus of the
+				// searched/selected row/value
+				table.setRowSelectionInterval(row, row);
+			    }
+			} catch (NumberFormatException e1) {
+			    // TODO Auto-generated catch block
+			    // e1.printStackTrace();
+			}
+		    }
+		}else if (rdbttCodBar.isSelected()) {
 		    for (int row = 0; row <= table.getRowCount() - 1; row++) {
 			try {
 			    if ((((Integer) (modelotablao.getmed(row)
@@ -211,13 +254,16 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 			}
 		    }
 		}
+		
+		
 
 	    }
 	});
 	busqueda.setText(Messages.getString("VProcesoCorte.textField.text")); //$NON-NLS-1$
-	busqueda.setBounds(65, 98, 213, 19);
+	busqueda.setBounds(24, 98, 325, 26);
 	add(busqueda);
 	busqueda.setColumns(10);
+
 
 	if (VLogin.UsuarioLogueado.getRoot()) {
 
@@ -319,4 +365,12 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 	}
 
     }
+	private class SwingAction extends AbstractAction {
+		public SwingAction() {
+			putValue(NAME, "SwingAction");
+			putValue(SHORT_DESCRIPTION, "Some short description");
+		}
+		public void actionPerformed(ActionEvent e) {
+		}
+	}
 }

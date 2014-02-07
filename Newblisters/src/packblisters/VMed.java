@@ -2,6 +2,7 @@ package packblisters;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.StringTokenizer;
 
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
@@ -68,14 +69,25 @@ public class VMed extends JPanel {
 
 			    
 			    //Forzar el filtrado para que solo nos devuelva reportes breves
-			    conexion.getOut().write("$sv=1".getBytes());
+			    //conexion.getOut().write("$sv=1".getBytes());
         
         		    // ESCRIBIR AL PUERTO
         		    // escribir al puerto el med.corte
-        		    conexion.getOut()
-        			    .write(corte.getBytes(), 0, corte.length());
-        		  
-        		
+        		    
+			    StringTokenizer tokens = new StringTokenizer(corte,"\n");
+			    String home = new String();
+			    home = "g28.2 x0y0z0\n";
+			    conexion.getOut().write(home.getBytes(),0,home.length());
+			    
+			    Thread.sleep(14000);
+	
+			    while(tokens.hasMoreTokens()){
+				String s = tokens.nextToken();
+				conexion.getOut()
+    			    .write(s.getBytes(), 0, s.length());
+				Thread.sleep(320);
+			    }
+			    
         
         		    System.out.println(corte);
         		    

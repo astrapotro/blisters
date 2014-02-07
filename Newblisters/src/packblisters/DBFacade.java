@@ -85,6 +85,7 @@ public class DBFacade implements TableModelListener {
 		medicamento.setId(resultados.getInt("medicamentos_id"));
 		medicamento.setNombre(resultados.getString("nombre"));
 		medicamento.setCodnac(resultados.getInt("codnac"));
+		medicamento.setCodbar(resultados.getLong("codbar"));
 		medicamento.setRutaimg(resultados.getString("rutaimg"));
 		medicamento.setIdcorte(resultados.getInt("idcorte"));
 
@@ -171,6 +172,7 @@ public class DBFacade implements TableModelListener {
 		medicamento.setId(resultados.getInt("medicamentos_id"));
 		medicamento.setNombre(resultados.getString("nombre"));
 		medicamento.setCodnac(resultados.getInt("codnac"));
+		medicamento.setCodbar(resultados.getLong("codbar"));
 		medicamento.setRutaimg(resultados.getString("rutaimg"));
 		medicamento.setIdcorte(resultados.getInt("idcorte"));
 		System.out.println(medicamento);
@@ -388,15 +390,6 @@ public class DBFacade implements TableModelListener {
 		hist.setIdCorte(resultados.getInt("idcorte"));
 		hist.setEvento(resultados.getString("evento"));
 
-		System.out.println("añadir al modelo historicos");
-		System.out.println(hist.getId());
-		System.out.println(hist.getFecha());
-		System.out.println(hist.getUsuario());
-		System.out.println(hist.getMedicamento());
-		System.out.println(hist.getCodNac());
-		System.out.println(hist.getIdCorte());
-		System.out.println(hist.getEvento());
-
 		modelotablao.anadeHistorico(hist);
 
 	    }
@@ -476,12 +469,13 @@ public class DBFacade implements TableModelListener {
 	    conexion = conectar();
 	    // Sentencia preparada
 	    sentenciapre = conexion
-		    .prepareStatement("insert into medicamentos (nombre, codnac, rutaimg, idcorte)"
+		    .prepareStatement("insert into medicamentos (nombre, codnac, codbar, rutaimg, idcorte)"
 			    + "	VALUES (?,?,?,?)");
 	    sentenciapre.setString(1, nombre);
 	    sentenciapre.setInt(2, codnac);
-	    sentenciapre.setString(3, rutaimg);
-	    sentenciapre.setInt(4, idcorte);
+	    sentenciapre.setInt(3, codnac);
+	    sentenciapre.setString(4, rutaimg);
+	    sentenciapre.setInt(5, idcorte);
 
 	    sentenciapre.executeUpdate();
 

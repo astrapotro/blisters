@@ -1,8 +1,11 @@
 package packblisters;
 
+import java.math.BigInteger;
+
 public class Medicamento {
     private int id;
     private int codnac;
+    private long codbar;
     private String nombre;
     private String rutaimg;
     private int idcorte;
@@ -52,6 +55,14 @@ public class Medicamento {
     @Override
     public String toString() {
 	return codnac + " :	" + nombre; //$NON-NLS-1$
+    }
+    
+    public long getCodbar() {
+        return codbar;
+    }
+
+    public void setCodbar(long l) {
+        this.codbar = l;
     }
 
     public void setRutaimg(String rutaimg) {

@@ -30,6 +30,9 @@ class ModeloTablaMeds extends AbstractTableModel implements TableModel {
 	case 1:
 	    aux.setCodnac((Integer) dato);
 	    break;
+	case 2:
+	    aux.setCodbar((long) dato);
+	    break;
 
 	}
 
@@ -52,7 +55,10 @@ class ModeloTablaMeds extends AbstractTableModel implements TableModel {
 	    // Nos piden la edad.
 	case 1:
 	    return new Integer(aux.getCodnac());
-
+	    
+	case 2:
+	    return aux.getCodbar();
+	 
 	}
 	return null;
     }
@@ -114,7 +120,7 @@ class ModeloTablaMeds extends AbstractTableModel implements TableModel {
     @Override
     public int getColumnCount() {
 	// TODO Auto-generated method stub
-	return 2;
+	return 3;
     }
 
     @Override
@@ -125,7 +131,9 @@ class ModeloTablaMeds extends AbstractTableModel implements TableModel {
 	case 0:
 	    return "Nombre";
 	case 1:
-	    return "Codigo Nacional";
+	    return "Código Nacional";
+	case 2: 
+	    return "Código de barras";
 	default:
 	    return null;
 	}
@@ -143,6 +151,9 @@ class ModeloTablaMeds extends AbstractTableModel implements TableModel {
 	    // La columna dos contine la edad de la persona, que es un
 	    // Integer (no vale int, debe ser una clase)
 	    return Integer.class;
+	case 2:
+	    return long.class;
+	    
 	default:
 	    // Devuelve una clase Object por defecto.
 	    return Object.class;
