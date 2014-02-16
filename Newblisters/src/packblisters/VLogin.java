@@ -1,11 +1,12 @@
 package packblisters;
 
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+
+import java.awt.Image;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -14,6 +15,9 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.ImageIcon;
+import javax.swing.border.MatteBorder;
+import java.awt.Color;
 
 public class VLogin extends JPanel {
 
@@ -26,7 +30,7 @@ public class VLogin extends JPanel {
     private static final long serialVersionUID = 1L;
 
     private JTextField textField;
-    private JButton btnNewButton;
+    private JButton btnEntrar, btnSalir;
     private DBFacade login;
     //static VLogin frame = new VLogin();
     protected static VAdmin vadmin = new VAdmin();
@@ -35,36 +39,16 @@ public class VLogin extends JPanel {
     private JPasswordField passwordField;
 
     public VLogin() {
-
-	
-	GridBagLayout gridBagLayout = new GridBagLayout();
-	gridBagLayout.columnWidths = new int[] { 150, 150, 0 };
-	gridBagLayout.rowHeights = new int[] { 30, 30, 30, 0 };
-	gridBagLayout.columnWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
-	gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0,
-		Double.MIN_VALUE }
-
-	;
-	
-	setLayout(gridBagLayout);
+	setLayout(null);
 	
 	
 	JLabel lblNewLabel = new JLabel(Messages.getString("VLogin.User"));
-	GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-	gbc_lblNewLabel.anchor = GridBagConstraints.NORTHWEST;
-	gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
-	gbc_lblNewLabel.gridx = 0;
-	gbc_lblNewLabel.gridy = 0;
-	add(lblNewLabel, gbc_lblNewLabel);
+	lblNewLabel.setBounds(206, 358, 60, 15);
+	add(lblNewLabel);
 
 	textField = new JTextField();
-	GridBagConstraints gbc_textField = new GridBagConstraints();
-	gbc_textField.anchor = GridBagConstraints.NORTH;
-	gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-	gbc_textField.insets = new Insets(0, 0, 5, 0);
-	gbc_textField.gridx = 1;
-	gbc_textField.gridy = 0;
-	add(textField, gbc_textField);
+	textField.setBounds(356, 358, 150, 19);
+	add(textField);
 	textField.setColumns(1);
 	textField.setHorizontalAlignment(SwingConstants.LEFT);
 
@@ -79,33 +63,25 @@ public class VLogin extends JPanel {
 	});
 
 	JLabel lblNewLabel_1 = new JLabel(Messages.getString("VLogin.Pass"));
-	GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
-	gbc_lblNewLabel_1.anchor = GridBagConstraints.NORTHWEST;
-	gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);
-	gbc_lblNewLabel_1.gridx = 0;
-	gbc_lblNewLabel_1.gridy = 1;
-	add(lblNewLabel_1, gbc_lblNewLabel_1);
+	lblNewLabel_1.setBounds(206, 389, 88, 18);
+	add(lblNewLabel_1);
 
 	passwordField = new JPasswordField();
-	GridBagConstraints gbc_passwordField = new GridBagConstraints();
-	gbc_passwordField.anchor = GridBagConstraints.NORTH;
-	gbc_passwordField.fill = GridBagConstraints.HORIZONTAL;
-	gbc_passwordField.insets = new Insets(0, 0, 5, 0);
-	gbc_passwordField.gridx = 1;
-	gbc_passwordField.gridy = 1;
-	add(passwordField, gbc_passwordField);
+	passwordField.setBounds(356, 389, 150, 18);
+	add(passwordField);
 	passwordField.setColumns(10);
-	btnNewButton = new JButton(Messages.getString("VLogin.Introbtn"));
-	GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-	gbc_btnNewButton.fill = GridBagConstraints.HORIZONTAL;
-	gbc_btnNewButton.anchor = GridBagConstraints.NORTH;
-	gbc_btnNewButton.insets = new Insets(0, 0, 0, 5);
-	gbc_btnNewButton.gridx = 0;
-	gbc_btnNewButton.gridy = 2;
-	add(btnNewButton, gbc_btnNewButton);
+	
+	btnEntrar = new JButton(Messages.getString("VLogin.labelentrar.text")); //$NON-NLS-1$
+	btnEntrar.setVerticalAlignment(SwingConstants.CENTER);
+	btnEntrar.setBounds(206, 445, 130, 67);
+	adaptajbutton(btnEntrar, "/iconos/Ok-icon.png");
+	btnEntrar.setIconTextGap(2);
+	btnEntrar.setHorizontalTextPosition(SwingConstants.CENTER);
+	btnEntrar.setVerticalTextPosition(SwingConstants.BOTTOM);
+	add(btnEntrar);
 
 	
-	btnNewButton.addActionListener(new ActionListener() {
+	btnEntrar.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent arg0) {
 		// Aki tiene que comprobar, en una función nueva si el
 		// usuario existe y si la contraseña es correcta y si es
@@ -133,7 +109,7 @@ public class VLogin extends JPanel {
 			
 
 			setVisible(false);
-			vadmin.setBounds((Principal.d.width/2)-225, (Principal.d.height/2)-140, 450, 280);
+			vadmin.setBounds((Principal.d.width/2)-(690/2), (Principal.d.height/2)-(550/2), 690, 550);
 			Principal.Panel.add(vadmin);
 			vadmin.repaint();
 			vadmin.validate();
@@ -165,14 +141,28 @@ public class VLogin extends JPanel {
 	    }
 	});
 
-	JButton btnSalir = new JButton(Messages.getString("VLogin.Quit"));
-	GridBagConstraints gbc_btnSalir = new GridBagConstraints();
-	gbc_btnSalir.fill = GridBagConstraints.HORIZONTAL;
-	gbc_btnSalir.anchor = GridBagConstraints.NORTH;
-	gbc_btnSalir.gridx = 1;
-	gbc_btnSalir.gridy = 2;
-	add(btnSalir, gbc_btnSalir);
-
+	btnSalir = new JButton(Messages.getString("VLogin.Quit"));
+	btnSalir.setBounds(376, 445, 130, 67);
+	
+	adaptajbutton(btnSalir, "/iconos/Close-2-icon.png");
+	btnSalir.setIconTextGap(2);
+	btnSalir.setHorizontalTextPosition(SwingConstants.CENTER);
+	btnSalir.setVerticalTextPosition(SwingConstants.BOTTOM);
+	add(btnSalir);
+	
+	
+	JPanel panel = new JPanel();
+	panel.setBounds(74, 48, 550, 275);
+	panel.setBorder(new MatteBorder(2, 2, 2, 2, (Color) new Color(107, 142, 35)));
+	add(panel);
+	panel.setLayout(null);
+	
+	JLabel lbllogo = new JLabel("");
+	lbllogo.setBorder(new MatteBorder(2, 2, 2, 2, (Color) new Color(107, 142, 35)));
+	lbllogo.setBounds(0, 0, 550, 275);
+	adaptajlabel (lbllogo, "/iconos/NEOMED4.png");
+	panel.add(lbllogo);
+	
 	btnSalir.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
 		// Hay que depurar y cerrar posibles conexiones abiertas
@@ -184,10 +174,23 @@ public class VLogin extends JPanel {
 	
     }
     
-    
+   public void adaptajlabel (JLabel lbl, String ruta){
+       
+       ImageIcon fot = new ImageIcon(VLogin.class.getResource(ruta));
+	//Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lbllogo.getWidth(), lbllogo.getHeight(), Image.SCALE_DEFAULT));
+	lbl.setIcon(new ImageIcon(fot.getImage().getScaledInstance(lbl.getWidth(), lbl.getHeight(), Image.SCALE_SMOOTH)));
+	//this.repaint();
+       
+   }
    
-
-
+   public void adaptajbutton (JButton but, String ruta){
+       
+       ImageIcon fot = new ImageIcon(VLogin.class.getResource(ruta));
+	//Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lbllogo.getWidth(), lbllogo.getHeight(), Image.SCALE_DEFAULT));
+	but.setIcon(new ImageIcon(fot.getImage().getScaledInstance(but.getWidth()/2, but.getHeight()/2, Image.SCALE_SMOOTH)));
+	//this.repaint();
+       
+   }
 }
 
 

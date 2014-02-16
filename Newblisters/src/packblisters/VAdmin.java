@@ -1,12 +1,18 @@
 package packblisters;
 
 
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JButton;
+
+import java.awt.Color;
+import java.awt.Image;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JSeparator;
+
 import javax.swing.SwingConstants;
+import javax.swing.border.MatteBorder;
 
 
 
@@ -25,44 +31,51 @@ public  class VAdmin extends JPanel {
    
     public VAdmin() {
 	setLayout(null);
+	this.setBackground(new Color(224, 255, 255));
+	this.setBorder(new MatteBorder(4, 4, 4, 4, (Color) new Color(107, 142, 35)));	
 	
-	JButton btnProcesoCorte = new JButton("ProcesoCorte");
-	btnProcesoCorte.setBounds(24, 30, 180, 47);
+	JButton btnProcesoCorte = new JButton("Proceso de corte");
+	//Para que no salga el cuadrado de selección alrededor del icono !!
+	btnProcesoCorte.setFocusPainted(false);
+	btnProcesoCorte.setBounds(106, 67, 180, 120);
+	btnProcesoCorte.setVerticalAlignment(SwingConstants.CENTER);
+	adaptajbutton(btnProcesoCorte, "/iconos/1 (31).png");
+	btnProcesoCorte.setIconTextGap(10);
+	btnProcesoCorte.setHorizontalTextPosition(SwingConstants.CENTER);
+	btnProcesoCorte.setVerticalTextPosition(SwingConstants.BOTTOM);
 	add(btnProcesoCorte);
 	
 	JButton btnHistorico = new JButton("Historico");
-	btnHistorico.setBounds(24, 127, 180, 45);
+	btnHistorico.setBounds(106, 249, 180, 120);
+	adaptajbutton(btnHistorico, "/iconos/1 (5).png");
+	btnHistorico.setIconTextGap(10);
+	btnHistorico.setHorizontalTextPosition(SwingConstants.CENTER);
+	btnHistorico.setVerticalTextPosition(SwingConstants.BOTTOM);
 	add(btnHistorico);
 	
 	JButton btnUsuarios = new JButton("Usuarios");
-	btnUsuarios.setBounds(246, 127, 180, 45);
+	btnUsuarios.setBounds(422, 249, 180, 120);
+	adaptajbutton(btnUsuarios, "/iconos/1 (1).png");
+	btnUsuarios.setIconTextGap(10);
+	btnUsuarios.setHorizontalTextPosition(SwingConstants.CENTER);
+	btnUsuarios.setVerticalTextPosition(SwingConstants.BOTTOM);
 	add(btnUsuarios);
 	
 	JButton btnMedicamentos = new JButton("Medicamentos");
-	btnMedicamentos.setBounds(246, 30, 180, 47);
+	btnMedicamentos.setBounds(422, 67, 180, 120);
+	adaptajbutton(btnMedicamentos, "/iconos/1 (14).jpg");
+	btnMedicamentos.setIconTextGap(10);
+	btnMedicamentos.setHorizontalTextPosition(SwingConstants.CENTER);
+	btnMedicamentos.setVerticalTextPosition(SwingConstants.BOTTOM);
 	add(btnMedicamentos);
 	
 	JButton btnSalir = new JButton("Salir");
-	btnSalir.setBounds(175, 205, 108, 47);
+	btnSalir.setBounds(272, 434, 160, 83);
+	adaptajbutton(btnSalir, "/iconos/Close-2-icon.png");
+	btnSalir.setIconTextGap(5);
+	btnSalir.setHorizontalTextPosition(SwingConstants.CENTER);
+	btnSalir.setVerticalTextPosition(SwingConstants.BOTTOM);
 	add(btnSalir);
-	
-	JSeparator separator = new JSeparator();
-	separator.setBounds(0, 0, 450, 2);
-	add(separator);
-	
-	JSeparator separator_1 = new JSeparator();
-	separator_1.setOrientation(SwingConstants.VERTICAL);
-	separator_1.setBounds(0, 0, 2, 280);
-	add(separator_1);
-	
-	JSeparator separator_2 = new JSeparator();
-	separator_2.setOrientation(SwingConstants.VERTICAL);
-	separator_2.setBounds(448, 0, 2, 280);
-	add(separator_2);
-	
-	JSeparator separator_3 = new JSeparator();
-	separator_3.setBounds(0, 278, 450, 2);
-	add(separator_3);
 	btnSalir.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 		    
@@ -124,4 +137,22 @@ public  class VAdmin extends JPanel {
 		}
 	});
     }
+    
+    public void adaptajlabel (JLabel lbl, String ruta){
+	       
+	       ImageIcon fot = new ImageIcon(VLogin.class.getResource(ruta));
+		//Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lbllogo.getWidth(), lbllogo.getHeight(), Image.SCALE_DEFAULT));
+		lbl.setIcon(new ImageIcon(fot.getImage().getScaledInstance(lbl.getWidth(), lbl.getHeight(), Image.SCALE_SMOOTH)));
+		//this.repaint();
+	       
+	   }
+	   
+	   public void adaptajbutton (JButton but, String ruta){
+	       
+	       ImageIcon fot = new ImageIcon(VLogin.class.getResource(ruta));
+		//Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lbllogo.getWidth(), lbllogo.getHeight(), Image.SCALE_DEFAULT));
+		but.setIcon(new ImageIcon(fot.getImage().getScaledInstance(but.getWidth()/2, but.getHeight()/2, Image.SCALE_SMOOTH)));
+		//this.repaint();
+	       
+	   }
 }
