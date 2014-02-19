@@ -1,6 +1,6 @@
 package packblisters;
 
-import java.math.BigInteger;
+
 
 public class Medicamento {
     private int id;

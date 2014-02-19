@@ -37,7 +37,7 @@ public  class VAdmin extends JPanel {
 	JButton btnProcesoCorte = new JButton("Proceso de corte");
 	//Para que no salga el cuadrado de selección alrededor del icono !!
 	btnProcesoCorte.setFocusPainted(false);
-	btnProcesoCorte.setBounds(106, 67, 180, 120);
+	btnProcesoCorte.setBounds(97, 66, 180, 120);
 	btnProcesoCorte.setVerticalAlignment(SwingConstants.CENTER);
 	adaptajbutton(btnProcesoCorte, "/iconos/1 (31).png");
 	btnProcesoCorte.setIconTextGap(10);
@@ -46,7 +46,7 @@ public  class VAdmin extends JPanel {
 	add(btnProcesoCorte);
 	
 	JButton btnHistorico = new JButton("Historico");
-	btnHistorico.setBounds(106, 249, 180, 120);
+	btnHistorico.setBounds(97, 248, 180, 120);
 	adaptajbutton(btnHistorico, "/iconos/1 (5).png");
 	btnHistorico.setIconTextGap(10);
 	btnHistorico.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -54,7 +54,7 @@ public  class VAdmin extends JPanel {
 	add(btnHistorico);
 	
 	JButton btnUsuarios = new JButton("Usuarios");
-	btnUsuarios.setBounds(422, 249, 180, 120);
+	btnUsuarios.setBounds(413, 248, 180, 120);
 	adaptajbutton(btnUsuarios, "/iconos/1 (1).png");
 	btnUsuarios.setIconTextGap(10);
 	btnUsuarios.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -62,7 +62,7 @@ public  class VAdmin extends JPanel {
 	add(btnUsuarios);
 	
 	JButton btnMedicamentos = new JButton("Medicamentos");
-	btnMedicamentos.setBounds(422, 67, 180, 120);
+	btnMedicamentos.setBounds(413, 66, 180, 120);
 	adaptajbutton(btnMedicamentos, "/iconos/1 (14).jpg");
 	btnMedicamentos.setIconTextGap(10);
 	btnMedicamentos.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -70,7 +70,7 @@ public  class VAdmin extends JPanel {
 	add(btnMedicamentos);
 	
 	JButton btnSalir = new JButton("Salir");
-	btnSalir.setBounds(272, 434, 160, 83);
+	btnSalir.setBounds(263, 433, 169, 83);
 	adaptajbutton(btnSalir, "/iconos/Close-2-icon.png");
 	btnSalir.setIconTextGap(5);
 	btnSalir.setHorizontalTextPosition(SwingConstants.CENTER);

@@ -32,6 +32,12 @@ import java.awt.Image;
 
 import javax.swing.border.MatteBorder;
 import java.awt.Color;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.Box;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class VProcesoCorte extends JPanel implements ListSelectionListener {
 
@@ -71,7 +77,7 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 	setLayout(null);
 
 	JScrollPane tablapane = new JScrollPane();
-	tablapane.setBounds(12, 157, 353, 432);
+	tablapane.setBounds(13, 162, 356, 428);
 	add(tablapane);
 	tablapane
 		.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -80,6 +86,7 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 		.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
 	table = new JTable(modelotablao);
+	table.setBorder(null);
 	// Instanciamos el TableRowSorter y lo añadimos al JTable
 	TableRowSorter<TableModel> elQueOrdena = new TableRowSorter<TableModel>(
 		table.getModel());
@@ -120,46 +127,38 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 	// lista.setVisibleRowCount(2);
 
 	   JLabel lblNewLabel_2 = new JLabel(Messages.getString("VProcesoCorte.lblNewLabel_2.text")); //$NON-NLS-1$
-	    lblNewLabel_2.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 18));
+	    lblNewLabel_2.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 25));
 	    lblNewLabel_2.setForeground(new Color(107, 142, 35));
 	    lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-	    lblNewLabel_2.setBounds(12, 7, 788, 33);
+	    lblNewLabel_2.setBounds(17, 7, 783, 37);
 	    add(lblNewLabel_2);
-	
-	
-	JLabel lblNewLabel = new JLabel(
-		Messages.getString("VProcesoCorte.Medicamentos"));
-	lblNewLabel.setBounds(12, 143, 103, 15);
-	add(lblNewLabel);
 
 	imagen = new JLabel("");
-	imagen.setBounds(377, 58, 411, 452);
+	imagen.setBorder(new LineBorder(new Color(107, 142, 35), 2, true));
+	imagen.setBounds(377, 52, 411, 458);
 	add(imagen);
-
-	JSeparator separator = new JSeparator();
-	separator.setOrientation(SwingConstants.VERTICAL);
-	separator.setBounds(13, 58, 1, 72);
-	add(separator);
-
-	JSeparator separator_1 = new JSeparator();
-	separator_1.setOrientation(SwingConstants.VERTICAL);
-	separator_1.setBounds(364, 58, 1, 72);
-	add(separator_1);
-
-	JSeparator separator_2 = new JSeparator();
-	separator_2.setBounds(13, 58, 352, 2);
-	add(separator_2);
 
 	JLabel lblNewLabel_1 = new JLabel(
 		Messages.getString("VProcesoCorte.lblNewLabel_1.text_1")); //$NON-NLS-1$
-	lblNewLabel_1.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 10));
-	lblNewLabel_1.setBounds(21, 40, 133, 15);
+	lblNewLabel_1.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 11));
+	lblNewLabel_1.setBounds(31, 61, 133, 15);
 	add(lblNewLabel_1);
 
 	busqueda = new JTextField();
+	busqueda.addFocusListener(new FocusAdapter() {
+		@Override
+		public void focusGained(FocusEvent e) {
+		    busqueda.setText("");
+		}
+		@Override
+		public void focusLost(FocusEvent e) {
+		    busqueda.setText("Medicamento a buscar");
+		}
+	});
 
 	rdbtnNombre = new JRadioButton(
 		Messages.getString("VProcesoCorte.rdbtnNombre.text")); //$NON-NLS-1$
+	rdbtnNombre.setBackground(new Color(224, 255, 255));
 	rdbtnNombre.setSelected(true);
 	rdbtnNombre.addMouseListener(new MouseAdapter() {
 	    @Override
@@ -169,11 +168,16 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 
 	    }
 	});
-	rdbtnNombre.setBounds(21, 67, 87, 23);
+	
+	Box verticalBox = Box.createVerticalBox();
+	verticalBox.setBounds(0, 0, 1, 1);
+	add(verticalBox);
+	rdbtnNombre.setBounds(25, 75, 87, 23);
 	add(rdbtnNombre);
 
 	rdbtnCodigoNacinal = new JRadioButton(
 		Messages.getString("VProcesoCorte.rdbtnCodigoNacinal.text")); //$NON-NLS-1$
+	rdbtnCodigoNacinal.setBackground(new Color(224, 255, 255));
 	rdbtnCodigoNacinal.setSelected(false);
 	rdbtnCodigoNacinal.addMouseListener(new MouseAdapter() {
 	    @Override
@@ -184,11 +188,12 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 
 	    }
 	});
-	rdbtnCodigoNacinal.setBounds(104, 67, 121, 23);
+	rdbtnCodigoNacinal.setBounds(108, 75, 121, 23);
 	add(rdbtnCodigoNacinal);
 
 	
 	rdbttCodBar = new JRadioButton(Messages.getString("VProcesoCorte.rdbttCodBar.text"));
+	rdbttCodBar.setBackground(new Color(224, 255, 255));
 	rdbttCodBar.setSelected(false);
 	rdbttCodBar.addMouseListener(new MouseAdapter() {
 	    @Override
@@ -199,12 +204,8 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 
 	    }
 	});
-	rdbttCodBar.setBounds(223, 67, 129, 23);
+	rdbttCodBar.setBounds(227, 75, 129, 23);
 	add(rdbttCodBar);
-	
-	JSeparator separator_3 = new JSeparator();
-	separator_3.setBounds(13, 131, 352, 2);
-	add(separator_3);
 
 	busqueda.addKeyListener(new KeyAdapter() {
 	    @Override
@@ -249,8 +250,8 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 		}else if (rdbttCodBar.isSelected()) {
 		    for (int row = 0; row <= table.getRowCount() - 1; row++) {
 			try {
-			    if ((((Integer) (modelotablao.getmed(row)
-				    .getCodnac())).toString().startsWith(value))) {
+			    if ((((Long) (modelotablao.getmed(row)
+				    .getCodbar())).toString().startsWith(value))) {
 				// this will automatically set the view of the
 				// scroll in
 				// the location of the value
@@ -273,9 +274,26 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 	});
 	
 	busqueda.setText(Messages.getString("VProcesoCorte.textField.text")); //$NON-NLS-1$
-	busqueda.setBounds(24, 98, 325, 26);
+	busqueda.setBounds(28, 102, 325, 26);
 	add(busqueda);
 	busqueda.setColumns(10);
+	
+	Box horizontalBox = Box.createHorizontalBox();
+	horizontalBox.setBorder(new LineBorder(new Color(107, 142, 35), 2, true));
+	horizontalBox.setBackground(new Color(154, 205, 50));
+	horizontalBox.setBounds(13, 53, 356, 85);
+	add(horizontalBox);
+	
+	
+	JLabel lblNewLabel = new JLabel(
+		Messages.getString("VProcesoCorte.Medicamentos"));
+	lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+	lblNewLabel.setBounds(5, 145, 121, 18);
+	
+	//lblNewLabel.setBorder(new LineBorder(new Color(107, 142, 35), 2, true));
+	
+	add(lblNewLabel);
+	lblNewLabel.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 12));
 
 
 	
@@ -283,7 +301,7 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 
 	    btnSeleccionar = new JButton(
 		    Messages.getString("VProcesoCorte.SeleccionBtn")); //$NON-NLS-1$
-	    btnSeleccionar.setBounds(598, 517, 179, 72);
+	    btnSeleccionar.setBounds(595, 517, 190, 72);
 	    //btnSeleccionar.setVerticalAlignment(SwingConstants.CENTER);
 	    adaptajbutton( btnSeleccionar, "/iconos/palante.png");
 	    btnSeleccionar.setIconTextGap(1);
@@ -293,7 +311,7 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 
 	    btnAtras = new JButton(
 		    Messages.getString("VProcesoCorte.btnAtras.text")); //$NON-NLS-1$
-	    btnAtras.setBounds(377, 517, 179, 72);
+	    btnAtras.setBounds(377, 517, 190, 72);
 	    //btnAtras.setVerticalAlignment(SwingConstants.CENTER);
 	    adaptajbutton(btnAtras, "/iconos/patras.png");
 	    btnAtras.setIconTextGap(1);
@@ -313,7 +331,7 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 
 	    btnSeleccionar = new JButton(
 		    Messages.getString("VProcesoCorte.SeleccionBtn")); //$NON-NLS-1$
-	    btnSeleccionar.setBounds(598, 555, 179, 72);
+	    btnSeleccionar.setBounds(500, 517, 190, 72);
 	    adaptajbutton( btnSeleccionar, "/iconos/palante.png");
 	    btnSeleccionar.setIconTextGap(1);
 	    btnSeleccionar.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -359,7 +377,9 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 	    int filaModelo = table.convertRowIndexToModel(filaVista);
 	    medselect = modelotablao.getmed(filaModelo);
 	    System.out.println(medselect);
-	    this.imagen.setIcon(new ImageIcon(medselect.getRutaimg()));
+	    ImageIcon fot = new ImageIcon(medselect.getRutaimg());
+	    //this.imagen.setIcon(new ImageIcon(medselect.getRutaimg()));
+	    this.imagen.setIcon(new ImageIcon(fot.getImage().getScaledInstance(this.imagen.getWidth(), this.imagen.getHeight(), Image.SCALE_SMOOTH)));
 
 	}
 
