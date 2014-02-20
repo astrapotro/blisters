@@ -5,6 +5,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JButton;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 
 import java.awt.Color;
 import java.awt.Image;
@@ -91,7 +93,8 @@ public  class VAdmin extends JPanel {
 			vtablamedicamentos = new VTablaMedicamentos();
 		    }
 		    
-		    vtablamedicamentos.setBounds((Principal.d.width/2)-250, (Principal.d.height/2)-250, 500, 500);
+		    vtablamedicamentos.setBounds((Principal.d.width/2)-350, (Principal.d.height/2)-305, 700, 610);
+		    
 		    Principal.Panel.add(vtablamedicamentos);
 		    vtablamedicamentos.repaint();
 		    vtablamedicamentos.validate();
@@ -155,4 +158,6 @@ public  class VAdmin extends JPanel {
 		//this.repaint();
 	       
 	   }
+	   
+	   
 }

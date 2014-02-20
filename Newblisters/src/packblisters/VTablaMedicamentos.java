@@ -1,19 +1,41 @@
 package packblisters;
 
-import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+
 import javax.swing.JLabel;
+
+import java.awt.Dialog;
+
+import javax.swing.Box;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+
+import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Image;
+
 
 public class VTablaMedicamentos extends JPanel implements ListSelectionListener {
 
@@ -25,18 +47,28 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
     private ModeloTablaMeds modelotablao = new ModeloTablaMeds();
     private Medicamento medselect ;
     private DBFacade consultameds = new DBFacade();
-
+    private JRadioButton rdbtnNombre;
+    private JRadioButton rdbtnCodigoNacinal;
+    private JRadioButton rdbttCodBar;
+    private JTextField busqueda;
+    private JLabel imagen;
+  
     /**
      * Create the frame.
      */
     public VTablaMedicamentos() {
+	
+	setBackground(new Color(224, 255, 255));
+    	setBorder(new MatteBorder(4, 4, 4, 4, (Color) new Color(107, 142, 35)));
 
 	JLabel medslb = new JLabel(
 		Messages.getString("VTablaMedicamentos.Medicamentos")); //$NON-NLS-1$
-	medslb.setBounds(15, 12, 440, 15);
+	medslb.setForeground(new Color(107, 142, 35));
+	medslb.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 14));
+	medslb.setBounds(30, 128, 130, 15);
 
 	JScrollPane scrollPane = new JScrollPane();
-	scrollPane.setBounds(15, 32, 473, 333);
+	scrollPane.setBounds(28, 147, 647, 335);
 	setLayout(null);
 	add(medslb);
 	add(scrollPane);
@@ -77,7 +109,7 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 		nuevomed.setVisible(true);
 	    }
 	});
-	btnNuevoMed.setBounds(22, 395, 117, 25);
+	btnNuevoMed.setBounds(19, 510, 117, 25);
 	add(btnNuevoMed);
 
 	JButton btnModificarMed = new JButton(
@@ -87,7 +119,7 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 		// TODO
 	    }
 	});
-	btnModificarMed.setBounds(193, 395, 129, 25);
+	btnModificarMed.setBounds(287, 510, 129, 25);
 	add(btnModificarMed);
 
 	JButton btnBorrarMed = new JButton(
@@ -97,7 +129,7 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 		// TODO
 	    }
 	});
-	btnBorrarMed.setBounds(371, 395, 117, 25);
+	btnBorrarMed.setBounds(548, 510, 117, 25);
 	add(btnBorrarMed);
 
 	JButton btnAtras = new JButton(
@@ -108,8 +140,164 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 		VLogin.vadmin.setVisible(true);
 	    }
 	});
-	btnAtras.setBounds(193, 453, 129, 25);
+	btnAtras.setBounds(287, 547, 129, 40);
 	add(btnAtras);
+	
+	Box horizontalBox = Box.createHorizontalBox();
+	horizontalBox.setBorder(new LineBorder(new Color(107, 142, 35), 2, true));
+	horizontalBox.setBackground(new Color(154, 205, 50));
+	horizontalBox.setBounds(74, 16, 356, 92);
+	add(horizontalBox);
+	
+	JLabel label = new JLabel("Búsqueda");
+	label.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 11));
+	label.setBounds(90, 26, 133, 15);
+	add(label);
+	
+	rdbtnCodigoNacinal = new JRadioButton(
+		Messages.getString("VProcesoCorte.rdbtnCodigoNacinal.text")); //$NON-NLS-1$
+	rdbtnCodigoNacinal.setBackground(new Color(224, 255, 255));
+	rdbtnCodigoNacinal .setBounds(162, 43, 121, 23);
+	rdbtnCodigoNacinal.setSelected(false);
+	rdbtnCodigoNacinal.addMouseListener(new MouseAdapter() {
+	    @Override
+	    public void mouseClicked(MouseEvent e) {
+		rdbtnNombre.setSelected(false);
+		rdbttCodBar.setSelected(false);
+		// busqueda.setText(null);
+
+	    }
+	});
+	
+	
+	add(rdbtnCodigoNacinal );
+	
+	rdbttCodBar = new JRadioButton("Cod de barras");
+	rdbttCodBar.setSelected(false);
+	rdbttCodBar.setBackground(new Color(224, 255, 255));
+	rdbttCodBar.setSelected(false);
+	rdbttCodBar.addMouseListener(new MouseAdapter() {
+	    @Override
+	    public void mouseClicked(MouseEvent e) {
+		rdbtnCodigoNacinal.setSelected(false);
+		rdbtnNombre.setSelected(false);
+		// busqueda.setText(null);
+
+	    }
+	});
+	rdbttCodBar.setBounds(287, 43, 129, 23);
+	add(rdbttCodBar);
+
+
+	
+	rdbtnNombre = new JRadioButton(
+		Messages.getString("VProcesoCorte.rdbtnNombre.text")); //$NON-NLS-1$
+	rdbtnNombre.setBackground(new Color(224, 255, 255));
+	rdbtnNombre.setBounds(82, 43, 87, 23);
+	rdbtnNombre.setSelected(true);
+	rdbtnNombre.addMouseListener(new MouseAdapter() {
+	    @Override
+	    public void mouseClicked(MouseEvent e) {
+		rdbtnCodigoNacinal.setSelected(false);
+		rdbttCodBar.setSelected(false);
+
+	    }
+	});
+	add(rdbtnNombre);
+	
+	
+	
+	busqueda = new JTextField();
+	busqueda.setText("Medicamento a buscar");
+	
+	busqueda.addKeyListener(new KeyAdapter() {
+	    @Override
+	    public void keyTyped(KeyEvent e) {
+
+		String value = busqueda.getText();
+
+		if (rdbtnNombre.isSelected()) {
+
+		    for (int row = 0; row <= table.getRowCount() - 1; row++) {
+			if ((modelotablao.getmed(row).getNombre()
+				.startsWith(value))) {
+			    // this will automatically set the view of the
+			    // scroll in
+			    // the location of the value
+			    table.scrollRectToVisible(table.getCellRect(row, 0,
+				    true));
+			    // this will automatically set the focus of the
+			    // searched/selected row/value
+			    table.setRowSelectionInterval(row, row);
+			}
+		    }
+		} else if (rdbtnCodigoNacinal.isSelected()) {
+		    for (int row = 0; row <= table.getRowCount() - 1; row++) {
+			try {
+			    if ((((Integer) (modelotablao.getmed(row)
+				    .getCodnac())).toString().startsWith(value))) {
+				// this will automatically set the view of the
+				// scroll in
+				// the location of the value
+				table.scrollRectToVisible(table.getCellRect(
+					row, 0, true));
+				// this will automatically set the focus of the
+				// searched/selected row/value
+				table.setRowSelectionInterval(row, row);
+			    }
+			} catch (NumberFormatException e1) {
+			    // TODO Auto-generated catch block
+			    // e1.printStackTrace();
+			}
+		    }
+		}else if (rdbttCodBar.isSelected()) {
+		    for (int row = 0; row <= table.getRowCount() - 1; row++) {
+			try {
+			    if ((((Long) (modelotablao.getmed(row)
+				    .getCodbar())).toString().startsWith(value))) {
+				// this will automatically set the view of the
+				// scroll in
+				// the location of the value
+				table.scrollRectToVisible(table.getCellRect(
+					row, 0, true));
+				// this will automatically set the focus of the
+				// searched/selected row/value
+				table.setRowSelectionInterval(row, row);
+			    }
+			} catch (NumberFormatException e1) {
+			    // TODO Auto-generated catch block
+			    // e1.printStackTrace();
+			}
+		    }
+		}
+		
+		
+
+	    }
+	});
+
+	busqueda.setColumns(10);
+	busqueda.setBounds(89, 69, 325, 26);
+	busqueda.addFocusListener(new FocusAdapter() {
+		@Override
+		public void focusGained(FocusEvent e) {
+		    busqueda.setText("");
+		}
+		@Override
+		public void focusLost(FocusEvent e) {
+		    busqueda.setText("Medicamento a buscar");
+		}
+	});
+	add(busqueda);
+	
+	imagen = new JLabel("");
+	imagen.setBorder(new LineBorder(new Color(107, 142, 35), 2, true));
+	imagen.setBounds(519, 12, 117, 123);
+	add(imagen);
+	
+	
+	
+	
     }
 
     public void valueChanged(ListSelectionEvent e) {
@@ -124,23 +312,12 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 	    int filaModelo = table.convertRowIndexToModel(filaVista);
 	    medselect = modelotablao.getmed(filaModelo);
 	    System.out.println("valueChanged VTablaMeds: " + medselect);
+	    ImageIcon fot = new ImageIcon(medselect.getRutaimg());
+	    //this.imagen.setIcon(new ImageIcon(medselect.getRutaimg()));
+	    this.imagen.setIcon(new ImageIcon(fot.getImage().getScaledInstance(this.imagen.getWidth(), this.imagen.getHeight(), Image.SCALE_SMOOTH)));
+
 
 	}
 
     }
-
-//    @Override
-//    public void repaint() {
-//	// TODO Auto-generated method stub
-//	//Consulta y modificación
-//        System.out.println(this.consultameds);
-//        System.out.println(this.modelotablao);
-//        
-//        this.
-//
-//	super.repaint();
-//    }
-   
- 
-
 }

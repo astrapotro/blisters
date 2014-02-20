@@ -18,7 +18,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -134,7 +133,7 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 	    add(lblNewLabel_2);
 
 	imagen = new JLabel("");
-	imagen.setBorder(new LineBorder(new Color(107, 142, 35), 2, true));
+	imagen.setBorder(new LineBorder(new Color(107, 142, 35), 3, true));
 	imagen.setBounds(377, 52, 411, 458);
 	add(imagen);
 
@@ -287,13 +286,14 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 	
 	JLabel lblNewLabel = new JLabel(
 		Messages.getString("VProcesoCorte.Medicamentos"));
+	lblNewLabel.setForeground(new Color(107, 142, 35));
 	lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-	lblNewLabel.setBounds(5, 145, 121, 18);
+	lblNewLabel.setBounds(12, 143, 121, 18);
 	
 	//lblNewLabel.setBorder(new LineBorder(new Color(107, 142, 35), 2, true));
 	
 	add(lblNewLabel);
-	lblNewLabel.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 12));
+	lblNewLabel.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 13));
 
 
 	
