@@ -1,5 +1,6 @@
 package packblisters;
 
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.StringTokenizer;
@@ -110,7 +111,13 @@ public class VMed extends JPanel {
 
 	    }
 	});
-	cortarBtn.setBounds(294, 563, 109, 25);
+	cortarBtn.setBounds(294, 550, 109, 50);
+	adaptajbuttonabajo(cortarBtn, "/iconos/cortar.png");
+	cortarBtn.setIconTextGap(1);
+//	btnNuevoMed.setForeground(Color.BLACK);
+//	btnNuevoMed.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 24));
+	cortarBtn.setHorizontalTextPosition(SwingConstants.CENTER);
+	cortarBtn.setVerticalTextPosition(SwingConstants.BOTTOM);
 	add(cortarBtn);
 
 	JLabel lblNewLabel_1 = new JLabel(med.toString());
@@ -193,8 +200,23 @@ public class VMed extends JPanel {
 			VLogin.vprocesocorte.setVisible(true);
 		}
 	});
-	btnAtras.setBounds(173, 563, 109, 25);
+	btnAtras.setBounds(173, 550, 109, 50);
+	adaptajbuttonabajo(btnAtras, "/iconos/patras.png");
+	btnAtras.setIconTextGap(1);
+//	btnNuevoMed.setForeground(Color.BLACK);
+//	btnNuevoMed.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 24));
+	btnAtras.setHorizontalTextPosition(SwingConstants.CENTER);
+	btnAtras.setVerticalTextPosition(SwingConstants.BOTTOM);
+	
 	add(btnAtras);
 
     }
+    
+    public void adaptajbuttonabajo (JButton but, String ruta){      
+        ImageIcon fot = new ImageIcon(VLogin.class.getResource(ruta));
+ 		//Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lbllogo.getWidth(), lbllogo.getHeight(), Image.SCALE_DEFAULT));
+ 		but.setIcon(new ImageIcon(fot.getImage().getScaledInstance(but.getWidth()-55, but.getHeight()-25, Image.SCALE_SMOOTH)));
+ 		//this.repaint();
+ 	       
+ 	   }
 }
