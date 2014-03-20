@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
+import java.awt.Font;
 
 
 
@@ -37,6 +38,7 @@ public  class VAdmin extends JPanel {
 	this.setBorder(new MatteBorder(4, 4, 4, 4, (Color) new Color(107, 142, 35)));	
 	
 	JButton btnProcesoCorte = new JButton("Proceso de corte");
+	btnProcesoCorte.setFont(new Font("Lucida Sans", Font.BOLD, 12));
 	//Para que no salga el cuadrado de selección alrededor del icono !!
 	btnProcesoCorte.setFocusPainted(false);
 	btnProcesoCorte.setBounds(97, 66, 180, 120);
@@ -150,14 +152,13 @@ public  class VAdmin extends JPanel {
 	       
 	   }
 	   
-	   public void adaptajbutton (JButton but, String ruta){
-	       
-	       ImageIcon fot = new ImageIcon(VLogin.class.getResource(ruta));
-		//Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lbllogo.getWidth(), lbllogo.getHeight(), Image.SCALE_DEFAULT));
-		but.setIcon(new ImageIcon(fot.getImage().getScaledInstance(but.getWidth()/2, but.getHeight()/2, Image.SCALE_SMOOTH)));
-		//this.repaint();
-	       
-	   }
+    public void adaptajbutton (JButton but, String ruta){      
+        ImageIcon fot = new ImageIcon(VLogin.class.getResource(ruta));
+ 		//Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lbllogo.getWidth(), lbllogo.getHeight(), Image.SCALE_DEFAULT));
+ 		but.setIcon(new ImageIcon(fot.getImage().getScaledInstance(but.getWidth()/2, but.getHeight()/2, Image.SCALE_SMOOTH)));
+ 		//this.repaint();
+ 	       
+ 	   }
 	   
 	   
 }

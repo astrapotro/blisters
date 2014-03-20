@@ -301,12 +301,13 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 
 	    btnSeleccionar = new JButton(
 		    Messages.getString("VProcesoCorte.SeleccionBtn")); //$NON-NLS-1$
+	
 	    btnSeleccionar.setBounds(595, 517, 190, 72);
 	    //btnSeleccionar.setVerticalAlignment(SwingConstants.CENTER);
 	    adaptajbutton( btnSeleccionar, "/iconos/palante.png");
 	    btnSeleccionar.setIconTextGap(1);
-	    btnSeleccionar.setHorizontalTextPosition(SwingConstants.CENTER);
-	    btnSeleccionar.setVerticalTextPosition(SwingConstants.BOTTOM);
+	    btnSeleccionar.setHorizontalTextPosition(SwingConstants.LEFT);
+	    btnSeleccionar.setVerticalTextPosition(SwingConstants.CENTER);
 	    add(btnSeleccionar);
 
 	    btnAtras = new JButton(
@@ -315,8 +316,8 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 	    //btnAtras.setVerticalAlignment(SwingConstants.CENTER);
 	    adaptajbutton(btnAtras, "/iconos/patras.png");
 	    btnAtras.setIconTextGap(1);
-	    btnAtras.setHorizontalTextPosition(SwingConstants.CENTER);
-	    btnAtras.setVerticalTextPosition(SwingConstants.BOTTOM);
+	    btnAtras.setHorizontalTextPosition(SwingConstants.RIGHT);
+	    btnAtras.setVerticalTextPosition(SwingConstants.CENTER);
 	    
 	    btnAtras.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
@@ -334,8 +335,8 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 	    btnSeleccionar.setBounds(500, 517, 190, 72);
 	    adaptajbutton( btnSeleccionar, "/iconos/palante.png");
 	    btnSeleccionar.setIconTextGap(1);
-	    btnSeleccionar.setHorizontalTextPosition(SwingConstants.CENTER);
-	    btnSeleccionar.setVerticalTextPosition(SwingConstants.BOTTOM);
+	    btnSeleccionar.setHorizontalTextPosition(SwingConstants.RIGHT);
+	    btnSeleccionar.setVerticalTextPosition(SwingConstants.CENTER);
 	    add(btnSeleccionar);
 
 	}
@@ -395,11 +396,11 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 	   }
     
     
-   public void adaptajbutton (JButton but, String ruta){      
-       ImageIcon fot = new ImageIcon(VLogin.class.getResource(ruta));
-		//Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lbllogo.getWidth(), lbllogo.getHeight(), Image.SCALE_DEFAULT));
-		but.setIcon(new ImageIcon(fot.getImage().getScaledInstance(but.getWidth()/2, but.getHeight()/2, Image.SCALE_SMOOTH)));
-		//this.repaint();
-	       
-	   }
+    public void adaptajbutton (JButton but, String ruta){      
+        ImageIcon fot = new ImageIcon(VLogin.class.getResource(ruta));
+ 		//Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lbllogo.getWidth(), lbllogo.getHeight(), Image.SCALE_DEFAULT));
+ 		but.setIcon(new ImageIcon(fot.getImage().getScaledInstance(but.getWidth()/2, (int) (but.getHeight()), Image.SCALE_SMOOTH)));
+ 		//this.repaint();
+ 	       
+ 	   }
 }
