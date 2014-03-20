@@ -1,12 +1,16 @@
 package packblisters;
 
+import java.awt.Dialog;
 import java.awt.EventQueue;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -28,38 +32,38 @@ public class VTablaUsuarios extends JPanel implements ListSelectionListener, Tab
     private static final long serialVersionUID = 1L;
 
     private JTable table;
+    private JLabel usuarioslb;
+    private JScrollPane scrollPane;
+    private JButton btnNuevoUsuario;
+    private JButton btnModUsuario;
+    private JButton btnBorrarUsuario;
+    private JButton btnAtras;
     private ModeloTablaUsr modelotablao;
-    private Usuario usrselect,aux;
-    private DBFacade consultausuarios;
-    
+    private Usuario usrselected;
+    private DBFacade dbFacade;
 
     /**
      * Create the frame.
      */
-    public VTablaUsuarios() {
-    	
+    public VTablaUsuarios() {    	
 	
-	JLabel usuarioslb = new JLabel(Messages.getString("VTablaUsuarios.Usuarios")); //$NON-NLS-1$
+	usuarioslb = new JLabel(Messages.getString("VTablaUsuarios.Usuarios")); //$NON-NLS-1$
 	usuarioslb.setBounds(15, 12, 440, 15);
 	
-	JScrollPane scrollPane = new JScrollPane();
+	scrollPane = new JScrollPane();
 	scrollPane.setBounds(15, 32, 474, 349);
 	setLayout(null);
 	add(usuarioslb);
 	add(scrollPane);
 	
-	//table = new JTable();
-	
-	
 	modelotablao = new ModeloTablaUsr();
 	modelotablao.addTableModelListener(this);
-	consultausuarios = new DBFacade();
+	dbFacade = new DBFacade();
 	// rellenar modelo si está vacío
-	consultausuarios.getUsuarios(modelotablao);
+	dbFacade.getUsuarios(modelotablao);
 
 	table = new JTable(modelotablao);
 	table.setBounds(0, 0, 1, 1);
-	//contentPane.add(table);
 	
 	// Instanciamos el TableRowSorter y lo añadimos al JTable
 	TableRowSorter<TableModel> elQueOrdena = new TableRowSorter<TableModel>(
@@ -67,53 +71,73 @@ public class VTablaUsuarios extends JPanel implements ListSelectionListener, Tab
 	table.setRowSorter(elQueOrdena);
 	elQueOrdena.setSortsOnUpdates(true);
 
-	// table.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null,
-	// null, null));
-
 	table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 	ListSelectionModel selectionModel = table.getSelectionModel();
 	selectionModel.addListSelectionListener(this);
-	// table.setSelectionModel(selectionModel);
 	scrollPane.setViewportView(table);
 	
-	JButton btnNuevoUsuario = new JButton(Messages.getString("VTablaUsuarios.NuevoUsuario")); //$NON-NLS-1$
+	btnNuevoUsuario = new JButton(Messages.getString("VTablaUsuarios.NuevoUsuario")); //$NON-NLS-1$
 	btnNuevoUsuario.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-		    //TODO
-		    //Meter una nueva fila en la tabla
-		    //modelotablao.fireTableRowsInserted(modelotablao.getRowCount()+1,modelotablao.getRowCount()+1);
-		    //table.addRowSelectionInterval(modelotablao.getRowCount(),modelotablao.getRowCount());
-		    //modelotablao.anadeUsr(null);
-		     aux = new Usuario();
-		    modelotablao.anadeUsr(aux);
-		    
+		    VNuevoUsr nuevousr = new VNuevoUsr(modelotablao);
+			nuevousr.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+			nuevousr.setVisible(true);
 		}
-	});
+	});	
 	btnNuevoUsuario.setBounds(33, 413, 106, 25);
 	add(btnNuevoUsuario);
 	
-	JButton btnGuardarCambios = new JButton(Messages.getString("VTablaUsuarios.ModificarUsuario")); //$NON-NLS-1$
-	btnGuardarCambios.addActionListener(new ActionListener() {
+	btnModUsuario = new JButton(Messages.getString("VTablaUsuarios.ModificarUsuario")); //$NON-NLS-1$
+	btnModUsuario.setEnabled(false);
+	btnModUsuario.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-		  //TODO
-		  
-		
+			JPanel panel = new JPanel();
+			JLabel lblPass = new JLabel("Nueva contraseña:");
+			JPasswordField pass = new JPasswordField(5);
+			JLabel lblRoot = new JLabel("Es Administrador:");
+			JCheckBox root= new JCheckBox(null, null, usrselected.getRoot());
+			panel.add(lblPass);
+			panel.add(pass);
+			panel.add(lblRoot);
+			panel.add(root);
+			String[] options = new String[]{"OK", "Cancelar"};
+			int option = JOptionPane.showOptionDialog(null, panel, "Modificar a "+usrselected.getNombre(),
+			                         JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE,
+			                         null, options, options[1]);
+			if(option == 0) // pressing OK button
+			{
+				usrselected.setRoot(root.isSelected());
+			    dbFacade.modificarUsr(usrselected,pass.getPassword());//rellena el id de ususario
+			}
+			
 		}
 	});
-	btnGuardarCambios.setBounds(164, 413, 162, 25);
-	add(btnGuardarCambios);
+	btnModUsuario.setBounds(164, 413, 162, 25);
+	add(btnModUsuario);
 	
-	JButton btnBorrarUsuario = new JButton(Messages.getString("VTablaUsuarios.BorrarUsuario")); //$NON-NLS-1$
+	btnBorrarUsuario = new JButton(Messages.getString("VTablaUsuarios.BorrarUsuario")); //$NON-NLS-1$
+	btnBorrarUsuario.setEnabled(false);
 	btnBorrarUsuario.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 		  //TODO
+			String[] options = new String[]{"OK", "Cancelar"};
+			int option = JOptionPane.showOptionDialog(null, "Borrar a "+usrselected.getNombre(),"Borrar usuario",
+			                         JOptionPane.NO_OPTION, JOptionPane.WARNING_MESSAGE,
+			                         null, options, options[1]);
+			if(option == 0) // pressing OK button
+			{				
+				dbFacade.borrarUsr(usrselected.getNombre());
+				int filaVista = table.getSelectedRow();
+				int filaModelo = table.convertRowIndexToModel(filaVista);
+				modelotablao.borraUsr(filaModelo);
+			}
 		}
 	});
 	btnBorrarUsuario.setBounds(349, 413, 106, 25);
 	add(btnBorrarUsuario);
 	
-	JButton btnAtras = new JButton(Messages.getString("VTablaUsuarios.btnAtras")); //$NON-NLS-1$
+	btnAtras = new JButton(Messages.getString("VTablaUsuarios.btnAtras")); //$NON-NLS-1$
 	btnAtras.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 		    VTablaUsuarios.this.setVisible(false);
@@ -130,12 +154,16 @@ public class VTablaUsuarios extends JPanel implements ListSelectionListener, Tab
    	int filaVista = table.getSelectedRow();
 
    	if (filaVista < 0) {
+   		btnBorrarUsuario.setEnabled(false);
+   		btnModUsuario.setEnabled(false);
    	    // No hay selección
    	    System.out.println(Messages.getString("VTablaUsuarios.ErrorNoSelection")); //$NON-NLS-1$
    	} else {
+   		btnBorrarUsuario.setEnabled(true);
+   		btnModUsuario.setEnabled(true);
    	    int filaModelo = table.convertRowIndexToModel(filaVista);
-   	    usrselect = modelotablao.getUsr(filaModelo);
-   	    System.out.println("valueChanged VTablaUsuarios: " +usrselect);
+   	    usrselected = modelotablao.getUsr(filaModelo);
+   	    System.out.println("valueChanged VTablaUsuarios: " +usrselected);
    	   
    	}
 

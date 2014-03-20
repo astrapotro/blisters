@@ -22,7 +22,7 @@ import java.awt.Color;
 public class VLogin extends JPanel {
 
     /**
-	 * 
+	 * TODO: poner marco y logo de la aplicación
 	 */
     // Consigo la resolución de la pantalla
     public static Dimension d;

@@ -39,7 +39,8 @@ import javax.swing.JTextArea;
 
 public class NuevoMed extends JDialog implements ItemListener {
     /**
-     * 
+     * TODO: cambiar nombre a VNuevoMed, añadir código de barras ¿se verá la foto subida?
+     * TODO: campo de gcode con mayor tamaño
      */
     private static final long serialVersionUID = 1L;
     private JTextField textNombre;

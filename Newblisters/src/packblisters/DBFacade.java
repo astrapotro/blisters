@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -55,7 +56,7 @@ public class DBFacade implements TableModelListener {
 	    return (contraseña.contentEquals(pwd));
 
 	} catch (Exception e) {
-	    // TODO Auto-generated catch block
+	   
 	    e.printStackTrace();
 	    System.out.println(Messages.getString("DBFacade.ErrorLogin")); //$NON-NLS-1$
 	    return false;
@@ -497,4 +498,112 @@ public class DBFacade implements TableModelListener {
 	}
     }
 
+	public void insertarUsr(Usuario user, char[] password) {
+		ResultSet generatedKeys = null;
+		try {
+			conexion = conectar();
+			// Sentencia preparada
+			sentenciapre = conexion
+					.prepareStatement("insert into usuarios (nombre, password, root)"
+							+ "	VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
+			sentenciapre.setString(1, user.getNombre());
+			sentenciapre.setString(2, String.valueOf(password));
+			sentenciapre.setBoolean(3, user.getRoot());
+			//seguridad de contraseña
+			 Arrays.fill(password, '0');
+			
+			int filasAfectadas= sentenciapre.executeUpdate();
+		        if (filasAfectadas == 0) {
+		            throw new SQLException("Creacion de usuario fallida, no se modificó ninguna fila.");
+		        }
+		        generatedKeys = sentenciapre.getGeneratedKeys();
+		        if (generatedKeys.next()) {
+		            user.setId(generatedKeys.getInt(1));
+		        } else {
+		            throw new SQLException("Creacion de usuario fallida, no se obtuvo la clave generada.");
+		        }
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			System.out.println(Messages.getString("DBFacade.ErrorNuevoUsr")); //$NON-NLS-1$
+
+		} finally // CErrar conexion con BBDD
+		{
+			 if (generatedKeys != null) try { generatedKeys.close(); } catch (SQLException logOrIgnore) {}
+		     if (sentenciapre != null) try { sentenciapre.close(); } catch (SQLException logOrIgnore) {}
+		     if (conexion != null) try { conexion.close(); } catch (SQLException logOrIgnore) {}
+		}
+	}
+
+	public void borrarUsr(String nombre) {
+		try {
+			conexion = conectar();
+			// Sentencia preparada
+			sentenciapre = conexion
+					.prepareStatement("delete from usuarios where nombre=?");
+			sentenciapre.setString(1, nombre);
+
+			sentenciapre.executeUpdate();
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			System.out.println(Messages.getString("DBFacade.ErrorBorraUsr")); //$NON-NLS-1$
+
+		} finally // CErrar conexion con BBDD
+		{
+			try {
+				sentenciapre.close(); // NOS FALTA EN TODO
+				conexion.close();
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void modificarUsr(Usuario user, char[] password) {
+		ResultSet generatedKeys = null;
+		try {
+			conexion = conectar();
+			// Sentencia preparada
+			sentenciapre = conexion
+					.prepareStatement("UPDATE `usuarios` SET " +
+							"`password`=?, `root`=? WHERE `id`=? and `nombre`=?", Statement.RETURN_GENERATED_KEYS);
+			sentenciapre.setString(1, String.valueOf(password));
+			sentenciapre.setBoolean(2, user.getRoot());
+			sentenciapre.setInt(3, user.getId());
+			sentenciapre.setString(4, user.getNombre());
+			
+			
+			int filasAfectadas= sentenciapre.executeUpdate();
+			
+			//seguridad de contraseña
+			 Arrays.fill(password, '0');
+			 
+		        if (filasAfectadas == 0) {
+		            throw new SQLException("Creacion de usuario fallida, no se modificó ninguna fila.");
+		        }
+		        generatedKeys = sentenciapre.getGeneratedKeys();
+		        if (generatedKeys.next()) {
+		            user.setId(generatedKeys.getInt(1));
+		        } else {
+		            throw new SQLException("Creacion de usuario fallida, no se obtuvo la clave generada.");
+		        }
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			System.out.println(Messages.getString("DBFacade.ErrorNuevoUsr")); //$NON-NLS-1$
+
+		} finally // CErrar conexion con BBDD
+		{
+			 if (generatedKeys != null) try { generatedKeys.close(); } catch (SQLException logOrIgnore) {}
+		     if (sentenciapre != null) try { sentenciapre.close(); } catch (SQLException logOrIgnore) {}
+		     if (conexion != null) try { conexion.close(); } catch (SQLException logOrIgnore) {}
+		}
+		
+	}
 }

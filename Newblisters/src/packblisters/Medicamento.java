@@ -3,6 +3,7 @@ package packblisters;
 
 
 public class Medicamento {
+	//TODO: nuevo campo de codigo de barras (ojo con la BBDD y las ventanas y búsquedas)
     private int id;
     private int codnac;
     private long codbar;

@@ -39,8 +39,10 @@ import java.awt.Image;
 
 public class VTablaMedicamentos extends JPanel implements ListSelectionListener {
 
-    /**
-     * 
+	/**
+     * TODO: implementar búsqueda meter por código de barras (copia pega de la VprocesoCorte) que la imagen se adapte al marco 
+     * todo:¿lista mas larga? 
+     * TODO:¿boton atras tras seleccionar medicamento?
      */
     private static final long serialVersionUID = 1L;
     private JTable table;
