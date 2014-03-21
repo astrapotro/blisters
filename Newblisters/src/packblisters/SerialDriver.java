@@ -1,12 +1,12 @@
 package packblisters;
 
-import gnu.io.CommPort;
-import gnu.io.CommPortIdentifier;
-import gnu.io.SerialPort;
+import gnu.io.*;
+
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Enumeration;
 
 //////////
 //////////
@@ -22,6 +22,7 @@ import java.io.OutputStream;
     private static SerialDriver msd;
     private InputStream in;
     private OutputStream out;
+    String puerto=VLogin.vadmin.puerto;
 
     private SerialDriver() {
 	super();
@@ -34,8 +35,9 @@ import java.io.OutputStream;
 	return msd;
     }
 
-    void connect(String portName) throws Exception {
+    public void connect(String portName) throws Exception {
 	System.setProperty(Messages.getString("SerialDriver.RXTXSerialPorts"), Messages.getString("SerialDriver.Puerto")); //$NON-NLS-1$ //$NON-NLS-2$
+	System.out.println("PUERTO en serialdriver: "+VLogin.vadmin.puerto);
 	CommPortIdentifier portIdentifier = CommPortIdentifier
 		.getPortIdentifier(portName);
 	if (portIdentifier.isCurrentlyOwned()) {
@@ -73,7 +75,37 @@ import java.io.OutputStream;
 	    }
 	}
     }
+    
+    public void dicepuerto (){
+	
+	Enumeration<?> ports = CommPortIdentifier.getPortIdentifiers(); 
+	System.out.println("DICEPUERTO");
+	
+	while( ports.hasMoreElements() ) 
+	{ 
+        	CommPortIdentifier port = (CommPortIdentifier)ports.nextElement(); 
+        	String type; 
+        
+        	switch( port.getPortType() ) 
+        	{ 
+                	case CommPortIdentifier.PORT_PARALLEL: 
+                	type = "Parallel"; 
+                	break; 
+                
+                	case CommPortIdentifier.PORT_SERIAL: 
+                	type = "Serial"; 
+                	break; 
+                
+                	default: 
+                	type = "Desconocido"; 
+                	break; 
+        	} 
 
+           System.out.println( port.getName() + ": " + type); 
+           
+	 } 
+} 
+	
     public InputStream getIn() {
 	return in;
     }

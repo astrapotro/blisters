@@ -1,5 +1,8 @@
 package packblisters;
 
+
+
+
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,12 +11,14 @@ import java.util.StringTokenizer;
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
+
+import java.awt.Color;
+
 
 public class VMed extends JPanel {
 
@@ -28,7 +33,7 @@ public class VMed extends JPanel {
     
     public VMed(Medicamento med) {
 	
-	super();
+	//super();
 
 	// AKI COGEMOS EL RECORTE ASOCIADO
 	
@@ -39,35 +44,49 @@ public class VMed extends JPanel {
 	reanudar =  med.getMicorte().getReanudar();
 	m = med;
 	setLayout(null);
-	
+	this.setBackground(new Color(224, 255, 255));
 
 	
 
-	JLabel lblNewLabel = new JLabel();
-	lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-	lblNewLabel.setIcon(new ImageIcon(med.getRutaimg()));
+	JLabel afoto = new JLabel();
+	this.setBorder(new MatteBorder(4, 4, 4, 4, (Color) new Color(107, 142, 35)));
+	afoto.setBorder(new MatteBorder(4, 4, 4, 4, (Color) new Color(107, 142, 35)));
+	afoto.setHorizontalAlignment(SwingConstants.CENTER);
+	afoto.setIcon(new ImageIcon(med.getRutaimg()));
 	System.out.println(med.getRutaimg());
-	lblNewLabel.setBounds(50, 50, 688, 476);
-	add(lblNewLabel);
-	lblNewLabel.repaint();
+	afoto.setBounds(49, 60, 700, 420);
+	add(afoto);
+	afoto.repaint();
 	
 	 
 	
 	JButton cortarBtn = new JButton(Messages.getString("VMed.CutBtn")); //$NON-NLS-1$
+	cortarBtn.setBounds(294, 530, 109, 50);
+	adaptajbuttonabajo(cortarBtn, "/iconos/cortar.png");
+	cortarBtn.setIconTextGap(1);
+//	btnNuevoMed.setForeground(Color.BLACK);
+//	btnNuevoMed.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 24));
+	cortarBtn.setHorizontalTextPosition(SwingConstants.CENTER);
+	cortarBtn.setVerticalTextPosition(SwingConstants.BOTTOM);
+	add(cortarBtn);
 	cortarBtn.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent arg0) {
 
 		try {
 		  
 		    	SerialDriver conexion = SerialDriver.getInstance();	
+		    	
+		    	//Miro que puertos hay en el sistema 
+		    	conexion.dicepuerto();
 		        
 			    try {
-				conexion.connect(Messages.getString("VMed.SerialPort"));
+				//conexion.connect(Messages.getString("VMed.SerialPort"));
+				conexion.connect(VLogin.vadmin.puerto);
 			    } catch (Exception e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			    } //$NON-NLS-1$
-
+			    
 			    
 			    //Forzar el filtrado para que solo nos devuelva reportes breves
 			    //conexion.getOut().write("$sv=1".getBytes());
@@ -90,7 +109,7 @@ public class VMed extends JPanel {
 			    }
 			    
         
-        		    System.out.println(corte);
+        		    System.out.println("CORTE en "+VLogin.vadmin.puerto);
         		    
         		
         		    
@@ -111,14 +130,7 @@ public class VMed extends JPanel {
 
 	    }
 	});
-	cortarBtn.setBounds(294, 550, 109, 50);
-	adaptajbuttonabajo(cortarBtn, "/iconos/cortar.png");
-	cortarBtn.setIconTextGap(1);
-//	btnNuevoMed.setForeground(Color.BLACK);
-//	btnNuevoMed.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 24));
-	cortarBtn.setHorizontalTextPosition(SwingConstants.CENTER);
-	cortarBtn.setVerticalTextPosition(SwingConstants.BOTTOM);
-	add(cortarBtn);
+	
 
 	JLabel lblNewLabel_1 = new JLabel(med.toString());
 	lblNewLabel_1.setBounds(39, 12, 311, 25);
@@ -145,12 +157,12 @@ public class VMed extends JPanel {
 		    
 		}
 	});
-	btnCancelar.setBounds(419, 563, 96, 25);
+	btnCancelar.setBounds(419, 530, 96, 25);
 	add(btnCancelar);
 	
 	JToggleButton pausa = new JToggleButton("PAUSAR");
 	pausa.setEnabled(false);
-	pausa.setBounds(527, 563, 89, 25);
+	pausa.setBounds(527, 530, 89, 25);
 	pausa.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 		  
@@ -200,7 +212,7 @@ public class VMed extends JPanel {
 			VLogin.vprocesocorte.setVisible(true);
 		}
 	});
-	btnAtras.setBounds(173, 550, 109, 50);
+	btnAtras.setBounds(173, 530, 109, 50);
 	adaptajbuttonabajo(btnAtras, "/iconos/patras.png");
 	btnAtras.setIconTextGap(1);
 //	btnNuevoMed.setForeground(Color.BLACK);

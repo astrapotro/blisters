@@ -99,8 +99,8 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 	// table.setSelectionModel(selectionModel);
 	scrollPane.setViewportView(table);
 
-	JButton btnNuevoMed = new JButton(
-		Messages.getString("VTablaMedicamentos.NuevoMedicamento")); //$NON-NLS-1$
+	JButton btnNuevoMed = new JButton();
+		//Messages.getString("VTablaMedicamentos.NuevoMedicamento")); //$NON-NLS-1$
 	btnNuevoMed.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
 		
@@ -111,6 +111,7 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 	    }
 	});
 	btnNuevoMed.setBounds(30, 531, 142, 59);
+	btnNuevoMed.setToolTipText("Crear nuevo medicamento");
 	adaptajbuttonabajo(btnNuevoMed, "/iconos/addition.png");
 	btnNuevoMed.setIconTextGap(1);
 //	btnNuevoMed.setForeground(Color.BLACK);
@@ -120,8 +121,9 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 	
 	add(btnNuevoMed);
 
-	JButton btnModificarMed = new JButton(
-		Messages.getString("VTablaMedicamentos.ModificarMedicamento")); //$NON-NLS-1$
+	JButton btnModificarMed = new JButton();
+	btnModificarMed.setToolTipText("Modificar medicamento");
+		//Messages.getString("VTablaMedicamentos.ModificarMedicamento")); //$NON-NLS-1$
 	btnModificarMed.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
 		// TODO
@@ -138,9 +140,9 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 	
 	add(btnModificarMed);
 
-	JButton btnBorrarMed = new JButton(
-		Messages.getString("VTablaMedicamentos.BorrarMedicamento")); //$NON-NLS-1$
-	
+	JButton btnBorrarMed = new JButton();
+		//Messages.getString("VTablaMedicamentos.BorrarMedicamento")); //$NON-NLS-1$
+	btnBorrarMed.setToolTipText("Borrar medicamento");
 	btnBorrarMed.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
 		// TODO
@@ -363,7 +365,7 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
     public void adaptajbuttonabajo (JButton but, String ruta){      
         ImageIcon fot = new ImageIcon(VLogin.class.getResource(ruta));
  		//Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lbllogo.getWidth(), lbllogo.getHeight(), Image.SCALE_DEFAULT));
- 		but.setIcon(new ImageIcon(fot.getImage().getScaledInstance(but.getWidth()-55, but.getHeight()-25, Image.SCALE_SMOOTH)));
+ 		but.setIcon(new ImageIcon(fot.getImage().getScaledInstance(but.getWidth()-6, but.getHeight()-6, Image.SCALE_SMOOTH)));
  		//this.repaint();
  	       
  	   }

@@ -2,11 +2,11 @@ package packblisters;
 
 
 import javax.swing.ImageIcon;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JButton;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
 
 import java.awt.Color;
 import java.awt.Image;
@@ -27,10 +27,8 @@ public  class VAdmin extends JPanel {
     public VTablaHistorico vtablahistorico;
     public VTablaMedicamentos vtablamedicamentos;
     public VProcesoCorte vprocesocorte;
+    public String puerto;
     
-  
-
-
    
     public VAdmin() {
 	setLayout(null);
@@ -44,7 +42,7 @@ public  class VAdmin extends JPanel {
 	btnProcesoCorte.setBounds(97, 66, 180, 120);
 	btnProcesoCorte.setVerticalAlignment(SwingConstants.CENTER);
 	adaptajbutton(btnProcesoCorte, "/iconos/1 (31).png");
-	btnProcesoCorte.setIconTextGap(10);
+	btnProcesoCorte.setIconTextGap(4);
 	btnProcesoCorte.setHorizontalTextPosition(SwingConstants.CENTER);
 	btnProcesoCorte.setVerticalTextPosition(SwingConstants.BOTTOM);
 	add(btnProcesoCorte);
@@ -52,7 +50,7 @@ public  class VAdmin extends JPanel {
 	JButton btnHistorico = new JButton("Historico");
 	btnHistorico.setBounds(97, 248, 180, 120);
 	adaptajbutton(btnHistorico, "/iconos/1 (5).png");
-	btnHistorico.setIconTextGap(10);
+	btnHistorico.setIconTextGap(4);
 	btnHistorico.setHorizontalTextPosition(SwingConstants.CENTER);
 	btnHistorico.setVerticalTextPosition(SwingConstants.BOTTOM);
 	add(btnHistorico);
@@ -60,7 +58,7 @@ public  class VAdmin extends JPanel {
 	JButton btnUsuarios = new JButton("Usuarios");
 	btnUsuarios.setBounds(413, 248, 180, 120);
 	adaptajbutton(btnUsuarios, "/iconos/1 (1).png");
-	btnUsuarios.setIconTextGap(10);
+	btnUsuarios.setIconTextGap(4);
 	btnUsuarios.setHorizontalTextPosition(SwingConstants.CENTER);
 	btnUsuarios.setVerticalTextPosition(SwingConstants.BOTTOM);
 	add(btnUsuarios);
@@ -68,13 +66,13 @@ public  class VAdmin extends JPanel {
 	JButton btnMedicamentos = new JButton("Medicamentos");
 	btnMedicamentos.setBounds(413, 66, 180, 120);
 	adaptajbutton(btnMedicamentos, "/iconos/1 (14).jpg");
-	btnMedicamentos.setIconTextGap(10);
+	btnMedicamentos.setIconTextGap(4);
 	btnMedicamentos.setHorizontalTextPosition(SwingConstants.CENTER);
 	btnMedicamentos.setVerticalTextPosition(SwingConstants.BOTTOM);
 	add(btnMedicamentos);
 	
 	JButton btnSalir = new JButton("Salir");
-	btnSalir.setBounds(263, 433, 169, 83);
+	btnSalir.setBounds(263, 417, 169, 99);
 	adaptajbutton(btnSalir, "/iconos/Close-2-icon.png");
 	btnSalir.setIconTextGap(5);
 	btnSalir.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -131,13 +129,25 @@ public  class VAdmin extends JPanel {
 	
 	btnProcesoCorte.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-		    	setVisible(false);
-			vprocesocorte = new VProcesoCorte();
-			vprocesocorte.setBounds((Principal.d.width/2)-400, (Principal.d.height/2)-300, 800, 600);
-			Principal.Panel.add(vprocesocorte);
-			vprocesocorte.repaint();
-			vprocesocorte.validate();
-			vprocesocorte.setVisible(true);
+		    	
+		    	
+		   puerto = (String)JOptionPane.showInputDialog( Principal.Panel,
+			    		"Introduzca el puerto:", //$NON-NLS-1$
+			    		"Configuración puerto serie" , //$NON-NLS-1$
+			    		JOptionPane.QUESTION_MESSAGE);
+		        
+		        System.out.println("PUERTO: "+puerto);
+		        
+		        if (puerto != null) {
+		    
+        		    	setVisible(false);
+        			vprocesocorte = new VProcesoCorte();
+        			vprocesocorte.setBounds((Principal.d.width/2)-400, (Principal.d.height/2)-300, 800, 600);
+        			Principal.Panel.add(vprocesocorte);
+        			vprocesocorte.repaint();
+        			vprocesocorte.validate();
+        			vprocesocorte.setVisible(true);
+		        }
 
 		}
 	});
@@ -155,7 +165,7 @@ public  class VAdmin extends JPanel {
     public void adaptajbutton (JButton but, String ruta){      
         ImageIcon fot = new ImageIcon(VLogin.class.getResource(ruta));
  		//Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lbllogo.getWidth(), lbllogo.getHeight(), Image.SCALE_DEFAULT));
- 		but.setIcon(new ImageIcon(fot.getImage().getScaledInstance(but.getWidth()/2, but.getHeight()/2, Image.SCALE_SMOOTH)));
+ 		but.setIcon(new ImageIcon(fot.getImage().getScaledInstance(but.getWidth()-80, but.getHeight()-40, Image.SCALE_SMOOTH)));
  		//this.repaint();
  	       
  	   }

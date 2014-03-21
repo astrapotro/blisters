@@ -43,11 +43,11 @@ public class VLogin extends JPanel {
 	
 	
 	JLabel lblNewLabel = new JLabel(Messages.getString("VLogin.User"));
-	lblNewLabel.setBounds(206, 358, 60, 15);
+	lblNewLabel.setBounds(201, 358, 60, 15);
 	add(lblNewLabel);
 
 	textField = new JTextField();
-	textField.setBounds(356, 358, 150, 19);
+	textField.setBounds(351, 358, 150, 19);
 	add(textField);
 	textField.setColumns(1);
 	textField.setHorizontalAlignment(SwingConstants.LEFT);
@@ -63,17 +63,17 @@ public class VLogin extends JPanel {
 	});
 
 	JLabel lblNewLabel_1 = new JLabel(Messages.getString("VLogin.Pass"));
-	lblNewLabel_1.setBounds(206, 389, 88, 18);
+	lblNewLabel_1.setBounds(201, 389, 88, 18);
 	add(lblNewLabel_1);
 
 	passwordField = new JPasswordField();
-	passwordField.setBounds(356, 389, 150, 18);
+	passwordField.setBounds(351, 389, 150, 18);
 	add(passwordField);
 	passwordField.setColumns(10);
 	
 	btnEntrar = new JButton(Messages.getString("VLogin.labelentrar.text")); //$NON-NLS-1$
 	btnEntrar.setVerticalAlignment(SwingConstants.CENTER);
-	btnEntrar.setBounds(206, 445, 130, 67);
+	btnEntrar.setBounds(201, 445, 130, 67);
 	adaptajbutton(btnEntrar, "/iconos/Ok-icon.png");
 	btnEntrar.setIconTextGap(2);
 	btnEntrar.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -142,7 +142,7 @@ public class VLogin extends JPanel {
 	});
 
 	btnSalir = new JButton(Messages.getString("VLogin.Quit"));
-	btnSalir.setBounds(376, 445, 130, 67);
+	btnSalir.setBounds(371, 445, 130, 67);
 	
 	adaptajbutton(btnSalir, "/iconos/Close-2-icon.png");
 	btnSalir.setIconTextGap(2);
@@ -152,7 +152,7 @@ public class VLogin extends JPanel {
 	
 	
 	JPanel panel = new JPanel();
-	panel.setBounds(74, 48, 550, 275);
+	panel.setBounds(69, 48, 550, 275);
 	panel.setBorder(new MatteBorder(2, 2, 2, 2, (Color) new Color(107, 142, 35)));
 	add(panel);
 	panel.setLayout(null);
@@ -187,7 +187,7 @@ public class VLogin extends JPanel {
        
        ImageIcon fot = new ImageIcon(VLogin.class.getResource(ruta));
 	//Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lbllogo.getWidth(), lbllogo.getHeight(), Image.SCALE_DEFAULT));
-	but.setIcon(new ImageIcon(fot.getImage().getScaledInstance(but.getWidth()/2, but.getHeight()/2, Image.SCALE_SMOOTH)));
+	but.setIcon(new ImageIcon(fot.getImage().getScaledInstance(but.getWidth()-70, but.getHeight()-30, Image.SCALE_SMOOTH)));
 	//this.repaint();
        
    }
