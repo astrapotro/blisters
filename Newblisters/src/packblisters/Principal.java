@@ -74,7 +74,7 @@ public class Principal extends JFrame {
 		Panel.setLayout(null);
 		vlogin.setBackground(new Color(224, 255, 255));
 		vlogin.setBorder(new MatteBorder(4, 4, 4, 4, (Color) new Color(107, 142, 35)));		
-		vlogin.setBounds((Panel.getWidth()/2)-(690/2),(Panel.getHeight()/2)-(550/2) , 690, 550);
+		vlogin.setBounds((Panel.getWidth()/2)-(690/2),(Panel.getHeight()/2)-(600/2) , 690, 550);
 		
 		//Al ancho de la pantalla lo divido en 2 y le resto la mitad del ancho de mi ventana, con eso queda centrada en el eje X, para el eje Y es lo mismo pero con el alto: 
 		//vlogin.setLocation((d.width/2)-(vlogin.getWidth()/2), (d.height/2)-(vlogin.getHeight()/2)); 

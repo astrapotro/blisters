@@ -71,7 +71,7 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 	medslb.setBounds(30, 128, 130, 15);
 
 	JScrollPane scrollPane = new JScrollPane();
-	scrollPane.setBounds(28, 147, 647, 373);
+	scrollPane.setBounds(28, 147, 647, 347);
 	setLayout(null);
 	add(medslb);
 	add(scrollPane);
@@ -101,8 +101,8 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 	// table.setSelectionModel(selectionModel);
 	scrollPane.setViewportView(table);
 
-	JButton btnNuevoMed = new JButton(
-		Messages.getString("VTablaMedicamentos.NuevoMedicamento")); //$NON-NLS-1$
+	JButton btnNuevoMed = new JButton();
+		//Messages.getString("VTablaMedicamentos.NuevoMedicamento")); //$NON-NLS-1$
 	btnNuevoMed.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
 		
@@ -112,7 +112,8 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 		nuevomed.setVisible(true);
 	    }
 	});
-	btnNuevoMed.setBounds(30, 531, 142, 59);
+	btnNuevoMed.setBounds(30, 506, 100, 84);
+	btnNuevoMed.setToolTipText("Crear nuevo medicamento");
 	adaptajbuttonabajo(btnNuevoMed, "/iconos/addition.png");
 	btnNuevoMed.setIconTextGap(1);
 //	btnNuevoMed.setForeground(Color.BLACK);
@@ -122,14 +123,15 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 	
 	add(btnNuevoMed);
 
-	JButton btnModificarMed = new JButton(
-		Messages.getString("VTablaMedicamentos.ModificarMedicamento")); //$NON-NLS-1$
+	JButton btnModificarMed = new JButton();
+	btnModificarMed.setToolTipText("Modificar medicamento");
+		//Messages.getString("VTablaMedicamentos.ModificarMedicamento")); //$NON-NLS-1$
 	btnModificarMed.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
 		// TODO
 	    }
 	});
-	btnModificarMed.setBounds(188, 531, 165, 59);
+	btnModificarMed.setBounds(184, 506, 100, 84);
 	
 	 adaptajbuttonabajo(btnModificarMed, "/iconos/edition.png");
 	 btnModificarMed.setIconTextGap(1);
@@ -140,15 +142,15 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 	
 	add(btnModificarMed);
 
-	JButton btnBorrarMed = new JButton(
-		Messages.getString("VTablaMedicamentos.BorrarMedicamento")); //$NON-NLS-1$
-	
+	JButton btnBorrarMed = new JButton();
+		//Messages.getString("VTablaMedicamentos.BorrarMedicamento")); //$NON-NLS-1$
+	btnBorrarMed.setToolTipText("Borrar medicamento");
 	btnBorrarMed.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
 		// TODO
 	    }
 	});
-	btnBorrarMed.setBounds(365, 531, 149, 59);
+	btnBorrarMed.setBounds(336, 506, 100, 84);
 	 adaptajbuttonabajo(btnBorrarMed, "/iconos/deletion.png");
 	 btnBorrarMed.setIconTextGap(1);
 //	 btnBorrarMed.setForeground(Color.BLACK);
@@ -159,7 +161,7 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 	add(btnBorrarMed);
 
 	JButton btnAtras = new JButton( Messages.getString("VTablaMedicamentos.btnAtras")); //$NON-NLS-1$
-	btnAtras.setBounds(526, 531, 149, 59);
+	btnAtras.setBounds(491, 506, 184, 84);
 	btnAtras.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
 		VTablaMedicamentos.this.setVisible(false);
@@ -365,7 +367,7 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
     public void adaptajbuttonabajo (JButton but, String ruta){      
         ImageIcon fot = new ImageIcon(VLogin.class.getResource(ruta));
  		//Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lbllogo.getWidth(), lbllogo.getHeight(), Image.SCALE_DEFAULT));
- 		but.setIcon(new ImageIcon(fot.getImage().getScaledInstance(but.getWidth()-55, but.getHeight()-25, Image.SCALE_SMOOTH)));
+ 		but.setIcon(new ImageIcon(fot.getImage().getScaledInstance(but.getWidth()-6, but.getHeight()-6, Image.SCALE_SMOOTH)));
  		//this.repaint();
  	       
  	   }
