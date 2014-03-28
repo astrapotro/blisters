@@ -58,7 +58,8 @@ import java.util.Enumeration;
 		int stopbits =Integer.parseInt(Messages.getString("SerialDriver.Stopbits"));
 		int paridad =Integer.parseInt(Messages.getString("SerialDriver.Paridad"));
 		serialPort.setSerialPortParams(b, databits,stopbits,paridad);
-		//serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_XONXOFF_OUT | SerialPort.FLOWCONTROL_XONXOFF_IN); 
+		serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_OUT | SerialPort.FLOWCONTROL_RTSCTS_IN); 
+		serialPort.setRTS(true);
 //		SerialPort.DATABITS_8,
 //			SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
 

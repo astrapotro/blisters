@@ -11,6 +11,7 @@ import java.util.StringTokenizer;
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
@@ -96,11 +97,14 @@ public class VMed extends JPanel {
         		    
 			    StringTokenizer tokens = new StringTokenizer(corte,"\n");
 			    String home = new String();
-			    home = "g28.2 x0y0z0\n";
+			    home = "g28.2 x0y0z0\n\r";
 			    conexion.getOut().write(home.getBytes(),0,home.length());
 			    
 			    Thread.sleep(14000);
-	
+
+			    ///Insert del evento en la tabla HISTORICO
+        		    dbf.insertarHistorico(VLogin.UsuarioLogueado.getNombre(),m.getNombre(),m.getCodnac(),m.getIdcorte(),"Comienzo corte",null);
+
 			    while(tokens.hasMoreTokens()){
 				String s = tokens.nextToken();
 				conexion.getOut()
@@ -110,18 +114,20 @@ public class VMed extends JPanel {
 			    
         
         		    System.out.println("CORTE en "+VLogin.vadmin.puerto);
-        		    
-        		
-        		    
+        		        
         		   
+        		    //TODO AKI JDIALOG de incidencia
+        		    VIncidencia vincidencia = new VIncidencia(m);
+        		    vincidencia.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        		    vincidencia.setVisible(true);
+        		  ///Insert del evento en la tabla HISTORICO
+        		    dbf.insertarHistorico(VLogin.UsuarioLogueado.getNombre(),m.getNombre(),m.getCodnac(),m.getIdcorte(),"Fin corte",null);
         		    
-        		    ///Insert del evento en la tabla HISTORICO
-        		    dbf.insertarHistorico(VLogin.UsuarioLogueado.getNombre(),m.getNombre(),m.getCodnac(),m.getIdcorte(),"Comienzo corte");
-        		    
+        		            		    
 		} catch (Exception e) {
 		    // TODO Auto-generated catch block
 		    
-		    dbf.insertarHistorico(VLogin.UsuarioLogueado.getNombre(),m.getNombre(),m.getCodnac(),m.getIdcorte(),"Fallo en corte");
+		    dbf.insertarHistorico(VLogin.UsuarioLogueado.getNombre(),m.getNombre(),m.getCodnac(),m.getIdcorte(),"Fallo en corte",null);
 		    
 		    e.printStackTrace();
 		    System.out
