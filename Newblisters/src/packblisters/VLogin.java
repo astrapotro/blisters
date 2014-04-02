@@ -109,7 +109,7 @@ public class VLogin extends JPanel {
 			
 
 			setVisible(false);
-			vadmin.setBounds((Principal.d.width/2)-(690/2), (Principal.d.height/2)-(550/2), 690, 550);
+			vadmin.setBounds((Principal.d.width/2)-(690/2), (Principal.d.height/2)-300, 690, 550);
 			Principal.Panel.add(vadmin);
 			vadmin.repaint();
 			vadmin.validate();

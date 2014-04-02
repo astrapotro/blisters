@@ -31,7 +31,7 @@ class ModeloTablaMeds extends AbstractTableModel implements TableModel {
 	    aux.setCodnac((Integer) dato);
 	    break;
 	case 2:
-	    aux.setCodbar((long) dato);
+	    aux.setCodbar((Long) dato);
 	    break;
 
 	}
@@ -57,7 +57,7 @@ class ModeloTablaMeds extends AbstractTableModel implements TableModel {
 	    return new Integer(aux.getCodnac());
 	    
 	case 2:
-	    return aux.getCodbar();
+	    return new Long (aux.getCodbar());
 	 
 	}
 	return null;
@@ -73,7 +73,7 @@ class ModeloTablaMeds extends AbstractTableModel implements TableModel {
 	// Añade la persona al modelo
 	boolean existe = false;
 	for (int i = 0; i < datos.size(); i++) {
-	    if (nuevoMed.getId() == datos.get(i).getId()) {
+	    if ((nuevoMed.getId() == datos.get(i).getId()) && nuevoMed.getId()!=0) {
 		existe = true;
 		break;
 	    }
@@ -152,7 +152,7 @@ class ModeloTablaMeds extends AbstractTableModel implements TableModel {
 	    // Integer (no vale int, debe ser una clase)
 	    return Integer.class;
 	case 2:
-	    return long.class;
+	    return Long.class;
 	    
 	default:
 	    // Devuelve una clase Object por defecto.

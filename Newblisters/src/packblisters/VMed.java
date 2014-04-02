@@ -3,6 +3,7 @@ package packblisters;
 
 
 
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -53,16 +54,17 @@ public class VMed extends JPanel {
 	this.setBorder(new MatteBorder(4, 4, 4, 4, (Color) new Color(107, 142, 35)));
 	afoto.setBorder(new MatteBorder(4, 4, 4, 4, (Color) new Color(107, 142, 35)));
 	afoto.setHorizontalAlignment(SwingConstants.CENTER);
-	afoto.setIcon(new ImageIcon(med.getRutaimg()));
-	System.out.println(med.getRutaimg());
-	afoto.setBounds(49, 60, 700, 420);
-	add(afoto);
+	afoto.setBounds(26, 27, 511, 552);
+	afoto.setIcon(new ImageIcon(new ImageIcon(med.getRutaimg()).getImage().getScaledInstance(afoto.getWidth(), afoto.getHeight(), Image.SCALE_SMOOTH)));
 	afoto.repaint();
+	System.out.println(med.getRutaimg());
+	add(afoto);
+	
 	
 	 
 	
 	JButton cortarBtn = new JButton(Messages.getString("VMed.CutBtn")); //$NON-NLS-1$
-	cortarBtn.setBounds(294, 530, 109, 50);
+	cortarBtn.setBounds(202, 591, 125, 77);
 	adaptajbuttonabajo(cortarBtn, "/iconos/cortar.png");
 	cortarBtn.setIconTextGap(1);
 //	btnNuevoMed.setForeground(Color.BLACK);
@@ -139,7 +141,9 @@ public class VMed extends JPanel {
 	
 
 	JLabel lblNewLabel_1 = new JLabel(med.toString());
-	lblNewLabel_1.setBounds(39, 12, 311, 25);
+	lblNewLabel_1.setBounds(16, 4, 311, 25);
+	lblNewLabel_1.setForeground(new Color(107, 142, 35));
+	lblNewLabel_1.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 13));
 	add(lblNewLabel_1);
 	
 	JButton btnCancelar = new JButton(Messages.getString("VMed.btnCancelar.text")); //$NON-NLS-1$
@@ -163,12 +167,12 @@ public class VMed extends JPanel {
 		    
 		}
 	});
-	btnCancelar.setBounds(419, 530, 96, 25);
+	btnCancelar.setBounds(336, 606, 100, 55);
 	add(btnCancelar);
 	
 	JToggleButton pausa = new JToggleButton("PAUSAR");
 	pausa.setEnabled(false);
-	pausa.setBounds(527, 530, 89, 25);
+	pausa.setBounds(448, 606, 89, 55);
 	pausa.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 		  
@@ -218,17 +222,22 @@ public class VMed extends JPanel {
 			VLogin.vprocesocorte.setVisible(true);
 		}
 	});
-	btnAtras.setBounds(173, 530, 109, 50);
-	adaptajbuttonabajo(btnAtras, "/iconos/patras.png");
+	btnAtras.setBounds(26, 591, 164, 77);
+	adaptajbutton(btnAtras, "/iconos/patras.png");
 	btnAtras.setIconTextGap(1);
-//	btnNuevoMed.setForeground(Color.BLACK);
-//	btnNuevoMed.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 24));
-	btnAtras.setHorizontalTextPosition(SwingConstants.CENTER);
-	btnAtras.setVerticalTextPosition(SwingConstants.BOTTOM);
-	
+	btnAtras.setHorizontalTextPosition(SwingConstants.RIGHT);
+	btnAtras.setVerticalTextPosition(SwingConstants.CENTER);
 	add(btnAtras);
 
     }
+    
+    public void adaptajbutton (JButton but, String ruta){      
+        ImageIcon fot = new ImageIcon(VLogin.class.getResource(ruta));
+ 		//Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lbllogo.getWidth(), lbllogo.getHeight(), Image.SCALE_DEFAULT));
+ 		but.setIcon(new ImageIcon(fot.getImage().getScaledInstance(but.getWidth()/2, (int) (but.getHeight()), Image.SCALE_SMOOTH)));
+ 		//this.repaint();
+ 	       
+ 	   }
     
     public void adaptajbuttonabajo (JButton but, String ruta){      
         ImageIcon fot = new ImageIcon(VLogin.class.getResource(ruta));

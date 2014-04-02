@@ -72,7 +72,7 @@ public  class VAdmin extends JPanel {
 	add(btnMedicamentos);
 	
 	JButton btnSalir = new JButton("Salir");
-	btnSalir.setBounds(263, 417, 169, 99);
+	btnSalir.setBounds(263, 405, 163, 111);
 	adaptajbutton(btnSalir, "/iconos/Close-2-icon.png");
 	btnSalir.setIconTextGap(5);
 	btnSalir.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -93,7 +93,7 @@ public  class VAdmin extends JPanel {
 			vtablamedicamentos = new VTablaMedicamentos();
 		    }
 		    
-		    vtablamedicamentos.setBounds((Principal.d.width/2)-350, (Principal.d.height/2)-305, 700, 610);
+		    vtablamedicamentos.setBounds((Principal.d.width/2)-350, (Principal.d.height/2)-325, 700, 610);
 		    
 		    Principal.Panel.add(vtablamedicamentos);
 		    vtablamedicamentos.repaint();
@@ -107,7 +107,7 @@ public  class VAdmin extends JPanel {
 		    
 		    setVisible(false);
 		    vtablausuarios = new VTablaUsuarios();
-		    vtablausuarios.setBounds((Principal.d.width/2)-250, (Principal.d.height/2)-250, 500, 500);
+		    vtablausuarios.setBounds((Principal.d.width/2)-265, (Principal.d.height/2)-190, 530, 340);
 		    Principal.Panel.add(vtablausuarios);
 		    vtablausuarios.repaint();
 		    vtablausuarios.validate();
@@ -119,7 +119,7 @@ public  class VAdmin extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 		    setVisible(false);
 		    vtablahistorico = new VTablaHistorico();
-		    vtablahistorico.setBounds((Principal.d.width/2)-350, (Principal.d.height/2)-250, 700, 500);
+		    vtablahistorico.setBounds((Principal.d.width/2)-375, (Principal.d.height/2)-270, 750, 500);
 		    Principal.Panel.add(vtablahistorico);
 		    vtablahistorico.repaint();
 		    vtablahistorico.validate();
@@ -142,7 +142,7 @@ public  class VAdmin extends JPanel {
 		    
         		    	setVisible(false);
         			vprocesocorte = new VProcesoCorte();
-        			vprocesocorte.setBounds((Principal.d.width/2)-400, (Principal.d.height/2)-300, 800, 600);
+        			vprocesocorte.setBounds((Principal.d.width/2)-400, (Principal.d.height/2)-320, 800, 600);
         			Principal.Panel.add(vprocesocorte);
         			vprocesocorte.repaint();
         			vprocesocorte.validate();

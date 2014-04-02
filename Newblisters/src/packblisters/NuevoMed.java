@@ -5,6 +5,8 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Window;
 
+import java.math.BigInteger;
+
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -63,6 +65,7 @@ public class NuevoMed extends JDialog implements ItemListener {
     private JDialog Vid;
     private JComboBox comboBoxcorte;
     private ModeloTablaMeds mt;
+    private JTextField textCodBar;
 
     public NuevoMed(ModeloTablaMeds modelotablao) {
 	
@@ -80,18 +83,18 @@ public class NuevoMed extends JDialog implements ItemListener {
 	    panel.setLayout(null);
 
 	    JLabel nombre = new JLabel("Nombre");
-	    nombre.setBounds(25, 30, 202, 15);
+	    nombre.setBounds(25, 12, 202, 15);
 	    panel.add(nombre);
 
 	    textNombre = new JTextField();
-	    textNombre.setBounds(25, 50, 202, 19);
+	    textNombre.setBounds(25, 27, 202, 19);
 	    panel.add(textNombre);
 	    textNombre.setColumns(10);
 	    
 	  
 
 	    JLabel codnac = new JLabel("Código Nacional");
-	    codnac.setBounds(25, 89, 141, 15);
+	    codnac.setBounds(25, 58, 141, 15);
 	    panel.add(codnac);
 
 	    JButton guardar = new JButton("Guardar");
@@ -109,15 +112,19 @@ public class NuevoMed extends JDialog implements ItemListener {
 		    insertamed = new DBFacade();
 		    insertamed.insertarMed(textNombre.getText(),
 			    Integer.valueOf(textCodNac.getText()),
+			    Long.valueOf(textCodBar.getText()),
 			    Integer.valueOf(textnewCorte),
 			    textRuta.getText());
 		    
 		    Medicamento nuevoMed = new Medicamento();
 		    nuevoMed.setNombre(textNombre.getText());
 		    nuevoMed.setCodnac(Integer.valueOf(textCodNac.getText()));
+		    nuevoMed.setCodbar(Long.valueOf(textCodBar.getText()));
 		    nuevoMed.setIdcorte(Integer.valueOf(textnewCorte));
 		    nuevoMed.setRutaimg(textRuta.getText());
 		    
+		    
+		   // insertamed.getMedicamentos(mt);
 		// Guardar e n el modelo
 		   mt.anademed(nuevoMed);
 
@@ -135,7 +142,7 @@ public class NuevoMed extends JDialog implements ItemListener {
 		    // Cierro ventana
 		    dispose();
 		    
-		    insertamed.getMedicamentos(mt);
+		  
 		    
 		    // PAra repintar VTABLAMEDS NOVA
 			Window vPadre = SwingUtilities
@@ -179,7 +186,7 @@ public class NuevoMed extends JDialog implements ItemListener {
 	    // });
 
 	    textCodNac = new JTextField();
-	    textCodNac.setBounds(25, 113, 202, 19);
+	    textCodNac.setBounds(25, 76, 202, 19);
 	    panel.add(textCodNac);
 	    textCodNac.setColumns(10);
 	    textCodNac.addKeyListener(new KeyAdapter() {
@@ -257,6 +264,28 @@ public class NuevoMed extends JDialog implements ItemListener {
 	    JLabel lblNewLabel = new JLabel("ID Corte");
 	    lblNewLabel.setBounds(25, 153, 70, 15);
 	    panel.add(lblNewLabel);
+	    
+	    JLabel codbar = new JLabel("Código de barras");
+	    codbar.setBounds(25, 107, 141, 15);
+	    panel.add(codbar);
+	    
+	    textCodBar = new JTextField();
+	    textCodBar.setColumns(10);
+	    textCodBar.setBounds(25, 125, 202, 19);
+	    textCodBar.addKeyListener(new KeyAdapter() {
+		// PAra que sólo lea números !
+		public void keyTyped(KeyEvent e) {
+		    char caracter = e.getKeyChar();
+		    if (((caracter < '0') || (caracter > '9'))
+			    && ((caracter != KeyEvent.VK_BACK_SPACE) || (caracter != KeyEvent.VK_DELETE))
+			    // || (textCodNac.getText().length()
+			    // >=Integer.toString(Integer.MAX_VALUE).length()))
+			    || (textCodBar.getText().length() >= 13))
+
+			e.consume();
+		}
+	    });
+	    panel.add(textCodBar);
 
 	}
     }
@@ -300,8 +329,6 @@ public class NuevoMed extends JDialog implements ItemListener {
 		guardar.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 
-		
-
 			// PAra repintar VTABLAMEDS NOVA
 			Window vPadre = SwingUtilities
 				.getWindowAncestor((Component) e.getSource());
@@ -321,9 +348,7 @@ public class NuevoMed extends JDialog implements ItemListener {
 					    "", JOptionPane.WARNING_MESSAGE);
 				
 				modeloCombo.addElement(i);
-
-			
-				 
+		                
 				//comboBoxcorte.addItem( ((int) NuevoMed.modeloCombo.getSize() + 1));
 				// Cierro ventana
 				vPadre.repaint();

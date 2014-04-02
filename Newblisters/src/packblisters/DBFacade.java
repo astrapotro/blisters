@@ -1,5 +1,6 @@
 package packblisters;
 
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -464,7 +465,7 @@ public class DBFacade implements TableModelListener {
 
     }
 
-    public void insertarMed(String nombre, int codnac, int idcorte,
+    public void insertarMed(String nombre, int codnac, long codbar, int idcorte,
 	    String rutaimg) {
 
 	try {
@@ -472,10 +473,10 @@ public class DBFacade implements TableModelListener {
 	    // Sentencia preparada
 	    sentenciapre = conexion
 		    .prepareStatement("insert into medicamentos (nombre, codnac, codbar, rutaimg, idcorte)"
-			    + "	VALUES (?,?,?,?)");
+			    + "	VALUES (?,?,?,?,?)");
 	    sentenciapre.setString(1, nombre);
 	    sentenciapre.setInt(2, codnac);
-	    sentenciapre.setInt(3, codnac);
+	    sentenciapre.setLong(3, codbar);
 	    sentenciapre.setString(4, rutaimg);
 	    sentenciapre.setInt(5, idcorte);
 
