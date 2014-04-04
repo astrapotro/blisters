@@ -1,5 +1,6 @@
 package packblisters;
 
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -203,23 +204,12 @@ public class DBFacade implements TableModelListener {
 	
 	try {
 	    conexion = conectar();
-	    // Sentencia preparada
-	    //sentenciapre = conexion
-	    // .prepareStatement("select DISTINCT idcorte from medicamentos;");
+	    // Sentencia preparada   
 	    sentenciapre = conexion.prepareStatement("select idcorte from cortes;");
 	    resultados = sentenciapre.executeQuery();
 
 	    while (resultados.next()) {
-		// Medicamento medicamento = new Medicamento();
-
-		// medicamento.setId(resultados.getInt("medicamentos_id"));
-		// medicamento.setNombre(resultados.getString("nombre"));
-		// medicamento.setCodnac(resultados.getInt("codnac"));
-		// medicamento.setRutaimg(resultados.getString("rutaimg"));
-		// medicamento.setIdcorte(resultados.getInt("idcorte"));
-
-		modeloCombo.addElement(resultados.getInt("idcorte"));
-
+	    	modeloCombo.addElement(resultados.getInt("idcorte"));
 	    }
 
 	} catch (Exception e) {
@@ -428,19 +418,20 @@ public class DBFacade implements TableModelListener {
     }
 
     public void insertarHistorico(String usuario, String nombre, int codnac,
-	    int idcorte, String evento) {
+	    int idcorte, String evento, String incidencia) {
 
 	try {
 	    conexion = conectar();
 	    // Sentencia preparada
 	    sentenciapre = conexion
 		    .prepareStatement("insert into historico (usuario, medicamento, codigonacional, idcorte, evento)"
-			    + "	VALUES (?,?,?,?,?)");
+			    + "	VALUES (?,?,?,?,?,?)");
 	    sentenciapre.setString(1, usuario);
 	    sentenciapre.setString(2, nombre);
 	    sentenciapre.setInt(3, codnac);
 	    sentenciapre.setInt(4, idcorte);
 	    sentenciapre.setString(5, evento);
+	    sentenciapre.setString(6, incidencia);
 
 	    sentenciapre.executeUpdate();
 
@@ -462,8 +453,8 @@ public class DBFacade implements TableModelListener {
 	}
 
     }
-
-    public void insertarMed(String nombre, int codnac, int idcorte,
+    
+    public void insertarMed(String nombre, int codnac, long codbar, int idcorte,
 	    String rutaimg) {
 
 	try {
@@ -471,10 +462,10 @@ public class DBFacade implements TableModelListener {
 	    // Sentencia preparada
 	    sentenciapre = conexion
 		    .prepareStatement("insert into medicamentos (nombre, codnac, codbar, rutaimg, idcorte)"
-			    + "	VALUES (?,?,?,?)");
+			    + "	VALUES (?,?,?,?,?)");
 	    sentenciapre.setString(1, nombre);
 	    sentenciapre.setInt(2, codnac);
-	    sentenciapre.setInt(3, codnac);
+	    sentenciapre.setLong(3, codbar);
 	    sentenciapre.setString(4, rutaimg);
 	    sentenciapre.setInt(5, idcorte);
 
@@ -485,19 +476,76 @@ public class DBFacade implements TableModelListener {
 	    e.printStackTrace();
 	    System.out.println(Messages.getString("DBFacade.ErrorNuevoMed")); //$NON-NLS-1$
 
-	} finally // CErrar conexion con BBDD
+	} finally // Cerrar conexion con BBDD
 	{
-	    try {
-		sentenciapre.close(); // NOS FALTA EN TODO
-		conexion.close();
-
-	    } catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	    }
+	     if (sentenciapre != null) try { sentenciapre.close(); } catch (SQLException logOrIgnore) {}
+	     if (conexion != null) try { conexion.close(); } catch (SQLException logOrIgnore) {}
 	}
     }
 
+    public void borrarMed(String nombre) {
+		try {
+			conexion = conectar();
+			// Sentencia preparada
+			sentenciapre = conexion.prepareStatement("delete from medicamentos where nombre=?");
+			sentenciapre.setString(1, nombre);
+
+			sentenciapre.executeUpdate();
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			System.out.println(Messages.getString("DBFacade.ErrorBorraMed")); //$NON-NLS-1$
+
+		} finally // Cerrar conexion con BBDD
+		{			
+		     if (sentenciapre != null) try { sentenciapre.close(); } catch (SQLException logOrIgnore) {}
+		     if (conexion != null) try { conexion.close(); } catch (SQLException logOrIgnore) {}
+		}
+	}
+
+    public void modificarMed(Medicamento med) {
+		ResultSet generatedKeys = null;
+		try {
+			conexion = conectar();
+			// Sentencia preparada
+			sentenciapre = conexion
+					.prepareStatement("UPDATE `medicamentos` SET " +
+							"`nombre`=?, `codnac`=?,`codbar`=?, `rutaimg`=?,  `idcorte`=? WHERE `medicamentos_id`=?", Statement.RETURN_GENERATED_KEYS);
+			sentenciapre.setString(1, med.getNombre());
+			sentenciapre.setInt(2, med.getCodnac());
+			sentenciapre.setLong(3, med.getCodbar());
+			sentenciapre.setString(4, med.getRutaimg());
+			sentenciapre.setInt(5, med.getIdcorte());
+			sentenciapre.setInt(6, med.getId());
+			
+			int filasAfectadas= sentenciapre.executeUpdate();
+			 
+		        if (filasAfectadas == 0) {
+		            throw new SQLException("Modificación de medicamento fallida, no se modificó ninguna fila.");
+		        }
+		        generatedKeys = sentenciapre.getGeneratedKeys();
+		        if (generatedKeys.next()) {
+		            med.setId(generatedKeys.getInt(1));
+		        } else {
+		            throw new SQLException("Modificación de medicamento fallida, no se obtuvo la clave generada.");
+		        }
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			System.out.println(Messages.getString("DBFacade.ErrorModMed")); //$NON-NLS-1$
+
+		} finally // Cerrar conexion con BBDD
+		{
+			 if (generatedKeys != null) try { generatedKeys.close(); } catch (SQLException logOrIgnore) {}
+		     if (sentenciapre != null) try { sentenciapre.close(); } catch (SQLException logOrIgnore) {}
+		     if (conexion != null) try { conexion.close(); } catch (SQLException logOrIgnore) {}
+		}
+		
+	}
+    
+    
 	public void insertarUsr(Usuario user, char[] password) {
 		ResultSet generatedKeys = null;
 		try {
@@ -535,6 +583,7 @@ public class DBFacade implements TableModelListener {
 		     if (conexion != null) try { conexion.close(); } catch (SQLException logOrIgnore) {}
 		}
 	}
+	
 
 	public void borrarUsr(String nombre) {
 		try {
@@ -551,7 +600,7 @@ public class DBFacade implements TableModelListener {
 			e.printStackTrace();
 			System.out.println(Messages.getString("DBFacade.ErrorBorraUsr")); //$NON-NLS-1$
 
-		} finally // CErrar conexion con BBDD
+		} finally // Cerrar conexion con BBDD
 		{
 			try {
 				sentenciapre.close(); // NOS FALTA EN TODO
@@ -563,6 +612,7 @@ public class DBFacade implements TableModelListener {
 			}
 		}
 	}
+	
 
 	public void modificarUsr(Usuario user, char[] password) {
 		ResultSet generatedKeys = null;
@@ -584,13 +634,13 @@ public class DBFacade implements TableModelListener {
 			 Arrays.fill(password, '0');
 			 
 		        if (filasAfectadas == 0) {
-		            throw new SQLException("Creacion de usuario fallida, no se modificó ninguna fila.");
+		            throw new SQLException("Modificación de usuario fallida, no se modificó ninguna fila.");
 		        }
 		        generatedKeys = sentenciapre.getGeneratedKeys();
 		        if (generatedKeys.next()) {
 		            user.setId(generatedKeys.getInt(1));
 		        } else {
-		            throw new SQLException("Creacion de usuario fallida, no se obtuvo la clave generada.");
+		            throw new SQLException("Modificación de usuario fallida, no se obtuvo la clave generada.");
 		        }
 
 		} catch (Exception e) {
@@ -598,7 +648,7 @@ public class DBFacade implements TableModelListener {
 			e.printStackTrace();
 			System.out.println(Messages.getString("DBFacade.ErrorNuevoUsr")); //$NON-NLS-1$
 
-		} finally // CErrar conexion con BBDD
+		} finally // Cerrar conexion con BBDD
 		{
 			 if (generatedKeys != null) try { generatedKeys.close(); } catch (SQLException logOrIgnore) {}
 		     if (sentenciapre != null) try { sentenciapre.close(); } catch (SQLException logOrIgnore) {}
@@ -606,4 +656,5 @@ public class DBFacade implements TableModelListener {
 		}
 		
 	}
-}
+
+	}

@@ -1,5 +1,9 @@
 package packblisters;
 
+
+
+
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,12 +12,15 @@ import java.util.StringTokenizer;
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
+
+import java.awt.Color;
+
 
 public class VMed extends JPanel {
 
@@ -28,7 +35,7 @@ public class VMed extends JPanel {
     
     public VMed(Medicamento med) {
 	
-	super();
+	//super();
 
 	// AKI COGEMOS EL RECORTE ASOCIADO
 	
@@ -39,35 +46,50 @@ public class VMed extends JPanel {
 	reanudar =  med.getMicorte().getReanudar();
 	m = med;
 	setLayout(null);
-	
+	this.setBackground(new Color(224, 255, 255));
 
 	
 
-	JLabel lblNewLabel = new JLabel();
-	lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-	lblNewLabel.setIcon(new ImageIcon(med.getRutaimg()));
+	JLabel afoto = new JLabel();
+	this.setBorder(new MatteBorder(4, 4, 4, 4, (Color) new Color(107, 142, 35)));
+	afoto.setBorder(new MatteBorder(4, 4, 4, 4, (Color) new Color(107, 142, 35)));
+	afoto.setHorizontalAlignment(SwingConstants.CENTER);
+	afoto.setBounds(26, 27, 511, 552);
+	afoto.setIcon(new ImageIcon(new ImageIcon(med.getRutaimg()).getImage().getScaledInstance(afoto.getWidth(), afoto.getHeight(), Image.SCALE_SMOOTH)));
+	afoto.repaint();
 	System.out.println(med.getRutaimg());
-	lblNewLabel.setBounds(50, 50, 688, 476);
-	add(lblNewLabel);
-	lblNewLabel.repaint();
+	add(afoto);
+	
 	
 	 
 	
 	JButton cortarBtn = new JButton(Messages.getString("VMed.CutBtn")); //$NON-NLS-1$
+	cortarBtn.setBounds(202, 591, 125, 77);
+	adaptajbuttonabajo(cortarBtn, "/iconos/cortar.png");
+	cortarBtn.setIconTextGap(1);
+//	btnNuevoMed.setForeground(Color.BLACK);
+//	btnNuevoMed.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 24));
+	cortarBtn.setHorizontalTextPosition(SwingConstants.CENTER);
+	cortarBtn.setVerticalTextPosition(SwingConstants.BOTTOM);
+	add(cortarBtn);
 	cortarBtn.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent arg0) {
 
 		try {
 		  
 		    	SerialDriver conexion = SerialDriver.getInstance();	
+		    	
+		    	//Miro que puertos hay en el sistema 
+		    	conexion.dicepuerto();
 		        
 			    try {
-				conexion.connect(Messages.getString("VMed.SerialPort"));
+				//conexion.connect(Messages.getString("VMed.SerialPort"));
+				conexion.connect(VLogin.vadmin.puerto);
 			    } catch (Exception e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			    } //$NON-NLS-1$
-
+			    
 			    
 			    //Forzar el filtrado para que solo nos devuelva reportes breves
 			    //conexion.getOut().write("$sv=1".getBytes());
@@ -77,11 +99,14 @@ public class VMed extends JPanel {
         		    
 			    StringTokenizer tokens = new StringTokenizer(corte,"\n");
 			    String home = new String();
-			    home = "g28.2 x0y0z0\n";
+			    home = "g28.2 x0y0z0\n\r";
 			    conexion.getOut().write(home.getBytes(),0,home.length());
 			    
 			    Thread.sleep(14000);
-	
+
+			    ///Insert del evento en la tabla HISTORICO
+        		    dbf.insertarHistorico(VLogin.UsuarioLogueado.getNombre(),m.getNombre(),m.getCodnac(),m.getIdcorte(),"Comienzo corte",null);
+
 			    while(tokens.hasMoreTokens()){
 				String s = tokens.nextToken();
 				conexion.getOut()
@@ -90,19 +115,21 @@ public class VMed extends JPanel {
 			    }
 			    
         
-        		    System.out.println(corte);
-        		    
-        		
-        		    
+        		    System.out.println("CORTE en "+VLogin.vadmin.puerto);
+        		        
         		   
+        		    //TODO AKI JDIALOG de incidencia
+        		    VIncidencia vincidencia = new VIncidencia(m);
+        		    vincidencia.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        		    vincidencia.setVisible(true);
+        		  ///Insert del evento en la tabla HISTORICO
+        		    dbf.insertarHistorico(VLogin.UsuarioLogueado.getNombre(),m.getNombre(),m.getCodnac(),m.getIdcorte(),"Fin corte",null);
         		    
-        		    ///Insert del evento en la tabla HISTORICO
-        		    dbf.insertarHistorico(VLogin.UsuarioLogueado.getNombre(),m.getNombre(),m.getCodnac(),m.getIdcorte(),"Comienzo corte");
-        		    
+        		            		    
 		} catch (Exception e) {
 		    // TODO Auto-generated catch block
 		    
-		    dbf.insertarHistorico(VLogin.UsuarioLogueado.getNombre(),m.getNombre(),m.getCodnac(),m.getIdcorte(),"Fallo en corte");
+		    dbf.insertarHistorico(VLogin.UsuarioLogueado.getNombre(),m.getNombre(),m.getCodnac(),m.getIdcorte(),"Fallo en corte",null);
 		    
 		    e.printStackTrace();
 		    System.out
@@ -111,17 +138,12 @@ public class VMed extends JPanel {
 
 	    }
 	});
-	cortarBtn.setBounds(294, 550, 109, 50);
-	adaptajbuttonabajo(cortarBtn, "/iconos/cortar.png");
-	cortarBtn.setIconTextGap(1);
-//	btnNuevoMed.setForeground(Color.BLACK);
-//	btnNuevoMed.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 24));
-	cortarBtn.setHorizontalTextPosition(SwingConstants.CENTER);
-	cortarBtn.setVerticalTextPosition(SwingConstants.BOTTOM);
-	add(cortarBtn);
+	
 
 	JLabel lblNewLabel_1 = new JLabel(med.toString());
-	lblNewLabel_1.setBounds(39, 12, 311, 25);
+	lblNewLabel_1.setBounds(16, 4, 311, 25);
+	lblNewLabel_1.setForeground(new Color(107, 142, 35));
+	lblNewLabel_1.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 13));
 	add(lblNewLabel_1);
 	
 	JButton btnCancelar = new JButton(Messages.getString("VMed.btnCancelar.text")); //$NON-NLS-1$
@@ -145,12 +167,12 @@ public class VMed extends JPanel {
 		    
 		}
 	});
-	btnCancelar.setBounds(419, 563, 96, 25);
+	btnCancelar.setBounds(336, 606, 100, 55);
 	add(btnCancelar);
 	
 	JToggleButton pausa = new JToggleButton("PAUSAR");
 	pausa.setEnabled(false);
-	pausa.setBounds(527, 563, 89, 25);
+	pausa.setBounds(448, 606, 89, 55);
 	pausa.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 		  
@@ -200,17 +222,22 @@ public class VMed extends JPanel {
 			VLogin.vprocesocorte.setVisible(true);
 		}
 	});
-	btnAtras.setBounds(173, 550, 109, 50);
-	adaptajbuttonabajo(btnAtras, "/iconos/patras.png");
+	btnAtras.setBounds(26, 591, 164, 77);
+	adaptajbutton(btnAtras, "/iconos/patras.png");
 	btnAtras.setIconTextGap(1);
-//	btnNuevoMed.setForeground(Color.BLACK);
-//	btnNuevoMed.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 24));
-	btnAtras.setHorizontalTextPosition(SwingConstants.CENTER);
-	btnAtras.setVerticalTextPosition(SwingConstants.BOTTOM);
-	
+	btnAtras.setHorizontalTextPosition(SwingConstants.RIGHT);
+	btnAtras.setVerticalTextPosition(SwingConstants.CENTER);
 	add(btnAtras);
 
     }
+    
+    public void adaptajbutton (JButton but, String ruta){      
+        ImageIcon fot = new ImageIcon(VLogin.class.getResource(ruta));
+ 		//Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lbllogo.getWidth(), lbllogo.getHeight(), Image.SCALE_DEFAULT));
+ 		but.setIcon(new ImageIcon(fot.getImage().getScaledInstance(but.getWidth()/2, (int) (but.getHeight()), Image.SCALE_SMOOTH)));
+ 		//this.repaint();
+ 	       
+ 	   }
     
     public void adaptajbuttonabajo (JButton but, String ruta){      
         ImageIcon fot = new ImageIcon(VLogin.class.getResource(ruta));
