@@ -242,7 +242,8 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 	selectionModel.addListSelectionListener(this);
 	scrollPane.setViewportView(table);
 
-	btnNuevoMed = new JButton(Messages.getString("VTablaMedicamentos.NuevoMedicamento"));
+	btnNuevoMed = new JButton();
+	btnNuevoMed.setToolTipText(Messages.getString("VTablaMedicamentos.NuevoMedicamento")); //$NON-NLS-1$
 	btnNuevoMed.setMnemonic('n');
 	btnNuevoMed.setBounds(30, 531, 142, 59);
 	btnNuevoMed.setIconTextGap(1);
@@ -259,7 +260,8 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 	
 	add(btnNuevoMed);
 
-	btnModificarMed = new JButton(Messages.getString("VTablaMedicamentos.ModificarMedicamento")); //$NON-NLS-1$
+	btnModificarMed = new JButton();
+	btnModificarMed.setToolTipText(Messages.getString("VTablaMedicamentos.ModificarMedicamento")); //$NON-NLS-1$
 	btnModificarMed.setMnemonic('m');
 	btnModificarMed.setEnabled(false);
 	btnModificarMed.setBounds(188, 531, 165, 59);
@@ -276,7 +278,8 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 	adaptajbuttonabajo(btnModificarMed, "/iconos/edition.png");
 	add(btnModificarMed);
 
-	btnBorrarMed = new JButton(Messages.getString("VTablaMedicamentos.BorrarMedicamento")); //$NON-NLS-1$
+	btnBorrarMed = new JButton();
+	btnBorrarMed.setToolTipText(Messages.getString("VTablaMedicamentos.BorrarMedicamento")); //$NON-NLS-1$
 	btnBorrarMed.setMnemonic('b');
 	btnBorrarMed.setEnabled(false);
 	btnBorrarMed.setBounds(365, 531, 149, 59);
@@ -301,7 +304,8 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 	adaptajbuttonabajo(btnBorrarMed, "/iconos/deletion.png");
 	add(btnBorrarMed);
 
-	btnAtras = new JButton( Messages.getString("VTablaMedicamentos.btnAtras")); //$NON-NLS-1$
+	btnAtras = new JButton();
+	btnAtras.setToolTipText(Messages.getString("VTablaMedicamentos.btnAtras")); //$NON-NLS-1$
 	btnAtras.setMnemonic('a');
 	btnAtras.setBounds(526, 531, 149, 59);
 	btnAtras.setIconTextGap(1);
@@ -356,7 +360,7 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
     public void adaptajbuttonabajo (JButton but, String ruta){      
         ImageIcon fot = new ImageIcon(VLogin.class.getResource(ruta));
  		//Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lbllogo.getWidth(), lbllogo.getHeight(), Image.SCALE_DEFAULT));
- 		but.setIcon(new ImageIcon(fot.getImage().getScaledInstance(but.getWidth()-55, but.getHeight()-25, Image.SCALE_SMOOTH)));
+ 		but.setIcon(new ImageIcon(fot.getImage().getScaledInstance(but.getWidth()-6, but.getHeight()-6, Image.SCALE_SMOOTH)));
  		//this.repaint();
  	       
  	   }
