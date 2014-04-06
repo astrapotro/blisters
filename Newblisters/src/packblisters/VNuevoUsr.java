@@ -3,6 +3,8 @@ package packblisters;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.Window;
 
 import javax.swing.JButton;
@@ -32,6 +34,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.URL;
 import java.util.Arrays;
 
 import javax.swing.JComboBox;
@@ -55,7 +58,13 @@ public class VNuevoUsr extends JDialog {
 	private ModeloTablaUsr mtu;
 
 	public VNuevoUsr(ModeloTablaUsr modelotablao) {
-
+                
+	    URL pathIcon = this.getClass().getClassLoader().getResource("iconos/1 (14).jpg");
+	    Toolkit kit = Toolkit.getDefaultToolkit();
+	    Image img = kit.createImage(pathIcon);
+	    this.setIconImage(img);
+	    
+	    
 		mtu = modelotablao;
 
 		setTitle("Nuevo Usuario");
@@ -72,7 +81,7 @@ public class VNuevoUsr extends JDialog {
 			panel.add(lblNombre);
 
 			textNombre = new JTextField();
-			textNombre.setBounds(10, 39, 202, 19);
+			textNombre.setBounds(13, 33, 202, 19);
 			panel.add(textNombre);
 			textNombre.setColumns(10);
 			
@@ -88,19 +97,19 @@ public class VNuevoUsr extends JDialog {
 						
 			
 						JLabel administrador = new JLabel("Administrador");
-						administrador.setBounds(10, 70, 141, 15);
+						administrador.setBounds(13, 128, 141, 15);
 						panel.add(administrador);
 			
 						chkAdministrador= new JCheckBox();
-						chkAdministrador.setBounds(192, 66, 35, 19);
+						chkAdministrador.setBounds(186, 124, 35, 19);
 						panel.add(chkAdministrador);
 			
 			JLabel label = new JLabel("Contraseña");
-			label.setBounds(10, 92, 202, 27);
+			label.setBounds(10, 64, 202, 27);
 			panel.add(label);
 
 			pfContraseña = new JPasswordField(5);
-			pfContraseña.setBounds(10, 125, 202, 19);
+			pfContraseña.setBounds(13, 90, 202, 19);
 			panel.add(pfContraseña);
 						
 			JButton guardar = new JButton("Guardar");
@@ -135,7 +144,7 @@ public class VNuevoUsr extends JDialog {
 
 				}
 			});			
-			guardar.setBounds(10, 161, 92, 25);
+			guardar.setBounds(10, 173, 92, 25);
 			panel.add(guardar);
 
 			JButton cancelar = new JButton("Cancelar");
@@ -145,7 +154,7 @@ public class VNuevoUsr extends JDialog {
 					dispose();
 				}
 			});
-			cancelar.setBounds(114, 161, 98, 25);
+			cancelar.setBounds(117, 173, 98, 25);
 			panel.add(cancelar);
 
 		}

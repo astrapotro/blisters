@@ -54,8 +54,8 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
     
     private JButton btnAtras;
     
+    private JButton btnNuevoMed;
     private JButton btnModificarMed;
-	private JButton btnNuevoMed;
 	private JButton btnBorrarMed;
   
     /**
@@ -267,8 +267,7 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 	btnModificarMed.setHorizontalTextPosition(SwingConstants.CENTER);
 	btnModificarMed.setVerticalTextPosition(SwingConstants.BOTTOM);
 	btnModificarMed.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-			//TODO: similar a nuevoMed o
+		public void actionPerformed(ActionEvent e) {			
 			VModMed vmodmed = new VModMed(modelotablao, medselect);
 			vmodmed.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 			vmodmed.setVisible(true);
@@ -325,6 +324,8 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 	if (filaVista < 0) {
 		btnBorrarMed.setEnabled(false);
    		btnModificarMed.setEnabled(false);
+   		medselect=null;
+   		this.imagen.setIcon(null);
 	    // No hay selección
 	    System.out.println(Messages.getString("VTablaMedicamentos.ErrorNoSelection")); //$NON-NLS-1$
 	} else {
@@ -355,7 +356,7 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
     public void adaptajbuttonabajo (JButton but, String ruta){      
         ImageIcon fot = new ImageIcon(VLogin.class.getResource(ruta));
  		//Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lbllogo.getWidth(), lbllogo.getHeight(), Image.SCALE_DEFAULT));
- 		but.setIcon(new ImageIcon(fot.getImage().getScaledInstance(but.getWidth()-6, but.getHeight()-6, Image.SCALE_SMOOTH)));
+ 		but.setIcon(new ImageIcon(fot.getImage().getScaledInstance(but.getWidth()-55, but.getHeight()-25, Image.SCALE_SMOOTH)));
  		//this.repaint();
  	       
  	   }

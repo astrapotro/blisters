@@ -152,8 +152,7 @@ public class DBFacade implements TableModelListener {
 	try {
 	    conexion = conectar();
 	    // Sentencia preparada
-	    sentenciapre = conexion
-		    .prepareStatement("select * from medicamentos;");
+	    sentenciapre = conexion.prepareStatement("select * from medicamentos;");
 	    resultados = sentenciapre.executeQuery();
 
 	    // Vector<Medicamento> vmed;
@@ -186,17 +185,13 @@ public class DBFacade implements TableModelListener {
 
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
-	    System.out.println(Messages
-		    .getString("DBFacade.ErrorMedicamntosTabla")); //$NON-NLS-1$
+	    System.out.println(Messages.getString("DBFacade.ErrorMedicamntosTabla")); //$NON-NLS-1$
 
 	} finally // CErrar conexion con BBDD
 	{
-	    try {
-		conexion.close();
-	    } catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	    }
+		 //if (generatedKeys != null) try { generatedKeys.close(); } catch (SQLException logOrIgnore) {}
+	     if (sentenciapre != null) try { sentenciapre.close(); } catch (SQLException logOrIgnore) {}
+	     if (conexion != null) try { conexion.close(); } catch (SQLException logOrIgnore) {}
 	}
     }
 
@@ -454,8 +449,8 @@ public class DBFacade implements TableModelListener {
 
     }
     
-    public void insertarMed(String nombre, int codnac, long codbar, int idcorte,
-	    String rutaimg) {
+    public void insertarMed(Medicamento med) 
+    {
 
 	try {
 	    conexion = conectar();
@@ -463,15 +458,24 @@ public class DBFacade implements TableModelListener {
 	    sentenciapre = conexion
 		    .prepareStatement("insert into medicamentos (nombre, codnac, codbar, rutaimg, idcorte)"
 			    + "	VALUES (?,?,?,?,?)");
-	    sentenciapre.setString(1, nombre);
-	    sentenciapre.setInt(2, codnac);
-	    sentenciapre.setLong(3, codbar);
-	    sentenciapre.setString(4, rutaimg);
-	    sentenciapre.setInt(5, idcorte);
-
-	    sentenciapre.executeUpdate();
-
-	} catch (Exception e) {
+		sentenciapre.setString(1, med.getNombre());
+		sentenciapre.setInt(2, med.getCodnac());
+		sentenciapre.setLong(3, med.getCodbar());
+		sentenciapre.setString(4, med.getRutaimg());
+		sentenciapre.setInt(5, med.getIdcorte());
+		
+	    int filasAfectadas= sentenciapre.executeUpdate();
+        if (filasAfectadas == 0) {
+            throw new SQLException("Creacion de medicamento fallida, no se modificó ninguna fila.");
+        }
+        ResultSet generatedKeys = sentenciapre.getGeneratedKeys();
+        if (generatedKeys.next()) {
+            med.setId(generatedKeys.getInt(1));
+        } else {
+            throw new SQLException("Creacion de medicamento fallida, no se obtuvo la clave generada.");
+        }
+	    
+	} catch (SQLException | ClassNotFoundException e) {
 
 	    e.printStackTrace();
 	    System.out.println(Messages.getString("DBFacade.ErrorNuevoMed")); //$NON-NLS-1$
@@ -523,12 +527,6 @@ public class DBFacade implements TableModelListener {
 			 
 		        if (filasAfectadas == 0) {
 		            throw new SQLException("Modificación de medicamento fallida, no se modificó ninguna fila.");
-		        }
-		        generatedKeys = sentenciapre.getGeneratedKeys();
-		        if (generatedKeys.next()) {
-		            med.setId(generatedKeys.getInt(1));
-		        } else {
-		            throw new SQLException("Modificación de medicamento fallida, no se obtuvo la clave generada.");
 		        }
 
 		} catch (Exception e) {

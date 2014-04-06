@@ -95,9 +95,20 @@ public class VModMed extends JDialog implements ItemListener {
     	    panel.add(lblCodBarras);
     	    
     	    jtfCodBar = new JTextField();
-    	    jtfCodBar.setText("0");
     	    jtfCodBar.setBounds(25, 142, 202, 19);
-    	    jtfCodBar.setDocument(new DocumentoLimitado(20));
+    	    jtfCodBar.setDocument(new DocumentoLimitado(11));
+    	    jtfCodBar.setText(Long.toString(mseleccionado.getCodbar()));
+    	    jtfCodBar.addKeyListener(new KeyAdapter() {
+				// Para que sólo lea números !
+				public void keyTyped(KeyEvent e) {
+				    char caracter = e.getKeyChar();
+				    if (((caracter < '0') || (caracter > '9'))
+					    && ((caracter != KeyEvent.VK_BACK_SPACE) || (caracter != KeyEvent.VK_DELETE))
+					    || (jtfCodBar.getText().length() >= 11))
+				
+					e.consume();
+				}
+    	    });
     	    panel.add(jtfCodBar);
     	    
     	    JLabel lblIdCorte = new JLabel("ID Corte");
@@ -106,7 +117,7 @@ public class VModMed extends JDialog implements ItemListener {
     	    
     	    modeloCombo = new DefaultComboBoxModel<String>();
 
-    	    // Poblar modelo
+    	    // Poblar modelo corte
     	    String newcorte = "Nuevo Corte";
     	    modeloCombo.addElement(newcorte);
     	    dbfacade.getIdCorte(modeloCombo);
@@ -154,15 +165,12 @@ public class VModMed extends JDialog implements ItemListener {
 	    			
 	    		    medSeleccionado.setNombre(jtfNombre.getText());
 	    		    medSeleccionado.setCodnac(Integer.valueOf(jtfCodNac.getText()));
+	    		    medSeleccionado.setCodbar(Long.valueOf(jtfCodBar.getText()));
 	    		    medSeleccionado.setIdcorte(Integer.valueOf(idModificadoCorte));
 	    		    medSeleccionado.setRutaimg(jtfRutaImg.getText());
-	    		    // Guardar el nuevo usuario en bbdd 
-	    		    dbfacade.modificarMed(medSeleccionado);
 	    		    
-	    		    // Guardar cambios en el modelo
-	    		    //TODO si ya esta en la bbdd y luego recargo el modelo no hace falta
-	    		    //mt.modificamed(medSeleccionado);    		    
-	    		    dbfacade.getMedicamentos(mt);
+	    		    // Guardar cambios en el modelo y BBDD 	    		    
+	    		    mt.modificamed(medSeleccionado);    		    
 	    		    
 	    		    // Cierro ventana
 	    		    dispose();

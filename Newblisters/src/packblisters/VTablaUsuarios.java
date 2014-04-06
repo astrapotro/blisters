@@ -1,7 +1,10 @@
 package packblisters;
 
+import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Image;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -14,7 +17,9 @@ import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
@@ -47,12 +52,19 @@ public class VTablaUsuarios extends JPanel implements ListSelectionListener, Tab
      */
     public VTablaUsuarios() {    	
 	
+	setBackground(new Color(224, 255, 255));
+    	setBorder(new MatteBorder(4, 4, 4, 4, (Color) new Color(107, 142, 35)));
+    	setLayout(null);
+    	
 	usuarioslb = new JLabel(Messages.getString("VTablaUsuarios.Usuarios")); //$NON-NLS-1$
-	usuarioslb.setBounds(15, 12, 440, 15);
+	usuarioslb.setBounds(18, 16, 440, 15);
+	usuarioslb.setForeground(new Color(107, 142, 35));
+	usuarioslb.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 14));
 	
 	scrollPane = new JScrollPane();
-	scrollPane.setBounds(15, 32, 474, 349);
-	setLayout(null);
+	scrollPane.setBounds(22, 32, 485, 200);
+	scrollPane.setBorder(new MatteBorder(2, 2, 2, 2, (Color) new Color(107, 142, 35)));
+	
 	add(usuarioslb);
 	add(scrollPane);
 	
@@ -77,7 +89,7 @@ public class VTablaUsuarios extends JPanel implements ListSelectionListener, Tab
 	selectionModel.addListSelectionListener(this);
 	scrollPane.setViewportView(table);
 	
-	btnNuevoUsuario = new JButton(Messages.getString("VTablaUsuarios.NuevoUsuario")); //$NON-NLS-1$
+	btnNuevoUsuario = new JButton(); //$NON-NLS-1$
 	btnNuevoUsuario.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 		    VNuevoUsr nuevousr = new VNuevoUsr(modelotablao);
@@ -85,10 +97,12 @@ public class VTablaUsuarios extends JPanel implements ListSelectionListener, Tab
 			nuevousr.setVisible(true);
 		}
 	});	
-	btnNuevoUsuario.setBounds(33, 413, 106, 25);
+	btnNuevoUsuario.setBounds(197, 244, 97, 77);
+	btnNuevoUsuario.setToolTipText("Crear nuevo usuario");
+	adaptajbuttonabajo(btnNuevoUsuario, "/iconos/adition-user.png");
 	add(btnNuevoUsuario);
 	
-	btnModUsuario = new JButton(Messages.getString("VTablaUsuarios.ModificarUsuario")); //$NON-NLS-1$
+	btnModUsuario = new JButton(); //$NON-NLS-1$
 	btnModUsuario.setEnabled(false);
 	btnModUsuario.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
@@ -107,16 +121,19 @@ public class VTablaUsuarios extends JPanel implements ListSelectionListener, Tab
 			                         null, options, options[1]);
 			if(option == 0) // pressing OK button
 			{
-				usrselected.setRoot(root.isSelected());
+			    usrselected.setRoot(root.isSelected());
 			    dbFacade.modificarUsr(usrselected,pass.getPassword());//rellena el id de ususario
 			}
 			
 		}
 	});
-	btnModUsuario.setBounds(164, 413, 162, 25);
+	btnModUsuario.setBounds(306, 243, 97, 78);
+	btnModUsuario.setToolTipText("Modificar usuario");
+	adaptajbuttonabajo(btnModUsuario, "/iconos/edition-user.png");
 	add(btnModUsuario);
 	
-	btnBorrarUsuario = new JButton(Messages.getString("VTablaUsuarios.BorrarUsuario")); //$NON-NLS-1$
+	
+	btnBorrarUsuario = new JButton(); //$NON-NLS-1$
 	btnBorrarUsuario.setEnabled(false);
 	btnBorrarUsuario.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
@@ -134,7 +151,9 @@ public class VTablaUsuarios extends JPanel implements ListSelectionListener, Tab
 			}
 		}
 	});
-	btnBorrarUsuario.setBounds(349, 413, 106, 25);
+	btnBorrarUsuario.setBounds(415, 243, 92, 78);
+	btnBorrarUsuario.setToolTipText("Borrar usuario");
+	adaptajbuttonabajo(btnBorrarUsuario, "/iconos/deletion-user.png");
 	add(btnBorrarUsuario);
 	
 	btnAtras = new JButton(Messages.getString("VTablaUsuarios.btnAtras")); //$NON-NLS-1$
@@ -144,7 +163,11 @@ public class VTablaUsuarios extends JPanel implements ListSelectionListener, Tab
 		    VLogin.vadmin.setVisible(true);
 		}
 	});
-	btnAtras.setBounds(183, 463, 129, 25);
+	btnAtras.setBounds(24, 243, 161, 79);
+	adaptajbutton(btnAtras, "/iconos/patras.png");
+        btnAtras.setIconTextGap(1);
+	btnAtras.setHorizontalTextPosition(SwingConstants.RIGHT);
+	btnAtras.setVerticalTextPosition(SwingConstants.CENTER);
 	add(btnAtras);
     }
     
@@ -176,6 +199,24 @@ public class VTablaUsuarios extends JPanel implements ListSelectionListener, Tab
 	//modelotablao.fireTableDataChanged();
 	//table.updateUI();
 	System.out.println("Tabla cambiada");
-	
     }
+    
+    
+    public void adaptajbutton (JButton but, String ruta){      
+        ImageIcon fot = new ImageIcon(VLogin.class.getResource(ruta));
+ 		//Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lbllogo.getWidth(), lbllogo.getHeight(), Image.SCALE_DEFAULT));
+ 		but.setIcon(new ImageIcon(fot.getImage().getScaledInstance(but.getWidth()/2, (int) (but.getHeight()), Image.SCALE_SMOOTH)));
+ 		//this.repaint();
+ 	       
+ 	   }
+    
+    public void adaptajbuttonabajo (JButton but, String ruta){      
+        ImageIcon fot = new ImageIcon(VLogin.class.getResource(ruta));
+ 		//Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lbllogo.getWidth(), lbllogo.getHeight(), Image.SCALE_DEFAULT));
+ 		but.setIcon(new ImageIcon(fot.getImage().getScaledInstance(but.getWidth()-6, but.getHeight()-6, Image.SCALE_SMOOTH)));
+ 		//this.repaint();
+ 	       
+ 	   }
+    
+    
 }

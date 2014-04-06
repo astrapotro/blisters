@@ -70,30 +70,35 @@ class ModeloTablaMeds extends AbstractTableModel implements TableModel {
     }
 
     public void anademed(Medicamento nuevoMed) {
-	// Añade la persona al modelo
-	boolean existe = false;
-	for (int i = 0; i < datos.size(); i++) {
-	    if ((nuevoMed.getId() == datos.get(i).getId()) && nuevoMed.getId()!=0) {
-		existe = true;
-		break;
-	    }
-	}
+		// Añade la medicamento al modelo
+		boolean existe = false;
+		for (int i = 0; i < datos.size(); i++) {
+			if ((nuevoMed.getId() == datos.get(i).getId())
+					&& nuevoMed.getId() != 0) {
+				existe = true;
+				break;
+			}
+		}
 
-	if (!existe) {
-	    datos.add(nuevoMed);
-	    // Avisa a los suscriptores creando un TableModelEvent...
-	    TableModelEvent evento;
-	    evento = new TableModelEvent(this, this.getRowCount() - 1,
-		    this.getRowCount() - 1, TableModelEvent.ALL_COLUMNS,
-		    TableModelEvent.INSERT);
+		if (!existe) {
+			datos.add(nuevoMed);
+			// Avisa a los suscriptores creando un TableModelEvent...
+			TableModelEvent evento;
+			evento = new TableModelEvent(this, this.getRowCount() - 1,
+					this.getRowCount() - 1, TableModelEvent.ALL_COLUMNS,
+					TableModelEvent.INSERT);
 
-	    // ... y avisando a los suscriptores
-	    avisaSuscriptores(evento);
-	}
+			// ... y avisando a los suscriptores
+			avisaSuscriptores(evento);
+		}
 
     }
     
     public void modificamed(Medicamento med) {
+    	 // Guardar el nuevo usuario en bbdd
+    	DBFacade dbfacade = new DBFacade();
+	    dbfacade.modificarMed(med);
+	    
     	//modifica medicamento del modelo 
     	boolean existe = false;
     	for (int i = 0; i < datos.size(); i++) {

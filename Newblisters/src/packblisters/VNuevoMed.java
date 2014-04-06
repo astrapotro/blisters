@@ -2,40 +2,27 @@ package packblisters;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.FlowLayout;
 import java.awt.Window;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.JLabel;
-import javax.swing.JPasswordField;
-import javax.swing.JCheckBox;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
-
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JEditorPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class VNuevoMed extends JDialog implements ItemListener {
 	/**
@@ -44,7 +31,7 @@ public class VNuevoMed extends JDialog implements ItemListener {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JTextField jtfNombre, jtfCodNac, jtfCodBar, jtfIdCorte, jtfRutaImg, jtfMiCorte, jtfRecorte;
-
+	
 	private String idModificadoCorte;
 
 	private DBFacade dbfacade;
@@ -102,7 +89,18 @@ public class VNuevoMed extends JDialog implements ItemListener {
     	    jtfCodBar = new JTextField();
     	    jtfCodBar.setText("0");
     	    jtfCodBar.setBounds(25, 142, 202, 19);
-    	    jtfCodBar.setDocument(new DocumentoLimitado(20));
+    	    jtfCodBar.setDocument(new DocumentoLimitado(11));
+    	    jtfCodBar.addKeyListener(new KeyAdapter() {
+				// Para que sólo lea números !
+				public void keyTyped(KeyEvent e) {
+				    char caracter = e.getKeyChar();
+				    if (((caracter < '0') || (caracter > '9'))
+					    && ((caracter != KeyEvent.VK_BACK_SPACE) || (caracter != KeyEvent.VK_DELETE))
+					    || (jtfCodBar.getText().length() >= 11))
+				
+					e.consume();
+				}
+    	    });
     	    panel.add(jtfCodBar);
     	    
     	    JLabel lblIdCorte = new JLabel("ID Corte");
@@ -150,28 +148,21 @@ public class VNuevoMed extends JDialog implements ItemListener {
     	    });
     	    panel.add(jtfRutaImg);
 
-			JButton guardar = new JButton("Guardar");
-			guardar.setEnabled(false);
+    		JButton guardar = new JButton("Guardar");
 			guardar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					 Medicamento nuevoMed = new Medicamento();
+					 nuevoMed.setNombre(jtfNombre.getText());
+					 nuevoMed.setCodnac(Integer.valueOf(jtfCodNac.getText()));
+					 nuevoMed.setCodbar(Long.valueOf(jtfCodBar.getText()));
+					 nuevoMed.setIdcorte(Integer.valueOf(idModificadoCorte));
+					 nuevoMed.setRutaimg(jtfRutaImg.getText());
 
 					// Guardar el nuevo usuario en bbdd
-					dbfacade = new DBFacade();
-					dbfacade.insertarMed(jtfNombre.getText(),
-							Integer.valueOf(jtfCodNac.getText()),
-							Integer.valueOf(jtfCodBar.getText()),
-							Integer.valueOf(idModificadoCorte),
-							jtfRutaImg.getText());
-
-					// Medicamento nuevoMed = new Medicamento();
-					// nuevoMed.setNombre(textNombre.getText());
-					// nuevoMed.setCodnac(Integer.valueOf(textCodNac.getText()));
-					// nuevoMed.setIdcorte(Integer.valueOf(textnewCorte));
-					// nuevoMed.setRutaimg(textRuta.getText());
-
+					dbfacade.insertarMed(nuevoMed);
 					// Guardar en el modelo
-					// mt.anademed(nuevoMed);
-					dbfacade.getMedicamentos(mt);
+					mt.anademed(nuevoMed);
+					//dbfacade.getMedicamentos(mt);
 
 					// Cierro ventana
 					dispose();
@@ -187,7 +178,6 @@ public class VNuevoMed extends JDialog implements ItemListener {
 
 				}
 			});
-
 			guardar.setBounds(25, 279, 92, 25);
 			panel.add(guardar);
 
@@ -219,5 +209,6 @@ public class VNuevoMed extends JDialog implements ItemListener {
 
 			}
 		}
+		
 	}
 }

@@ -16,6 +16,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import javax.swing.SwingConstants;
@@ -38,7 +40,7 @@ import javax.swing.Box;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
-public class VProcesoCorte extends JPanel implements ListSelectionListener {
+public class VProcesoCorte extends JPanel implements ListSelectionListener , TableModelListener{
 
     /**
      * 
@@ -69,14 +71,17 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 	consultamedica = new DBFacade();
 
 	modelotablao = new ModeloTablaMeds();
+	modelotablao.addTableModelListener(this);
 	consultamedica = new DBFacade();
 	// rellenar modelo
 	consultamedica.getMedicamentos(modelotablao);
+	
 
 	setLayout(null);
 
 	JScrollPane tablapane = new JScrollPane();
-	tablapane.setBounds(13, 162, 356, 428);
+	tablapane.setBounds(13, 159, 356, 425);
+	tablapane.setBorder(new MatteBorder(2, 2, 2, 2, (Color) new Color(107, 142, 35)));
 	add(tablapane);
 	tablapane
 		.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -134,13 +139,13 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 
 	imagen = new JLabel("");
 	imagen.setBorder(new LineBorder(new Color(107, 142, 35), 3, true));
-	imagen.setBounds(377, 52, 411, 458);
+	imagen.setBounds(377, 49, 411, 458);
 	add(imagen);
 
 	JLabel lblNewLabel_1 = new JLabel(
 		Messages.getString("VProcesoCorte.lblNewLabel_1.text_1")); //$NON-NLS-1$
 	lblNewLabel_1.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 11));
-	lblNewLabel_1.setBounds(31, 61, 133, 15);
+	lblNewLabel_1.setBounds(27, 58, 133, 15);
 	add(lblNewLabel_1);
 
 	busqueda = new JTextField();
@@ -171,7 +176,7 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 	Box verticalBox = Box.createVerticalBox();
 	verticalBox.setBounds(0, 0, 1, 1);
 	add(verticalBox);
-	rdbtnNombre.setBounds(25, 75, 87, 23);
+	rdbtnNombre.setBounds(25, 72, 87, 23);
 	add(rdbtnNombre);
 
 	rdbtnCodigoNacinal = new JRadioButton(
@@ -187,7 +192,7 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 
 	    }
 	});
-	rdbtnCodigoNacinal.setBounds(108, 75, 121, 23);
+	rdbtnCodigoNacinal.setBounds(108, 72, 121, 23);
 	add(rdbtnCodigoNacinal);
 
 	
@@ -203,7 +208,7 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 
 	    }
 	});
-	rdbttCodBar.setBounds(227, 75, 129, 23);
+	rdbttCodBar.setBounds(227, 72, 129, 23);
 	add(rdbttCodBar);
 
 	busqueda.addKeyListener(new KeyAdapter() {
@@ -273,14 +278,14 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 	});
 	
 	busqueda.setText(Messages.getString("VProcesoCorte.textField.text")); //$NON-NLS-1$
-	busqueda.setBounds(28, 102, 325, 26);
+	busqueda.setBounds(28, 99, 325, 26);
 	add(busqueda);
 	busqueda.setColumns(10);
 	
 	Box horizontalBox = Box.createHorizontalBox();
 	horizontalBox.setBorder(new LineBorder(new Color(107, 142, 35), 2, true));
 	horizontalBox.setBackground(new Color(154, 205, 50));
-	horizontalBox.setBounds(13, 53, 356, 85);
+	horizontalBox.setBounds(13, 49, 356, 85);
 	add(horizontalBox);
 	
 	
@@ -288,7 +293,7 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 		Messages.getString("VProcesoCorte.Medicamentos"));
 	lblNewLabel.setForeground(new Color(107, 142, 35));
 	lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-	lblNewLabel.setBounds(12, 143, 121, 18);
+	lblNewLabel.setBounds(5, 141, 121, 18);
 	
 	//lblNewLabel.setBorder(new LineBorder(new Color(107, 142, 35), 2, true));
 	
@@ -302,7 +307,7 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 	    btnSeleccionar = new JButton(
 		    Messages.getString("VProcesoCorte.SeleccionBtn")); //$NON-NLS-1$
 	
-	    btnSeleccionar.setBounds(595, 517, 190, 72);
+	    btnSeleccionar.setBounds(598, 515, 190, 69);
 	    //btnSeleccionar.setVerticalAlignment(SwingConstants.CENTER);
 	    adaptajbutton( btnSeleccionar, "/iconos/palante.png");
 	    btnSeleccionar.setIconTextGap(1);
@@ -312,7 +317,7 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 
 	    btnAtras = new JButton(
 		    Messages.getString("VProcesoCorte.btnAtras.text")); //$NON-NLS-1$
-	    btnAtras.setBounds(377, 517, 190, 72);
+	    btnAtras.setBounds(378, 514, 190, 70);
 	    //btnAtras.setVerticalAlignment(SwingConstants.CENTER);
 	    adaptajbutton(btnAtras, "/iconos/patras.png");
 	    btnAtras.setIconTextGap(1);
@@ -332,7 +337,7 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 
 	    btnSeleccionar = new JButton(
 		    Messages.getString("VProcesoCorte.SeleccionBtn")); //$NON-NLS-1$
-	    btnSeleccionar.setBounds(500, 517, 190, 72);
+	    btnSeleccionar.setBounds(598, 515, 190, 69);
 	    adaptajbutton( btnSeleccionar, "/iconos/palante.png");
 	    btnSeleccionar.setIconTextGap(1);
 	    btnSeleccionar.setHorizontalTextPosition(SwingConstants.RIGHT);
@@ -349,8 +354,8 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
 		if (medselect != null) {
 		    setVisible(false);
 		    VMed vmed = new VMed(medselect);
-		    vmed.setBounds((Principal.d.width / 2) - 400,
-			    (Principal.d.height / 2) - 300, 800, 600);
+		    vmed.setBounds((Principal.d.width / 2) - 560/2,
+			    (Principal.d.height / 2) - 320, 560, 600);
 		    Principal.Panel.add(vmed);
 		    vmed.repaint();
 		    vmed.validate();
@@ -403,4 +408,12 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener {
  		//this.repaint();
  	       
  	   }
+
+
+    @Override
+    public void tableChanged(TableModelEvent e) {
+	// TODO Auto-generated method stub
+	System.out.println("Tabla cambiada");
+	
+    }
 }

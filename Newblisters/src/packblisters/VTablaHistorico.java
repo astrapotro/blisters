@@ -1,8 +1,12 @@
 package packblisters;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -10,7 +14,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
@@ -18,6 +24,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import javax.swing.border.LineBorder;
 
 public class VTablaHistorico extends JPanel implements ListSelectionListener {
 
@@ -36,15 +43,19 @@ public class VTablaHistorico extends JPanel implements ListSelectionListener {
      * Create the frame.
      */
     public VTablaHistorico() {
-	System.out.println("VTABLAHISTORICO entrando en constructor");
 	
-
+	setBackground(new Color(224, 255, 255));
+    	setBorder(new MatteBorder(4, 4, 4, 4, (Color) new Color(107, 142, 35)));
+    
 	JLabel histlb = new JLabel(
 		Messages.getString("VTablaHistorico.Historico")); //$NON-NLS-1$
-	histlb.setBounds(15, 12, 440, 15);
+	histlb.setForeground(new Color(107, 142, 35));
+	histlb.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 14));
+	histlb.setBounds(14, 21, 149, 15);
 
 	JScrollPane scrollPane = new JScrollPane();
-	scrollPane.setBounds(15, 32, 674, 422);
+	scrollPane.setBorder(new MatteBorder(2, 2, 2, 2, (Color) new Color(107, 142, 35)));
+	scrollPane.setBounds(18, 38, 714, 380);
 	setLayout(null);
 	add(histlb);
 	add(scrollPane);
@@ -88,9 +99,14 @@ public class VTablaHistorico extends JPanel implements ListSelectionListener {
 		VLogin.vadmin.setVisible(true);
 	    }
 	});
-	btnAtras.setBounds(293, 463, 162, 25);
-	add(btnAtras);
-	System.out.println("VTABLAHISTORICO saliendo en constructor");
+	
+	btnAtras.setBounds(290, 426, 149, 59);
+	    adaptajbutton(btnAtras, "/iconos/patras.png");
+	    btnAtras.setIconTextGap(1);
+	    btnAtras.setHorizontalTextPosition(SwingConstants.RIGHT);
+	    btnAtras.setVerticalTextPosition(SwingConstants.CENTER);
+	add(btnAtras);	
+	
     }
 
     public void valueChanged(ListSelectionEvent e) {
@@ -112,5 +128,14 @@ public class VTablaHistorico extends JPanel implements ListSelectionListener {
     }
 
 
+    public void adaptajbutton (JButton but, String ruta){      
+        ImageIcon fot = new ImageIcon(VLogin.class.getResource(ruta));
+ 		//Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lbllogo.getWidth(), lbllogo.getHeight(), Image.SCALE_DEFAULT));
+ 		but.setIcon(new ImageIcon(fot.getImage().getScaledInstance(but.getWidth()/2, (int) (but.getHeight()), Image.SCALE_SMOOTH)));
+ 		//this.repaint();
+ 	       
+ 	   }
+    
+    
 }
 
