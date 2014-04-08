@@ -245,7 +245,7 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 	btnNuevoMed = new JButton();
 	btnNuevoMed.setToolTipText(Messages.getString("VTablaMedicamentos.NuevoMedicamento")); //$NON-NLS-1$
 	btnNuevoMed.setMnemonic('n');
-	btnNuevoMed.setBounds(30, 531, 142, 59);
+	btnNuevoMed.setBounds(236, 506, 130, 84);
 	btnNuevoMed.setIconTextGap(1);
 	btnNuevoMed.setHorizontalTextPosition(SwingConstants.CENTER);
 	btnNuevoMed.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -264,7 +264,7 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 	btnModificarMed.setToolTipText(Messages.getString("VTablaMedicamentos.ModificarMedicamento")); //$NON-NLS-1$
 	btnModificarMed.setMnemonic('m');
 	btnModificarMed.setEnabled(false);
-	btnModificarMed.setBounds(188, 531, 165, 59);
+	btnModificarMed.setBounds(392, 506, 130, 84);
 	btnModificarMed.setIconTextGap(1);
 	btnModificarMed.setHorizontalTextPosition(SwingConstants.CENTER);
 	btnModificarMed.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -282,7 +282,7 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 	btnBorrarMed.setToolTipText(Messages.getString("VTablaMedicamentos.BorrarMedicamento")); //$NON-NLS-1$
 	btnBorrarMed.setMnemonic('b');
 	btnBorrarMed.setEnabled(false);
-	btnBorrarMed.setBounds(365, 531, 149, 59);
+	btnBorrarMed.setBounds(545, 506, 130, 84);
 	btnBorrarMed.setIconTextGap(1);
 	btnBorrarMed.setHorizontalTextPosition(SwingConstants.CENTER);
 	btnBorrarMed.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -305,9 +305,10 @@ public class VTablaMedicamentos extends JPanel implements ListSelectionListener 
 	add(btnBorrarMed);
 
 	btnAtras = new JButton();
-	btnAtras.setToolTipText(Messages.getString("VTablaMedicamentos.btnAtras")); //$NON-NLS-1$
+	btnAtras.setText(Messages.getString("VTablaMedicamentos.btnAtras.text")); //$NON-NLS-1$
+	//btnAtras.setToolTipText(Messages.getString("VTablaMedicamentos.btnAtras")); //$NON-NLS-1$
 	btnAtras.setMnemonic('a');
-	btnAtras.setBounds(526, 531, 149, 59);
+	btnAtras.setBounds(26, 506, 184, 84);
 	btnAtras.setIconTextGap(1);
     btnAtras.setHorizontalTextPosition(SwingConstants.RIGHT);
     btnAtras.setVerticalTextPosition(SwingConstants.CENTER);
