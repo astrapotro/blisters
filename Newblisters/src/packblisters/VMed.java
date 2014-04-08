@@ -54,7 +54,7 @@ public class VMed extends JPanel {
 	this.setBorder(new MatteBorder(4, 4, 4, 4, (Color) new Color(107, 142, 35)));
 	afoto.setBorder(new MatteBorder(4, 4, 4, 4, (Color) new Color(107, 142, 35)));
 	afoto.setHorizontalAlignment(SwingConstants.CENTER);
-	afoto.setBounds(26, 27, 511, 552);
+	afoto.setBounds(26, 27, 472, 519);
 	afoto.setIcon(new ImageIcon(new ImageIcon(med.getRutaimg()).getImage().getScaledInstance(afoto.getWidth(), afoto.getHeight(), Image.SCALE_SMOOTH)));
 	afoto.repaint();
 	System.out.println(med.getRutaimg());
@@ -64,7 +64,7 @@ public class VMed extends JPanel {
 	 
 	
 	JButton cortarBtn = new JButton(Messages.getString("VMed.CutBtn")); //$NON-NLS-1$
-	cortarBtn.setBounds(202, 591, 125, 77);
+	cortarBtn.setBounds(186, 558, 114, 77);
 	adaptajbuttonabajo(cortarBtn, "/iconos/cortar.png");
 	cortarBtn.setIconTextGap(1);
 //	btnNuevoMed.setForeground(Color.BLACK);
@@ -167,12 +167,12 @@ public class VMed extends JPanel {
 		    
 		}
 	});
-	btnCancelar.setBounds(336, 606, 100, 55);
+	btnCancelar.setBounds(313, 566, 185, 25);
 	add(btnCancelar);
 	
 	JToggleButton pausa = new JToggleButton("PAUSAR");
 	pausa.setEnabled(false);
-	pausa.setBounds(448, 606, 89, 55);
+	pausa.setBounds(312, 603, 186, 25);
 	pausa.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 		  
@@ -222,7 +222,7 @@ public class VMed extends JPanel {
 			VLogin.vprocesocorte.setVisible(true);
 		}
 	});
-	btnAtras.setBounds(26, 591, 164, 77);
+	btnAtras.setBounds(26, 558, 148, 77);
 	adaptajbutton(btnAtras, "/iconos/patras.png");
 	btnAtras.setIconTextGap(1);
 	btnAtras.setHorizontalTextPosition(SwingConstants.RIGHT);

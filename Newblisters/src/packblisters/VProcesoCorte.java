@@ -354,8 +354,8 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener , Tab
 		if (medselect != null) {
 		    setVisible(false);
 		    VMed vmed = new VMed(medselect);
-		    vmed.setBounds((Principal.d.width / 2) - 560/2,
-			    (Principal.d.height / 2) - 320, 560, 600);
+		    vmed.setBounds((Principal.d.width / 2) - 518/2,
+			    (Principal.d.height / 2) - 345, 518, 650);
 		    Principal.Panel.add(vmed);
 		    vmed.repaint();
 		    vmed.validate();
