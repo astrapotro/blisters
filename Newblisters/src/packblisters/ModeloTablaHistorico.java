@@ -10,9 +10,7 @@ import javax.swing.table.TableModel;
 
 
 class ModeloTablaHistorico extends AbstractTableModel implements TableModel {
-    /**
-     * 
-     */
+
     private static final long serialVersionUID = 1L;
 
     private static LinkedList<Historico> Datos = new LinkedList<Historico>();
