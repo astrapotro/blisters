@@ -31,6 +31,7 @@ public class VMed extends JPanel {
     private String corte,cancelar,pausar,reanudar;
     private DBFacade dbf = new DBFacade();
     private Medicamento m;
+    private JToggleButton pausa;
 
     
     public VMed(Medicamento med) {
@@ -170,35 +171,36 @@ public class VMed extends JPanel {
 	btnCancelar.setBounds(313, 566, 185, 25);
 	add(btnCancelar);
 	
-	JToggleButton pausa = new JToggleButton("PAUSAR");
-	pausa.setEnabled(false);
+	pausa = new JToggleButton();
+	pausa.setText("PAUSAR");
+	pausa.setEnabled(true);
 	pausa.setBounds(312, 603, 186, 25);
 	pausa.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-		  
+		 
 
-		    AbstractButton abstractButton = (AbstractButton) e.getSource();
-		    boolean selected = abstractButton.getModel().isSelected();
+//		    AbstractButton abstractButton = (AbstractButton) e.getSource();
+//		    boolean selected = abstractButton.getModel().isSelected();
 		    
 		    try {
-			 	SerialDriver conexion = SerialDriver.getInstance();
-        			conexion.connect(Messages.getString("VMed.SerialPort"));
+//			 	SerialDriver conexion = SerialDriver.getInstance();
+//        			conexion.connect(Messages.getString("VMed.SerialPort"));
         			//conexion.
         		   
 		    
-        		    if (selected){
+        		    if ( pausa.isSelected()){
         			
         			//hay que mandar la PAUSA: ! 
-        			
-        			conexion.getOut()
-        			    .write(pausar.getBytes(), 0, pausar.length());
+        			pausa.setText("Reanudar");
+//        			conexion.getOut()
+//        			    .write(pausar.getBytes(), 0, pausar.length());
         		    }
         		    
         		    else{
         			//mandar la reanudación: ~
-
-        			conexion.getOut()
-        			    .write(reanudar.getBytes(), 0, reanudar.length());
+        			pausa.setText("Pausar");
+//        			conexion.getOut()
+//        			    .write(reanudar.getBytes(), 0, reanudar.length());
         		    }
 		    } catch (Exception e1) {
 			// TODO Auto-generated catch block
