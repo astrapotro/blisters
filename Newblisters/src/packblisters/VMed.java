@@ -19,6 +19,8 @@ import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
 
+import packblisters.SerialDriver.SerialWriter;
+
 import java.awt.Color;
 
 
@@ -32,6 +34,8 @@ public class VMed extends JPanel {
     private DBFacade dbf = new DBFacade();
     private Medicamento m;
     private JToggleButton pausa;
+    private SerialDriver conexion;
+    private JButton btnCancelar;
 
     
     public VMed(Medicamento med) {
@@ -46,10 +50,10 @@ public class VMed extends JPanel {
 	pausar =  med.getMicorte().getPausar();
 	reanudar =  med.getMicorte().getReanudar();
 	m = med;
-	setLayout(null);
-	this.setBackground(new Color(224, 255, 255));
-
+	conexion = SerialDriver.getInstance(corte);
 	
+	setLayout(null);
+	this.setBackground(new Color(224, 255, 255));	
 
 	JLabel afoto = new JLabel();
 	this.setBorder(new MatteBorder(4, 4, 4, 4, (Color) new Color(107, 142, 35)));
@@ -78,59 +82,35 @@ public class VMed extends JPanel {
 
 		try {
 		  
-		    	SerialDriver conexion = SerialDriver.getInstance();	
+		    	btnCancelar.setEnabled(true);
+		    	Thread hilocorte = new Thread (conexion);
+		    	hilocorte.start();
 		    	
 		    	//Miro que puertos hay en el sistema 
-		    	conexion.dicepuerto();
+		    	
+		    	//conexion.dicepuerto();
 		        
-			    try {
-				//conexion.connect(Messages.getString("VMed.SerialPort"));
-				conexion.connect(VLogin.vadmin.puerto);
-			    } catch (Exception e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			    } //$NON-NLS-1$
-			    
-			    
-			    //Forzar el filtrado para que solo nos devuelva reportes breves
-			    //conexion.getOut().write("$sv=1".getBytes());
-        
-        		    // ESCRIBIR AL PUERTO
-        		    // escribir al puerto el med.corte
-        		    
-			    StringTokenizer tokens = new StringTokenizer(corte,"\n");
-			    String home = new String();
-			    home = "g28.2 x0y0z0\n\r";
-			    conexion.getOut().write(home.getBytes(),0,home.length());
-			    
-			    Thread.sleep(14000);
-
+		    	
 			    ///Insert del evento en la tabla HISTORICO
-        		    dbf.insertarHistorico(VLogin.UsuarioLogueado.getNombre(),m.getNombre(),m.getCodnac(),m.getIdcorte(),"Comienzo corte",null);
-
-			    while(tokens.hasMoreTokens()){
-				String s = tokens.nextToken();
-				conexion.getOut()
-    			    .write(s.getBytes(), 0, s.length());
-				Thread.sleep(320);
-			    }
-			    
-        
-        		    System.out.println("CORTE en "+VLogin.vadmin.puerto);
-        		        
-        		   
-        		    //TODO AKI JDIALOG de incidencia
-        		    VIncidencia vincidencia = new VIncidencia(m);
-        		    vincidencia.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        		    vincidencia.setVisible(true);
-        		  ///Insert del evento en la tabla HISTORICO
-        		    dbf.insertarHistorico(VLogin.UsuarioLogueado.getNombre(),m.getNombre(),m.getCodnac(),m.getIdcorte(),"Fin corte",null);
+//        		    dbf.insertarHistorico(VLogin.UsuarioLogueado.getNombre(),m.getNombre(),m.getCodnac(),m.getIdcorte(),"Comienzo corte",null);
+//
+//			    
+//        
+//        		    System.out.println("CORTE en "+VLogin.vadmin.puerto);
+//        		        
+//        		   
+//        		    //TODO AKI JDIALOG de incidencia
+//        		    VIncidencia vincidencia = new VIncidencia(m);
+//        		    vincidencia.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+//        		    vincidencia.setVisible(true);
+//        		  ///Insert del evento en la tabla HISTORICO
+//        		    dbf.insertarHistorico(VLogin.UsuarioLogueado.getNombre(),m.getNombre(),m.getCodnac(),m.getIdcorte(),"Fin corte",null);
         		    
         		            		    
 		} catch (Exception e) {
 		    // TODO Auto-generated catch block
 		    
-		    dbf.insertarHistorico(VLogin.UsuarioLogueado.getNombre(),m.getNombre(),m.getCodnac(),m.getIdcorte(),"Fallo en corte",null);
+		    //dbf.insertarHistorico(VLogin.UsuarioLogueado.getNombre(),m.getNombre(),m.getCodnac(),m.getIdcorte(),"Fallo en corte",null);
 		    
 		    e.printStackTrace();
 		    System.out
@@ -147,25 +127,13 @@ public class VMed extends JPanel {
 	lblNewLabel_1.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 13));
 	add(lblNewLabel_1);
 	
-	JButton btnCancelar = new JButton(Messages.getString("VMed.btnCancelar.text")); //$NON-NLS-1$
+	btnCancelar = new JButton(Messages.getString("VMed.btnCancelar.text")); //$NON-NLS-1$
 	btnCancelar.setEnabled(false);
 	btnCancelar.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 		    
-		    
-		    //TODO Cancelar todo: Ctrl+x
-		    SerialDriver conexion = SerialDriver.getInstance();
+		    conexion.getSw().cancela=true;
 
-		    try {
-			conexion.connect(Messages.getString("VMed.SerialPort"));
-			conexion.getOut()
-			    .write(cancelar.getBytes(), 0, cancelar.length());
-		    } catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		    } //$NON-NLS-1$
-
-		    
 		}
 	});
 	btnCancelar.setBounds(313, 566, 185, 25);
@@ -192,13 +160,19 @@ public class VMed extends JPanel {
         			
         			//hay que mandar la PAUSA: ! 
         			pausa.setText("Reanudar");
+        			conexion.getSw().pausa=true;
 //        			conexion.getOut()
 //        			    .write(pausar.getBytes(), 0, pausar.length());
         		    }
         		    
         		    else{
         			//mandar la reanudación: ~
+        			
         			pausa.setText("Pausar");
+        			//conexion.getSw().notify();
+        			conexion.getSw().reanuda=true;
+        			
+        			
 //        			conexion.getOut()
 //        			    .write(reanudar.getBytes(), 0, reanudar.length());
         		    }

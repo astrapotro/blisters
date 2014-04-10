@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
+import java.util.StringTokenizer;
 
 //////////
 //////////
@@ -18,24 +19,32 @@ import java.util.Enumeration;
 
 /////////////// TO-DO Hay que cambiarlo para lectura/escritura orientada a eventos
 
- class SerialDriver {
+public class SerialDriver implements Runnable {
     private static SerialDriver msd;
     private InputStream in;
     private OutputStream out;
-    String puerto=VLogin.vadmin.puerto;
+    private String puerto=VLogin.vadmin.puerto;
+    private boolean conectado = false;
+    
+    private Thread hiloescribe;
+    private Thread hilolee;
+    private SerialWriter sw;
+    private String cort;
 
-    private SerialDriver() {
+    private SerialDriver(String corte) {
 	super();
+	this.cort=corte;
+
     }
     
-    public static SerialDriver getInstance(){
+    public static SerialDriver getInstance(String corte){
 	if(msd==null)
-	    msd=new SerialDriver();
+	    msd=new SerialDriver(corte);
 	
 	return msd;
     }
 
-    public void connect(String portName) throws Exception {
+    public void connect(String portName) throws NoSuchPortException, PortInUseException, UnsupportedCommOperationException, IOException{
 	System.setProperty(Messages.getString("SerialDriver.RXTXSerialPorts"), Messages.getString("SerialDriver.Puerto")); //$NON-NLS-1$ //$NON-NLS-2$
 	System.out.println("PUERTO en serialdriver: "+VLogin.vadmin.puerto);
 	CommPortIdentifier portIdentifier = CommPortIdentifier
@@ -49,7 +58,8 @@ import java.util.Enumeration;
 	    if (commPort instanceof SerialPort) {
 
 		SerialPort serialPort = (SerialPort) commPort;
-
+		
+		conectado = true;
 		//
 		// CONFIGURACION de LA CONEXION SERIE
 		// tinyg 115200 baud
@@ -65,9 +75,16 @@ import java.util.Enumeration;
 
 		in = serialPort.getInputStream();
 		out = serialPort.getOutputStream();
-
-		(new Thread(new SerialReader(in))).start();
-		(new Thread(new SerialWriter(out))).start();
+		sw = new SerialWriter(out);
+		
+		hilolee = (new Thread(new SerialReader(in)));
+		hilolee.start();
+		
+		hiloescribe = (new Thread(new SerialWriter(out)));
+		hiloescribe.start();
+		
+//		(new Thread(new SerialReader(in))).start();
+//		(new Thread(new SerialWriter(out))).start();
 		
 
 	    } else {
@@ -154,6 +171,7 @@ import java.util.Enumeration;
 		   }
 		    
 		}
+		System.out.println("BUFFER: "+buffer);
 	    } catch (IOException e) {
 		e.printStackTrace();
 	    }
@@ -163,6 +181,10 @@ import java.util.Enumeration;
     /** */
     public static class SerialWriter implements Runnable {
 	OutputStream out;
+	public boolean pausa = false;
+	public boolean reanuda = false;
+	public boolean cancela = false;
+	private boolean pausado = false;
 	
 	
 	
@@ -171,16 +193,203 @@ import java.util.Enumeration;
 	}
 
 	public void run() {
-	    try {
-		int c = 0;
-		while ((c = System.in.read()) > -1) {
+	    //try {
+		//int c = 0;
+
+		    while (true){}
+
+//		while ((c = System.in.read()) > -1) {
+//		    
+//		    this.out.write(c);
+////		}
+//	    } catch (IOException e) {
+//		e.printStackTrace();
+//	    } catch (InterruptedException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	    }
+	}
+	
+	public void escribe (String s){
+	    
+	    StringTokenizer tokens = new StringTokenizer(s,"\n\r");
+	    
+	    String flush ="%\n";
+	    String home = "g28.2 x0y0z0\n";
+	    String pausar = "!\n";
+	    String reanudar = "~\n";
+	    
+	    
+	    while(tokens.hasMoreTokens()){
+		
+		
+		
+		if (pausa ){
+		    try {
+			if (!pausado)
+			    this.out.write(pausar.getBytes(), 0 ,pausar.length());
+			pausa=false;
+			pausado=true;
+			//Thread.currentThread().wait();
+			
+		    } catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		    }
 		    
-		    this.out.write(c);
 		}
-	    } catch (IOException e) {
+		else if (reanuda){
+		    try {
+			this.out.write(reanudar.getBytes(), 0 , reanudar.length());
+			reanuda=false;
+			pausado=false;
+		    } catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		    }
+		}
+		else if (cancela ){
+		    try {
+			this.out.write(pausar.getBytes(), 0 , pausar.length());
+			try {
+        		    Thread.sleep(300);
+        		} catch (InterruptedException e) {
+        		    // TODO Auto-generated catch block
+        		    e.printStackTrace();
+        		}
+			this.out.write(flush.getBytes(), 0 , flush.length());
+			
+			try {
+        		    Thread.sleep(300);
+        		} catch (InterruptedException e) {
+        		    // TODO Auto-generated catch block
+        		    e.printStackTrace();
+        		}
+			this.out.write(reanudar.getBytes(), 0 , reanudar.length());
+			try {
+        		    Thread.sleep(300);
+        		} catch (InterruptedException e) {
+        		    // TODO Auto-generated catch block
+        		    e.printStackTrace();
+        		}
+			this.out.write(home.getBytes(), 0 , home.length());
+			try {
+        		    Thread.sleep(300);
+        		} catch (InterruptedException e) {
+        		    // TODO Auto-generated catch block
+        		    e.printStackTrace();
+        		}
+			
+			cancela=false;
+			
+			return;
+		    } catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		    }
+		}
+		else{ 
+		    
+		    if (!pausado){
+			String token = tokens.nextToken();
+			token = token +"\n\r";
+			
+        		try {
+        		    this.out.write(token.getBytes(), 0 ,token.length());
+        		} catch (IOException e) {
+        		    // TODO Auto-generated catch block
+        		    e.printStackTrace();
+        		}
+        		
+        //		conexion.getOut()
+        //		    .write(s.getBytes(), 0, s.length());
+        		try {
+        		    Thread.sleep(300);
+        		} catch (InterruptedException e) {
+        		    // TODO Auto-generated catch block
+        		    e.printStackTrace();
+        		}
+		    }
+		}
+	    }
+	    
+	}
+    }
+
+//    @Override
+//    public void run() {
+//	// TODO Auto-generated method stub
+//	
+//	
+//    }
+
+    public Thread getHiloescribe() {
+        return hiloescribe;
+    }
+
+    public void setHiloescribe(Thread hiloescribe) {
+        this.hiloescribe = hiloescribe;
+    }
+
+    public Thread getHilolee() {
+        return hilolee;
+    }
+
+    public void setHilolee(Thread hilolee) {
+        this.hilolee = hilolee;
+    }
+
+    public boolean isConectado() {
+        return conectado;
+    }
+
+    public void setConectado(boolean conectado) {
+        this.conectado = conectado;
+    }
+
+    public SerialWriter getSw() {
+        return sw;
+    }
+
+    public void setSw(SerialWriter sw) {
+        this.sw = sw;
+    }
+
+    @Override
+    public void run() {
+	// TODO Auto-generated method stub
+	//while (true);
+	
+
+	    try {
+		//conexion.connect(Messages.getString("VMed.SerialPort"));
+		if (!this.isConectado())
+		    this.connect(VLogin.vadmin.puerto);
+	    } catch (Exception e2) {
+		// TODO Auto-generated catch block
+		e2.printStackTrace();
+	    } //$NON-NLS-1$
+	    
+	    
+	    //Forzar el filtrado para que solo nos devuelva reportes breves
+	    //conexion.getOut().write("$sv=1".getBytes());
+
+	    // ESCRIBIR AL PUERTO
+	    // escribir al puerto el med.corte
+	    
+	    
+	    String home = new String();
+	    home = "%\ng28.2 x0y0z0\n";
+	    this.getSw().escribe(home);
+	    //conexion.getOut().write(home.getBytes(),0,home.length());
+	    try {
+		Thread.sleep(20000);
+	    } catch (InterruptedException e) {
+		// TODO Auto-generated catch block
 		e.printStackTrace();
 	    }
-	}
+	    this.getSw().escribe(this.cort);
+	
     }
 
 

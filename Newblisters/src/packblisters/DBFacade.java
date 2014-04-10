@@ -419,7 +419,7 @@ public class DBFacade implements TableModelListener {
 	    conexion = conectar();
 	    // Sentencia preparada
 	    sentenciapre = conexion
-		    .prepareStatement("insert into historico (usuario, medicamento, codigonacional, idcorte, evento)"
+		    .prepareStatement("insert into historico (usuario, medicamento, codigonacional, idcorte, evento, incidencia)"
 			    + "	VALUES (?,?,?,?,?,?)");
 	    sentenciapre.setString(1, usuario);
 	    sentenciapre.setString(2, nombre);
