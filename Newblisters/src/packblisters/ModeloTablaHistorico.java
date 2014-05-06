@@ -49,6 +49,10 @@ class ModeloTablaHistorico extends AbstractTableModel implements TableModel {
 	case 5:
 	    aux.setEvento((String) dato);
 	    break;
+	
+	case 6:
+	    aux.setIncidencia((String) dato);
+	    break;
 
 	}
 
@@ -80,6 +84,8 @@ class ModeloTablaHistorico extends AbstractTableModel implements TableModel {
 	    return aux.getIdCorte();
 	case 5:
 	    return aux.getEvento();
+	case 6:
+	    return aux.getIncidencia();
 	}
 	return null;
     }
@@ -131,7 +137,7 @@ class ModeloTablaHistorico extends AbstractTableModel implements TableModel {
     @Override
     public int getColumnCount() {
 	// TODO Auto-generated method stub
-	return 6;
+	return 7;
     }
 
     @Override
@@ -140,17 +146,19 @@ class ModeloTablaHistorico extends AbstractTableModel implements TableModel {
 	// cabecera de la tabla.
 	switch (columnIndex) {
 	case 0:
-	    return "Fecha y hora";
+	    return "Fecha";
 	case 1:
 	    return "Usuario";
 	case 2:
 	    return "Medicamento";
 	case 3:
-	    return "Codigo Nacional";
+	    return "Cod Nac";
 	case 4:
-	    return "Patron Corte";
+	    return "Corte";
 	case 5:
 	    return "Evento";
+	case 6:
+	    return "Incidencia";
 	default:
 	    return null;
 	}
@@ -171,6 +179,8 @@ class ModeloTablaHistorico extends AbstractTableModel implements TableModel {
 	case 4:
 	    return Integer.class;
 	case 5:
+	    return String.class;
+	case 6:
 	    return String.class;
 	default:
 	    // Devuelve una clase Object por defecto.

@@ -33,9 +33,11 @@ public class VMed extends JPanel {
     private String corte,cancelar,pausar,reanudar;
     private DBFacade dbf = new DBFacade();
     private Medicamento m;
-    private JToggleButton pausa;
-    private SerialDriver conexion;
-    private JButton btnCancelar;
+    private JToggleButton cortarBtn;
+    public SerialDriver conexion;
+    private JButton btnCancelar ;
+    
+    public VIncidencia vincidencia;
 
     
     public VMed(Medicamento med) {
@@ -68,12 +70,10 @@ public class VMed extends JPanel {
 	
 	 
 	
-	JButton cortarBtn = new JButton(Messages.getString("VMed.CutBtn")); //$NON-NLS-1$
-	cortarBtn.setBounds(186, 558, 114, 77);
+	cortarBtn = new JToggleButton("CORTAR"); //$NON-NLS-1$
+	cortarBtn.setBounds(216, 558, 135, 77);
 	adaptajbuttonabajo(cortarBtn, "/iconos/cortar.png");
 	cortarBtn.setIconTextGap(1);
-//	btnNuevoMed.setForeground(Color.BLACK);
-//	btnNuevoMed.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 24));
 	cortarBtn.setHorizontalTextPosition(SwingConstants.CENTER);
 	cortarBtn.setVerticalTextPosition(SwingConstants.BOTTOM);
 	add(cortarBtn);
@@ -81,31 +81,61 @@ public class VMed extends JPanel {
 	    public void actionPerformed(ActionEvent arg0) {
 
 		try {
-		  
+		    	
 		    	btnCancelar.setEnabled(true);
 		    	Thread hilocorte = new Thread (conexion);
 		    	hilocorte.start();
+		   
+		    	if  (cortarBtn.getText().contentEquals("CORTAR")){
+		    	     cortarBtn.setText("PAUSAR");
 		    	
-		    	//Miro que puertos hay en el sistema 
+		    	}
 		    	
-		    	//conexion.dicepuerto();
-		        
+		    	try {
+		    	    
+		        if (cortarBtn.isSelected()){
+//                    		    if ( cortarBtn.getText().contentEquals("PAUSAR")){
+//                    			
+//                    			//hay que mandar la PAUSA: ! 
+//                    			cortarBtn.setText("Reanudar");
+//                    			//conexion.getSw().pausa=true;
+//                    			
+//                    		    }
+                    		    
+                    		    if ( cortarBtn.getText().contentEquals("Reanudar")){
+                    			//mandar la reanudación: ~
+                    			
+                    			cortarBtn.setText("PAUSAR");
+                    			//conexion.getSw().notify();
+                    			conexion.getSw().reanuda=true;
+                    		
+                    		    }
+		    
+		       }else if (cortarBtn.isSelected()==false){
+           		    if ( cortarBtn.getText().contentEquals("PAUSAR")){
+            			
+           			//hay que mandar la PAUSA: ! 
+           			cortarBtn.setText("Reanudar");
+           			conexion.getSw().pausa=true;
+           			
+           		    }
+           		    
+           		    else if ( cortarBtn.getText().contentEquals("Reanudar")){
+           			//mandar la reanudación: ~
+           			
+           			cortarBtn.setText("PAUSAR");
+           			//conexion.getSw().notify();
+           			conexion.getSw().reanuda=true;
+           		
+           		    }
+	    
+	       }
+		    } catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		    } //$NON-NLS-1$
 		    	
-			    ///Insert del evento en la tabla HISTORICO
-//        		    dbf.insertarHistorico(VLogin.UsuarioLogueado.getNombre(),m.getNombre(),m.getCodnac(),m.getIdcorte(),"Comienzo corte",null);
-//
-//			    
-//        
-//        		    System.out.println("CORTE en "+VLogin.vadmin.puerto);
-//        		        
-//        		   
-//        		    //TODO AKI JDIALOG de incidencia
-//        		    VIncidencia vincidencia = new VIncidencia(m);
-//        		    vincidencia.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-//        		    vincidencia.setVisible(true);
-//        		  ///Insert del evento en la tabla HISTORICO
-//        		    dbf.insertarHistorico(VLogin.UsuarioLogueado.getNombre(),m.getNombre(),m.getCodnac(),m.getIdcorte(),"Fin corte",null);
-        		    
+		  	    
         		            		    
 		} catch (Exception e) {
 		    // TODO Auto-generated catch block
@@ -136,55 +166,43 @@ public class VMed extends JPanel {
 
 		}
 	});
-	btnCancelar.setBounds(313, 566, 185, 25);
+	btnCancelar.setBounds(363, 558, 135, 77);
 	add(btnCancelar);
 	
-	pausa = new JToggleButton();
-	pausa.setText("PAUSAR");
-	pausa.setEnabled(true);
-	pausa.setBounds(312, 603, 186, 25);
-	pausa.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-		 
-
-//		    AbstractButton abstractButton = (AbstractButton) e.getSource();
-//		    boolean selected = abstractButton.getModel().isSelected();
-		    
-		    try {
-//			 	SerialDriver conexion = SerialDriver.getInstance();
-//        			conexion.connect(Messages.getString("VMed.SerialPort"));
-        			//conexion.
-        		   
-		    
-        		    if ( pausa.isSelected()){
-        			
-        			//hay que mandar la PAUSA: ! 
-        			pausa.setText("Reanudar");
-        			conexion.getSw().pausa=true;
-//        			conexion.getOut()
-//        			    .write(pausar.getBytes(), 0, pausar.length());
-        		    }
-        		    
-        		    else{
-        			//mandar la reanudación: ~
-        			
-        			pausa.setText("Pausar");
-        			//conexion.getSw().notify();
-        			conexion.getSw().reanuda=true;
-        			
-        			
-//        			conexion.getOut()
-//        			    .write(reanudar.getBytes(), 0, reanudar.length());
-        		    }
-		    } catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		    } //$NON-NLS-1$
-		    		   
-		    
-		}
-	});
-	add(pausa);
+//	pausa = new JToggleButton();
+//	pausa.setText("PAUSAR");
+//	pausa.setEnabled(true);
+//	pausa.setBounds(312, 603, 186, 25);
+//	pausa.addActionListener(new ActionListener() {
+//		public void actionPerformed(ActionEvent e) {
+//		    
+//		    try {  
+//		    
+//        		    if ( pausa.isSelected()){
+//        			
+//        			//hay que mandar la PAUSA: ! 
+//        			pausa.setText("Reanudar");
+//        			conexion.getSw().pausa=true;
+//        			
+//        		    }
+//        		    
+//        		    else{
+//        			//mandar la reanudación: ~
+//        			
+//        			pausa.setText("Pausar");
+//        			//conexion.getSw().notify();
+//        			conexion.getSw().reanuda=true;
+//        		
+//        		    }
+//		    } catch (Exception e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		    } //$NON-NLS-1$
+//		    		   
+//		    
+//		}
+//	});
+//	add(pausa);
 	
 	JButton btnAtras = new JButton(Messages.getString("VMed.btnAtras.text")); //$NON-NLS-1$
 	btnAtras.addActionListener(new ActionListener() {
@@ -198,7 +216,7 @@ public class VMed extends JPanel {
 			VLogin.vprocesocorte.setVisible(true);
 		}
 	});
-	btnAtras.setBounds(26, 558, 148, 77);
+	btnAtras.setBounds(26, 558, 178, 77);
 	adaptajbutton(btnAtras, "/iconos/patras.png");
 	btnAtras.setIconTextGap(1);
 	btnAtras.setHorizontalTextPosition(SwingConstants.RIGHT);
@@ -207,6 +225,21 @@ public class VMed extends JPanel {
 
     }
     
+    
+    public void cortefinalizado (){
+    ///Insert del evento en la tabla HISTORICO
+    dbf.insertarHistorico(VLogin.UsuarioLogueado.getNombre(),m.getNombre(),m.getCodnac(),m.getIdcorte(),"Comienzo corte",null);
+    
+    //TODO AKI JDIALOG de incidencia
+    vincidencia = new VIncidencia(m);
+    vincidencia.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+    vincidencia.setVisible(true);
+    
+    
+  ///Insert del evento en la tabla HISTORICO
+    dbf.insertarHistorico(VLogin.UsuarioLogueado.getNombre(),m.getNombre(),m.getCodnac(),m.getIdcorte(),"Fin corte",null);
+
+   }
     public void adaptajbutton (JButton but, String ruta){      
         ImageIcon fot = new ImageIcon(VLogin.class.getResource(ruta));
  		//Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lbllogo.getWidth(), lbllogo.getHeight(), Image.SCALE_DEFAULT));
@@ -215,7 +248,7 @@ public class VMed extends JPanel {
  	       
  	   }
     
-    public void adaptajbuttonabajo (JButton but, String ruta){      
+    public void adaptajbuttonabajo (JToggleButton but, String ruta){      
         ImageIcon fot = new ImageIcon(VLogin.class.getResource(ruta));
  		//Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lbllogo.getWidth(), lbllogo.getHeight(), Image.SCALE_DEFAULT));
  		but.setIcon(new ImageIcon(fot.getImage().getScaledInstance(but.getWidth()-55, but.getHeight()-25, Image.SCALE_SMOOTH)));

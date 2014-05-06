@@ -85,10 +85,12 @@ public class VTablaHistorico extends JPanel implements ListSelectionListener {
 	
 	
 	 //Fuerzo a varias columnas a tener un ancho determinado
-	 TableColumn columnafecha = table.getColumn("Fecha y hora");
+	 TableColumn columnafecha = table.getColumn("Fecha");
 	 TableColumn columnausuario = table.getColumn("Usuario");
+	 TableColumn columnacorte = table.getColumn("Corte");
+	 columnacorte.setPreferredWidth(30);
 	 columnausuario.setPreferredWidth(50);
-	 columnafecha.setPreferredWidth(120);
+	 columnafecha.setPreferredWidth(100);
 
 
 	JButton btnAtras = new JButton(

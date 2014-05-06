@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import javax.swing.DefaultComboBoxModel;
@@ -310,7 +311,7 @@ public class DBFacade implements TableModelListener {
 	    conexion = conectar();
 	    // Sentencia preparada
 	    sentenciapre = conexion
-		    .prepareStatement("select * from usuarios WHERE nombre=?;");
+  		    .prepareStatement("select * from usuarios WHERE nombre=?;");
 	    sentenciapre.setString(1, nombre);
 	    resultados = sentenciapre.executeQuery();
 
@@ -368,13 +369,17 @@ public class DBFacade implements TableModelListener {
 	    while (resultados.next()) {
 		Historico hist = new Historico();
 
+		
+		String S = new SimpleDateFormat("MM/dd/yyyy hh:mm").format(resultados.getTimestamp("fecha"));
+		
 		hist.setId(resultados.getInt("id"));
-		hist.setFecha(resultados.getTimestamp("fecha").toString());
+		hist.setFecha(S);
 		hist.setUsuario(resultados.getString("usuario"));
 		hist.setMedicamento(resultados.getString("medicamento"));
 		hist.setCodNac(resultados.getInt("codigonacional"));
 		hist.setIdCorte(resultados.getInt("idcorte"));
 		hist.setEvento(resultados.getString("evento"));
+		hist.setIncidencia(resultados.getString("incidencia"));
 
 		modelotablao.anadeHistorico(hist);
 

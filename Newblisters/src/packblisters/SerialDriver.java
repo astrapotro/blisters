@@ -1,7 +1,7 @@
 package packblisters;
 
-import gnu.io.*;
-
+//import gnu.io.*;
+import jssc.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,23 +13,29 @@ import java.util.StringTokenizer;
 //////////
 //////////
 ////////////////
-//////////////// Sólo funciona en linux con la libreria rxtx-2.2pre2-bins. Con inferiores casca el .so !!!!!!
+////////////////  CAMBIADA LIBRERÍA RXTX por JSSC (revisar rendimiento)
 //////////////// Con linux socat -d -d pty,raw pty,raw para emular puertos serie. 
+
 //////////////// Cada terminal abierta se abre en un pts nuevo. OJO !!
 
 /////////////// TO-DO Hay que cambiarlo para lectura/escritura orientada a eventos
 
 public class SerialDriver implements Runnable {
     private static SerialDriver msd;
-    private InputStream in;
-    private OutputStream out;
-    private String puerto=VLogin.vadmin.puerto;
+//    private InputStream in;
+//    private OutputStream out;
+    private String puerto = VLogin.vadmin.puerto;
     private boolean conectado = false;
     
-    private Thread hiloescribe;
-    private Thread hilolee;
+    public Thread hiloescribe;
+    public Thread hilolee;
     private SerialWriter sw;
+    private SerialReader sr;
     private String cort;
+    private SerialPort serialPort;;
+    
+   
+   
 
     private SerialDriver(String corte) {
 	super();
@@ -44,143 +50,424 @@ public class SerialDriver implements Runnable {
 	return msd;
     }
 
-    public void connect(String portName) throws NoSuchPortException, PortInUseException, UnsupportedCommOperationException, IOException{
+    
+    @Override
+    public void run() {
+	// TODO Auto-generated method stub
+	//while (true);
+	
+	//serialPort = new SerialPort(puerto);
+	
+	
+	
+	    try {
+		//conexion.connect(Messages.getString("VMed.SerialPort"));
+		if (!this.isConectado())
+		    this.connect(VLogin.vadmin.puerto);
+	    } catch (Exception e2) {
+		// TODO Auto-generated catch block
+		e2.printStackTrace();
+	    } //$NON-NLS-1$
+	    
+	    
+	    	sr = new SerialDriver.SerialReader(serialPort);
+	    	
+		sw = new SerialDriver.SerialWriter(serialPort);
+		
+		
+		hilolee = new Thread(sr);
+		hilolee.start();
+		hiloescribe = new Thread(sw);
+		hiloescribe.start();
+		
+	    
+	    //Forzar el filtrado para que solo nos devuelva reportes breves
+	    //conexion.getOut().write("$sv=1".getBytes());
+
+	    // ESCRIBIR AL PUERTO
+	    // escribir al puerto el med.corte
+	    
+	    
+	    String home = new String();
+	    //this.getSr().in.skip(this.getSr().in);
+	    home = "%\ng28.2 x0y0z0\n";
+	    
+	    
+	    this.getSr().setFinalizado(false);
+	    this.getSw().escribe(home);
+	    //conexion.getOut().write(home.getBytes(),0,home.length());
+	   
+	    for(int i=200; i>0;i--){
+		
+		
+		this.getSw().escribe("$home");
+		System.out.println(this.getSr());
+
+		if(this.getSr().isFinalizado()){
+		    System.out.println("Saliendo del for");
+		    break;
+		}
+		   
+		
+		try {
+		    Thread.sleep(300);
+		    
+		} catch (InterruptedException e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		} 
+		
+	    }
+//	    try {
+//		Thread.sleep(20000);
+//	    } catch (InterruptedException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	    }
+	    this.getSw().escribe(this.cort);
+	
+    }
+    
+    
+    
+    
+    public void connect(String portName) throws IOException{
 	System.setProperty(Messages.getString("SerialDriver.RXTXSerialPorts"), Messages.getString("SerialDriver.Puerto")); //$NON-NLS-1$ //$NON-NLS-2$
 	System.out.println("PUERTO en serialdriver: "+VLogin.vadmin.puerto);
-	CommPortIdentifier portIdentifier = CommPortIdentifier
-		.getPortIdentifier(portName);
-	if (portIdentifier.isCurrentlyOwned()) {
-	    System.out.println(Messages.getString("SerialDriver.PuertoBusy")); //$NON-NLS-1$
-	} else {
-	    CommPort commPort = portIdentifier.open(this.getClass().getName(),
-		    2000);
-
-	    if (commPort instanceof SerialPort) {
-
-		SerialPort serialPort = (SerialPort) commPort;
-		
+	
+	serialPort = new SerialPort(puerto);
+	
+        	try{
+        	    
+        	    
+        	    	serialPort.openPort();	//serialPort.setParams(9600,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
+        	    	serialPort.setParams(115200,8,1,0);
+        	    	serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN|SerialPort.FLOWCONTROL_RTSCTS_OUT);
+        		serialPort.setRTS(true);
+        		
+        		
+        		
+//        		//Preparing a mask. In a mask, we need to specify the types of events that we want to track.
+//        		//Well, for example, we need to know what came some data, thus in the mask must have the
+//        		//following value: MASK_RXCHAR. If we, for example, still need to know about changes in states 
+//        		//of lines CTS and DSR, the mask has to look like this: SerialPort.MASK_RXCHAR + SerialPort.MASK_CTS + SerialPort.MASK_DSR
+//        		int mask = SerialPort.MASK_RXCHAR;
+//        		//Set the prepared mask
+//        		serialPort.setEventsMask(mask);
+//        		//Add an interface through which we will receive information about events
+        		//serialPort.addEventListener(this);
+        		
+        		
+        	}catch (SerialPortException ex) {
+        	    System.out.println(ex);
+                	conectado = false;
+        	}
+        	
 		conectado = true;
-		//
-		// CONFIGURACION de LA CONEXION SERIE
-		// tinyg 115200 baud
-		int b=Integer.parseInt(Messages.getString("SerialDriver.Baudios"));
-		int databits =Integer.parseInt(Messages.getString("SerialDriver.Databits"));
-		int stopbits =Integer.parseInt(Messages.getString("SerialDriver.Stopbits"));
-		int paridad =Integer.parseInt(Messages.getString("SerialDriver.Paridad"));
-		serialPort.setSerialPortParams(b, databits,stopbits,paridad);
-		serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_OUT | SerialPort.FLOWCONTROL_RTSCTS_IN); 
-		serialPort.setRTS(true);
-//		SerialPort.DATABITS_8,
-//			SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+		
+		
+		
+		
+//static class SerialPortReader implements SerialPortEventListener {
+//	 
+//	        public void serialEvent(SerialPortEvent event) {
+//	            //Object type SerialPortEvent carries information about which event occurred and a value.
+//	            //For example, if the data came a method event.getEventValue() returns us the number of bytes in the input buffer.
+//	            if(event.isRXCHAR()){
+//	                if(event.getEventValue() == 10){
+//	                    try {
+//	                        byte buffer[] = serialPort.readBytes(10);
+//	                    }
+//	                    catch (SerialPortException ex) {
+//	                        System.out.println(ex);
+//	                    }
+//	                }
+//	            }
+//	            //If the CTS line status has changed, then the method event.getEventValue() returns 1 if the line is ON and 0 if it is OFF.
+//	            else if(event.isCTS()){
+//	                if(event.getEventValue() == 1){
+//	                    System.out.println("CTS - ON");
+//	                }
+//	                else {
+//	                    System.out.println("CTS - OFF");
+//	                }
+//	            }
+//	            else if(event.isDSR()){
+//	                if(event.getEventValue() == 1){
+//	                    System.out.println("DSR - ON");
+//	                }
+//	                else {
+//	                    System.out.println("DSR - OFF");
+//	                }
+//	            }
+//	        }
+//	    }
+//	}
+//		
 
-		in = serialPort.getInputStream();
-		out = serialPort.getOutputStream();
-		sw = new SerialWriter(out);
 		
-		hilolee = (new Thread(new SerialReader(in)));
-		hilolee.start();
+
 		
-		hiloescribe = (new Thread(new SerialWriter(out)));
-		hiloescribe.start();
+//		hilolee = (new Thread());
+//		hilolee.start();
+		
+//		hiloescribe = (new Thread(new SerialWriter(out)));
+//		hiloescribe.start();
 		
 //		(new Thread(new SerialReader(in))).start();
 //		(new Thread(new SerialWriter(out))).start();
 		
 
-	    } else {
-		System.out
-			.println(Messages.getString("SerialDriver.ErrorNoSerial")); //$NON-NLS-1$
-	    }
-	}
-    }
-    
+//	    } else {
+//		System.out
+//			.println(Messages.getString("SerialDriver.ErrorNoSerial")); //$NON-NLS-1$
+//	    }
+//	}
+//    }
+}   
+
+
     public void dicepuerto (){
 	
-	Enumeration<?> ports = CommPortIdentifier.getPortIdentifiers(); 
-	System.out.println("DICEPUERTO");
+//	Enumeration<?> ports = CommPortIdentifier.getPortIdentifiers(); 
+//	System.out.println("DICEPUERTO");
+//	
+//	while( ports.hasMoreElements() ) 
+//	{ 
+//        	CommPortIdentifier port = (CommPortIdentifier)ports.nextElement(); 
+//        	String type; 
+//        
+//        	switch( port.getPortType() ) 
+//        	{ 
+//                	case CommPortIdentifier.PORT_PARALLEL: 
+//                	type = "Parallel"; 
+//                	break; 
+//                
+//                	case CommPortIdentifier.PORT_SERIAL: 
+//                	type = "Serial"; 
+//                	break; 
+//                
+//                	default: 
+//                	type = "Desconocido"; 
+//                	break; 
+//        	} 
+//
+//           System.out.println( port.getName() + ": " + type); 
+//           
+//	 } 
 	
-	while( ports.hasMoreElements() ) 
-	{ 
-        	CommPortIdentifier port = (CommPortIdentifier)ports.nextElement(); 
-        	String type; 
-        
-        	switch( port.getPortType() ) 
-        	{ 
-                	case CommPortIdentifier.PORT_PARALLEL: 
-                	type = "Parallel"; 
-                	break; 
-                
-                	case CommPortIdentifier.PORT_SERIAL: 
-                	type = "Serial"; 
-                	break; 
-                
-                	default: 
-                	type = "Desconocido"; 
-                	break; 
-        	} 
-
-           System.out.println( port.getName() + ": " + type); 
-           
-	 } 
 } 
 	
-    public InputStream getIn() {
-	return in;
-    }
+//    /**Clase hilo que lee respuestas de la tiny */
+//    public static class SerialReader implements Runnable {
+//	//InputStream in;
+//	SerialPort puerto;
+//	boolean finalizado;
+//
+//	public SerialReader (SerialPort puerto) {
+//	    this.puerto = puerto;
+//	}
+//
+//	public void run() {
+//	    byte[] buffer = new byte[1024];
+//	   // int len = -1;
+//	    finalizado =  false;
+//	    
+//		//while ((len = this.in.read(buffer)) > -1) {
+//	    
+//	    
+//		while (true){
+//		    try {
+//			  buffer = puerto.readBytes();
+//		         
+//			  System.out.println("BUFFER lectura: "+buffer);
+//	
+//	           if (buffer !=null){
+//		    // FILTRO DE ENTRADA
+//			  String buff = new String(buffer);
+//			  System.out.print(buff);
+//		    
+//		    //Capturar lo que manda tinyG
+//		    //Bucle de escucha a la tinyg y le pida su estado
+//		    //byte[] estado=null;
+//		    
+//            		    
+//            		  if (!finalizado)
+//            		   {
+//            		       //conexion.getOut().write("$sr".getBytes());
+//            		       
+//            		       if (buff.contains("Homed")){
+//            			   finalizado=true;
+//            			   System.out.println(this);
+//            			   System.out.println("Homing finalizado!");
+//            			   //TODO NotiFY
+//               			
+//            			   synchronized (VLogin.vadmin.vprocesocorte.getVmed().conexion.hiloescribe){
+//               			    VLogin.vadmin.vprocesocorte.getVmed().conexion.hiloescribe.notify();
+//   				 }
+//            			   
+//            		       }
+//            		   }else{
+//            		       
+//                		   if (buff.contains("stat:3")){
+//            			   System.out.println("EL movimiento ha finalizado");
+//            			   	//TODO NotiFY
+//                    			synchronized (VLogin.vadmin.vprocesocorte.getVmed().conexion.hiloescribe){
+//                    			    VLogin.vadmin.vprocesocorte.getVmed().conexion.hiloescribe.notify();
+//        				}
+//                		   }
+//                		       
+//                		   else if (buff.contains("stat:4")){
+//                			   System.out.println("EL PROGRAMA HA FINALIZADO");
+//                			   
+//                			   //TODO Hay que llamar a cortefinalizado
+//                			   VLogin.vadmin.vprocesocorte.getVmed().cortefinalizado();
+//                			   
+//                			   synchronized (VLogin.vadmin.vprocesocorte.getVmed().conexion.hiloescribe){
+//                       			    VLogin.vadmin.vprocesocorte.getVmed().conexion.hiloescribe.notify();
+//           				}
+//                		       }
+//                		       
+//            		   }
+//	           	} 
+//	           
+//	           	Thread.sleep(300);
+//	           	
+//		    }catch (SerialPortException e) {
+//		    // TODO Auto-generated catch block
+//		    e.printStackTrace();
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		    }
+//		}
+//	
+//	}
+//
+//	public boolean isFinalizado() {
+//	    return finalizado;
+//	}
+//
+//	public void setFinalizado(boolean finalizado) {
+//	    this.finalizado = finalizado;
+//	}
+//	
+//    }
 
-    public void setIn(InputStream in) {
-	this.in = in;
-    }
+    
+    
+    
+    /**Clase hilo que lee respuestas de la tiny */
+    public static class SerialReader implements SerialPortEventListener {
+	//InputStream in;
+	SerialPort puerto;
+	boolean finalizado;
 
-    public OutputStream getOut() {
-	return out;
-    }
-
-    public void setOut(OutputStream out) {
-	this.out = out;
-    }
-
-    /** */
-    public static class SerialReader implements Runnable {
-	InputStream in;
-
-	public SerialReader(InputStream in) {
-	    this.in = in;
+	public SerialReader (SerialPort puerto) {
+	    this.puerto = puerto;
 	}
 
 	public void run() {
 	    byte[] buffer = new byte[1024];
-	    int len = -1;
-	    try {
-		while ((len = this.in.read(buffer)) > -1) {
+	   // int len = -1;
+	    finalizado =  false;
+	    
+		//while ((len = this.in.read(buffer)) > -1) {
+	    
+	    
+		while (true){
+		    try {
+			  buffer = puerto.readBytes();
+		         
+			  System.out.println("BUFFER lectura: "+buffer);
+	
+	           if (buffer !=null){
 		    // FILTRO DE ENTRADA
-		    System.out.print(new String(buffer, 0, len));
+			  String buff = new String(buffer);
+			  System.out.print(buff);
 		    
 		    //Capturar lo que manda tinyG
 		    //Bucle de escucha a la tinyg y le pida su estado
-		    byte[] estado=null;
-		    boolean finalizado=false;
+		    //byte[] estado=null;
 		    
-		   while (!finalizado)
-		   {
-		       //conexion.getOut().write("$sr".getBytes());
-		       
-		       if (buffer.toString().contains("stat:3"))
-			   finalizado=true;
-		       
-		   }
-		    
+            		    
+            		  if (!finalizado)
+            		   {
+            		       //conexion.getOut().write("$sr".getBytes());
+            		       
+            		       if (buff.contains("Homed")){
+            			   finalizado=true;
+            			   System.out.println(this);
+            			   System.out.println("Homing finalizado!");
+            			   //TODO NotiFY
+               			
+            			   synchronized (VLogin.vadmin.vprocesocorte.getVmed().conexion.hiloescribe){
+               			    VLogin.vadmin.vprocesocorte.getVmed().conexion.hiloescribe.notify();
+   				 }
+            			   
+            		       }
+            		   }else{
+            		       
+                		   if (buff.contains("stat:3")){
+            			   System.out.println("EL movimiento ha finalizado");
+            			   	//TODO NotiFY
+                    			synchronized (VLogin.vadmin.vprocesocorte.getVmed().conexion.hiloescribe){
+                    			    VLogin.vadmin.vprocesocorte.getVmed().conexion.hiloescribe.notify();
+        				}
+                		   }
+                		       
+                		   else if (buff.contains("stat:4")){
+                			   System.out.println("EL PROGRAMA HA FINALIZADO");
+                			   
+                			   //TODO Hay que llamar a cortefinalizado
+                			   VLogin.vadmin.vprocesocorte.getVmed().cortefinalizado();
+                			   
+                			   synchronized (VLogin.vadmin.vprocesocorte.getVmed().conexion.hiloescribe){
+                       			    VLogin.vadmin.vprocesocorte.getVmed().conexion.hiloescribe.notify();
+           				}
+                		       }
+                		       
+            		   }
+	           	} 
+	           
+	           	Thread.sleep(300);
+	           	
+		    }catch (SerialPortException e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		    }
 		}
-		System.out.println("BUFFER: "+buffer);
-	    } catch (IOException e) {
-		e.printStackTrace();
-	    }
+	
 	}
-    }
 
+	public boolean isFinalizado() {
+	    return finalizado;
+	}
+
+	public void setFinalizado(boolean finalizado) {
+	    this.finalizado = finalizado;
+	}
+
+	@Override
+	public void serialEvent(SerialPortEvent arg0) {
+	    // TODO Auto-generated method stub
+	    
+	}
+	
+    }
+    
+    
+    
     /** */
+    
+    /**Clase hilo que escribe órdenes a la tiny */
     public static class SerialWriter implements Runnable {
-	OutputStream out;
+	//OutputStream out;
+	SerialPort puerto;
+	
 	public boolean pausa = false;
 	public boolean reanuda = false;
 	public boolean cancela = false;
@@ -188,26 +475,14 @@ public class SerialDriver implements Runnable {
 	
 	
 	
-	public SerialWriter(OutputStream out) {
-	    this.out = out;
+	public SerialWriter(SerialPort puerto) {
+	    this.puerto = puerto;
 	}
 
 	public void run() {
-	    //try {
-		//int c = 0;
-
+	    
 		    while (true){}
-
-//		while ((c = System.in.read()) > -1) {
-//		    
-//		    this.out.write(c);
-////		}
-//	    } catch (IOException e) {
-//		e.printStackTrace();
-//	    } catch (InterruptedException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	    }
+	
 	}
 	
 	public void escribe (String s){
@@ -221,18 +496,23 @@ public class SerialDriver implements Runnable {
 	    
 	    
 	    while(tokens.hasMoreTokens()){
-		
-		
-		
-		if (pausa ){
+	
+		if (pausa){
 		    try {
-			if (!pausado)
-			    this.out.write(pausar.getBytes(), 0 ,pausar.length());
+			if (!pausado){
+			   puerto.writeBytes(pausar.getBytes());
+			    try {
+	        		    Thread.sleep(300);
+	        		} catch (InterruptedException e) {
+	        		    // TODO Auto-generated catch block
+	        		    e.printStackTrace();
+	        		}   
+			}
 			pausa=false;
 			pausado=true;
 			//Thread.currentThread().wait();
 			
-		    } catch (IOException e) {
+		    } catch (SerialPortException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		    }
@@ -240,24 +520,7 @@ public class SerialDriver implements Runnable {
 		}
 		else if (reanuda){
 		    try {
-			this.out.write(reanudar.getBytes(), 0 , reanudar.length());
-			reanuda=false;
-			pausado=false;
-		    } catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		    }
-		}
-		else if (cancela ){
-		    try {
-			this.out.write(pausar.getBytes(), 0 , pausar.length());
-			try {
-        		    Thread.sleep(300);
-        		} catch (InterruptedException e) {
-        		    // TODO Auto-generated catch block
-        		    e.printStackTrace();
-        		}
-			this.out.write(flush.getBytes(), 0 , flush.length());
+			puerto.writeBytes(reanudar.getBytes());
 			
 			try {
         		    Thread.sleep(300);
@@ -265,14 +528,40 @@ public class SerialDriver implements Runnable {
         		    // TODO Auto-generated catch block
         		    e.printStackTrace();
         		}
-			this.out.write(reanudar.getBytes(), 0 , reanudar.length());
+			reanuda=false;
+			pausado=false;
+			pausa=false;
+			
+		    } catch (SerialPortException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		    }
+		}
+		else if (cancela ){
+		    try {
+			puerto.writeBytes(pausar.getBytes());
 			try {
         		    Thread.sleep(300);
         		} catch (InterruptedException e) {
         		    // TODO Auto-generated catch block
         		    e.printStackTrace();
         		}
-			this.out.write(home.getBytes(), 0 , home.length());
+			puerto.writeBytes(flush.getBytes());
+			
+			try {
+        		    Thread.sleep(300);
+        		} catch (InterruptedException e) {
+        		    // TODO Auto-generated catch block
+        		    e.printStackTrace();
+        		}
+			puerto.writeBytes(reanudar.getBytes());
+			try {
+        		    Thread.sleep(300);
+        		} catch (InterruptedException e) {
+        		    // TODO Auto-generated catch block
+        		    e.printStackTrace();
+        		}
+			puerto.writeBytes(home.getBytes());
 			try {
         		    Thread.sleep(300);
         		} catch (InterruptedException e) {
@@ -283,7 +572,7 @@ public class SerialDriver implements Runnable {
 			cancela=false;
 			
 			return;
-		    } catch (IOException e) {
+		    } catch ( SerialPortException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		    }
@@ -293,22 +582,35 @@ public class SerialDriver implements Runnable {
 		    if (!pausado){
 			String token = tokens.nextToken();
 			token = token +"\n\r";
-			
+			System.out.println("TOKEN"+token);
         		try {
-        		    this.out.write(token.getBytes(), 0 ,token.length());
-        		} catch (IOException e) {
+        		    puerto.writeBytes(token.getBytes());
+        		} catch (SerialPortException e) {
         		    // TODO Auto-generated catch block
         		    e.printStackTrace();
         		}
         		
         //		conexion.getOut()
         //		    .write(s.getBytes(), 0, s.length());
-        		try {
-        		    Thread.sleep(300);
-        		} catch (InterruptedException e) {
-        		    // TODO Auto-generated catch block
-        		    e.printStackTrace();
-        		}
+        		
+//        		try {
+//        		    Thread.sleep(500);
+//        		} catch (InterruptedException e) {
+//        		    // TODO Auto-generated catch block
+//        		    e.printStackTrace();
+//        		}
+        		
+        		synchronized (this){
+    			    try {
+				this.wait();
+			    } catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			    }
+			}
+        		
+        		
+        		
 		    }
 		}
 	    }
@@ -316,12 +618,11 @@ public class SerialDriver implements Runnable {
 	}
     }
 
-//    @Override
-//    public void run() {
-//	// TODO Auto-generated method stub
-//	
-//	
-//    }
+
+
+
+    
+
 
     public Thread getHiloescribe() {
         return hiloescribe;
@@ -351,46 +652,19 @@ public class SerialDriver implements Runnable {
         return sw;
     }
 
+    public SerialReader getSr() {
+        return sr;
+    }
+
+    public void setSr(SerialReader sr) {
+        this.sr = sr;
+    }
+
     public void setSw(SerialWriter sw) {
         this.sw = sw;
     }
 
-    @Override
-    public void run() {
-	// TODO Auto-generated method stub
-	//while (true);
-	
 
-	    try {
-		//conexion.connect(Messages.getString("VMed.SerialPort"));
-		if (!this.isConectado())
-		    this.connect(VLogin.vadmin.puerto);
-	    } catch (Exception e2) {
-		// TODO Auto-generated catch block
-		e2.printStackTrace();
-	    } //$NON-NLS-1$
-	    
-	    
-	    //Forzar el filtrado para que solo nos devuelva reportes breves
-	    //conexion.getOut().write("$sv=1".getBytes());
-
-	    // ESCRIBIR AL PUERTO
-	    // escribir al puerto el med.corte
-	    
-	    
-	    String home = new String();
-	    home = "%\ng28.2 x0y0z0\n";
-	    this.getSw().escribe(home);
-	    //conexion.getOut().write(home.getBytes(),0,home.length());
-	    try {
-		Thread.sleep(20000);
-	    } catch (InterruptedException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	    }
-	    this.getSw().escribe(this.cort);
-	
-    }
 
 
 }

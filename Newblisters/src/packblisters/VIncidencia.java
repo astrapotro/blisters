@@ -29,7 +29,8 @@ public class VIncidencia extends JDialog {
     public VIncidencia(Medicamento med) {
 	
 	this.m=med;
-	setBounds(100, 100, 450, 300);
+	
+	setBounds((Principal.d.width/2)-250, (Principal.d.height/2)-175, 450, 300);
 	getContentPane().setLayout(null);
 	contentPanel.setBounds(0, 0, 450, 231);
 	contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -52,6 +53,7 @@ public class VIncidencia extends JDialog {
 			    JOptionPane.showMessageDialog(incidenciaok,
 					"Incidencia guardada", "Info",
 					JOptionPane.INFORMATION_MESSAGE);
+			    dispose();
 			}
 		});
 		okButton.setBounds(152, 237, 71, 25);
@@ -59,11 +61,19 @@ public class VIncidencia extends JDialog {
 		okButton.setActionCommand("OK");
 		getRootPane().setDefaultButton(okButton);
 	}
-	{
+	    
 		JButton cancelButton = new JButton("Cancel");
+		cancelButton.addActionListener(new ActionListener(){
+		    public void actionPerformed(ActionEvent e) {
+			dispose();
+		    }
+		    
+		});
+		
+		
 		cancelButton.setBounds(228, 237, 81, 25);
 		getContentPane().add(cancelButton);
 		cancelButton.setActionCommand("Cancel");
-	}
+	
     }
 }

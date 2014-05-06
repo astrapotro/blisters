@@ -5,7 +5,7 @@ package packblisters;
 
 public class Historico {
     
-    private String Usuario, Medicamento, Evento;
+    private String Usuario, Medicamento, Evento, Incidencia;
     private String fecha;
     private int id;
     
@@ -54,4 +54,11 @@ public class Historico {
     public void setIdCorte(int idCorte) {
         IdCorte = idCorte;
     }
+    public String getIncidencia() {
+        return Incidencia;
+    }
+    public void setIncidencia(String incidencia) {
+        Incidencia = incidencia;
+    }
+   
 }

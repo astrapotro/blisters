@@ -60,6 +60,7 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener , Tab
     private JRadioButton rdbtnNombre;
     private JRadioButton rdbtnCodigoNacinal;
     private JRadioButton rdbttCodBar;
+    private VMed vmed;
   
 
     public VProcesoCorte() {
@@ -353,7 +354,7 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener , Tab
 
 		if (medselect != null) {
 		    setVisible(false);
-		    VMed vmed = new VMed(medselect);
+		    vmed = new VMed(medselect);
 		    vmed.setBounds((Principal.d.width / 2) - 518/2,
 			    (Principal.d.height / 2) - 345, 518, 650);
 		    Principal.Panel.add(vmed);
@@ -415,5 +416,15 @@ public class VProcesoCorte extends JPanel implements ListSelectionListener , Tab
 	// TODO Auto-generated method stub
 	System.out.println("Tabla cambiada");
 	
+    }
+
+
+    public VMed getVmed() {
+        return vmed;
+    }
+
+
+    public void setVmed(VMed vmed) {
+        this.vmed = vmed;
     }
 }
