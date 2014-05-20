@@ -130,11 +130,12 @@ public  class VAdmin extends JPanel {
 	btnProcesoCorte.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 		    	
+		  // puerto = "/dev/ttyUSB0";
 		    	
 		   puerto = (String)JOptionPane.showInputDialog( Principal.Panel,
 			    		"Introduzca el puerto:", //$NON-NLS-1$
 			    		"Configuración puerto serie" , //$NON-NLS-1$
-			    		JOptionPane.QUESTION_MESSAGE);
+			    		JOptionPane.QUESTION_MESSAGE,null,null,"/dev/ttyUSB0");
 		        
 		        System.out.println("PUERTO: "+puerto);
 		        

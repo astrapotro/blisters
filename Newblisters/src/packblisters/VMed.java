@@ -52,7 +52,8 @@ public class VMed extends JPanel {
 	pausar =  med.getMicorte().getPausar();
 	reanudar =  med.getMicorte().getReanudar();
 	m = med;
-	conexion = SerialDriver.getInstance(corte);
+	conexion = SerialDriver.getInstance();
+	conexion.setCort(corte);
 	
 	setLayout(null);
 	this.setBackground(new Color(224, 255, 255));	
