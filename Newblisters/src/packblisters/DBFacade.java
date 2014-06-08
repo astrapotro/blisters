@@ -34,6 +34,7 @@ public class DBFacade implements TableModelListener {
 		return c;
 	}
 
+	// USUARIOS
 	private String leerBBDD(String nomusuario) throws Exception {
 
 		conexion = conectar();
@@ -45,237 +46,9 @@ public class DBFacade implements TableModelListener {
 		resultados.next();
 		return resultados.getString("password"); // Nombre de campo a recoger de
 		// la BBDD
-
 	}
 
-	public boolean comprobarLogin(String user, char[] pass) {
-
-		// Aki comprobaríamos con la BBDD
-
-		try {
-			String contraseña = leerBBDD(user);
-			String pwd = new String(pass);
-			return (contraseña.contentEquals(pwd));
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-			System.out.println(Messages.getString("DBFacade.ErrorLogin")); //$NON-NLS-1$
-			return false;
-
-		} finally // CErrar conexion con BBDD
-		{
-			try {
-				conexion.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-
-	public void getMedicamentos(DefaultListModel<Medicamento> modelolista) {
-		try {
-			conexion = conectar();
-			// Sentencia preparada
-			sentenciapre = conexion
-					.prepareStatement("select * from medicamentos;");
-			resultados = sentenciapre.executeQuery();
-
-			while (resultados.next()) {
-				Medicamento medicamento = new Medicamento();
-
-				medicamento.setId(resultados.getInt("medicamentos_id"));
-				medicamento.setNombre(resultados.getString("nombre"));
-				medicamento.setCodnac(resultados.getInt("codnac"));
-				medicamento.setCodbar(resultados.getLong("codbar"));
-				medicamento.setRutaimg(resultados.getString("rutaimg"));
-				medicamento.setIdcorte(resultados.getInt("idcorte"));
-
-				modelolista.addElement(medicamento);
-			}
-		} catch (Exception e) {
-
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println(Messages.getString("DBFacade.ErrorMedicamento")); //$NON-NLS-1$
-
-		} finally // CErrar conexion con BBDD
-		{
-			try {
-				conexion.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-
-	public void getRecorteMedicamento(Medicamento med) {
-		try {
-			conexion = conectar();
-			// Sentencia preparada
-			sentenciapre = conexion
-					.prepareStatement("select * from cortes WHERE idcorte=?;");
-			sentenciapre.setInt(1, med.getIdcorte());
-			resultados = sentenciapre.executeQuery();
-
-			while (resultados.next()) {
-				Corte c = new Corte();
-
-				c.setId(resultados.getInt("idcorte"));
-				c.setGcode(resultados.getString("gcode"));
-				med.setMicorte(c);
-			}
-
-		} catch (Exception e) {
-
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println(Messages.getString("DBFacade.ErrorRecorte")); //$NON-NLS-1$
-
-		} finally // CErrar conexion con BBDD
-		{
-			try {
-				conexion.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-
-	//
-	// Para la tabla !!
-	//
-	public void getMedicamentos(ModeloTablaMeds modelotablao) {
-
-		try {
-			conexion = conectar();
-			// Sentencia preparada
-			sentenciapre = conexion
-					.prepareStatement("select * from medicamentos;");
-			resultados = sentenciapre.executeQuery();
-
-			// Vector<Medicamento> vmed;
-			// Vector<String> idcolumns = new Vector<String>();
-
-			// COLUMNAS
-			// idcolumns.add("ID");
-			// idcolumns.add("Nombre");
-			// idcolumns.add("Código Nacional");
-			// idcolumns.add("Ruta");
-			// idcolumns.add("Corte");
-			// modelotabla.setColumnIdentifiers(idcolumns);
-
-			// FILAS
-			while (resultados.next()) {
-				Medicamento medicamento = new Medicamento();
-
-				medicamento.setId(resultados.getInt("medicamentos_id"));
-				medicamento.setNombre(resultados.getString("nombre"));
-				medicamento.setCodnac(resultados.getInt("codnac"));
-				medicamento.setCodbar(resultados.getLong("codbar"));
-				medicamento.setRutaimg(resultados.getString("rutaimg"));
-				medicamento.setIdcorte(resultados.getInt("idcorte"));
-				System.out.println(medicamento);
-				modelotablao.anademed(medicamento);
-
-			}
-
-		} catch (Exception e) {
-
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println(Messages
-					.getString("DBFacade.ErrorMedicamntosTabla")); //$NON-NLS-1$
-
-		} finally // CErrar conexion con BBDD
-		{
-			// if (generatedKeys != null) try { generatedKeys.close(); } catch
-			// (SQLException logOrIgnore) {}
-			if (sentenciapre != null)
-				try {
-					sentenciapre.close();
-				} catch (SQLException logOrIgnore) {
-				}
-			if (conexion != null)
-				try {
-					conexion.close();
-				} catch (SQLException logOrIgnore) {
-				}
-		}
-	}
-
-	public void getIdCorte(DefaultComboBoxModel modeloCombo) {
-
-		try {
-			conexion = conectar();
-			// Sentencia preparada
-			sentenciapre = conexion
-					.prepareStatement("select idcorte from cortes;");
-			resultados = sentenciapre.executeQuery();
-
-			while (resultados.next()) {
-				modeloCombo.addElement(resultados.getInt("idcorte"));
-			}
-
-		} catch (Exception e) {
-
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println(Messages
-					.getString("DBFacade.ErrorMedicamntosTabla")); //$NON-NLS-1$
-
-		} finally // CErrar conexion con BBDD
-		{
-			try {
-				conexion.close();
-
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-
-	public int insertarIdCorte(String gcode) {
-
-		int i = 0;
-
-		try {
-			conexion = conectar();
-			// Sentencia preparada
-			sentenciapre = conexion.prepareStatement(
-					"insert into cortes (gcode)" + "	VALUES (?)",
-					Statement.RETURN_GENERATED_KEYS);
-
-			sentenciapre.setString(1, gcode);
-			sentenciapre.executeUpdate();
-
-			ResultSet res = sentenciapre.getGeneratedKeys();
-			res.last();
-			i = res.getInt(1);
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-			System.out.println(Messages.getString("DBFacade.ErrorID")); //$NON-NLS-1$
-
-		} finally // CErrar conexion con BBDD
-		{
-			try {
-				sentenciapre.close(); // NOS FALTA EN TODO
-				conexion.close();
-
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return i;
-	}
-
+	// USUARIOS
 	public void getUsuarios(ModeloTablaUsr modelotablao) {
 		try {
 			conexion = conectar();
@@ -292,16 +65,12 @@ public class DBFacade implements TableModelListener {
 				usr.setRoot(resultados.getBoolean("root"));
 
 				modelotablao.anadeUsr(usr);
-
 			}
-
 		} catch (Exception e) {
-
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println(Messages
 					.getString("DBFacade.ErrorMedicamntosTabla")); //$NON-NLS-1$
-
 		} finally // CErrar conexion con BBDD
 		{
 			try {
@@ -311,11 +80,10 @@ public class DBFacade implements TableModelListener {
 				e.printStackTrace();
 			}
 		}
-
 	}
 
+	// USUARIOS
 	public Usuario getUsr(String nombre) {
-
 		try {
 			conexion = conectar();
 			// Sentencia preparada
@@ -334,13 +102,11 @@ public class DBFacade implements TableModelListener {
 				System.out.println("getUsr: "
 						+ VLogin.UsuarioLogueado.toString());
 			}
-
 		} catch (Exception e) {
 			VLogin.UsuarioLogueado = null;
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println(Messages.getString("DBFacade.ErrorUsuario")); //$NON-NLS-1$
-
 		} finally // CErrar conexion con BBDD
 		{
 			try {
@@ -351,245 +117,10 @@ public class DBFacade implements TableModelListener {
 				e.printStackTrace();
 			}
 		}
-
 		return VLogin.UsuarioLogueado;
 	}
 
-	public void getHistorico(ModeloTablaHistorico modelotablao) {
-		try {
-			conexion = conectar();
-			// Sentencia preparada
-			sentenciapre = conexion
-					.prepareStatement("select * from historico;");
-			resultados = sentenciapre.executeQuery();
-
-			// Vector<Medicamento> vmed;
-			// Vector<String> idcolumns = new Vector<String>();
-
-			// COLUMNAS
-			// idcolumns.add("ID");
-			// idcolumns.add("Nombre");
-			// idcolumns.add("Código Nacional");
-			// idcolumns.add("Ruta");
-			// idcolumns.add("Corte");
-			// modelotabla.setColumnIdentifiers(idcolumns);
-
-			// FILAS
-			while (resultados.next()) {
-				Historico hist = new Historico();
-
-				String S = new SimpleDateFormat("MM/dd/yyyy hh:mm")
-						.format(resultados.getTimestamp("fecha"));
-
-				hist.setId(resultados.getInt("id"));
-				hist.setFecha(S);
-				hist.setUsuario(resultados.getString("usuario"));
-				hist.setMedicamento(resultados.getString("medicamento"));
-				hist.setCodNac(resultados.getInt("codigonacional"));
-				hist.setIdCorte(resultados.getInt("idcorte"));
-				hist.setEvento(resultados.getString("evento"));
-				hist.setIncidencia(resultados.getString("incidencia"));
-
-				modelotablao.anadeHistorico(hist);
-
-			}
-
-		} catch (Exception e) {
-
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println(Messages.getString("DBFacade.ErrorHistorico")); //$NON-NLS-1$
-
-		} finally // Cerrar conexion con BBDD
-		{
-			try {
-				conexion.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-	}
-
-	// Escuchador de eventos de cambio en el modelo de la tabla
-	@Override
-	public void tableChanged(TableModelEvent e) {
-		// TODO Auto-generated method stub
-		if (e.getType() == TableModelEvent.UPDATE) {
-			System.out.println("DFacade ha escuchado cambio en el modelo");
-			Usuario aux = ((ModeloTablaUsr) e.getSource()).getUsr(e
-					.getLastRow());
-
-			System.out.println(aux.getNombre());
-		}
-
-	}
-
-	public void insertarHistorico(String usuario, String nombre, int codnac,
-			int idcorte, String evento, String incidencia) {
-
-		try {
-			conexion = conectar();
-			// Sentencia preparada
-			sentenciapre = conexion
-					.prepareStatement("insert into historico (usuario, medicamento, codigonacional, idcorte, evento, incidencia)"
-							+ "	VALUES (?,?,?,?,?,?)");
-			sentenciapre.setString(1, usuario);
-			sentenciapre.setString(2, nombre);
-			sentenciapre.setInt(3, codnac);
-			sentenciapre.setInt(4, idcorte);
-			sentenciapre.setString(5, evento);
-			sentenciapre.setString(6, incidencia);
-
-			sentenciapre.executeUpdate();
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-			System.out.println(Messages.getString("DBFacade.ErrorHistorico")); //$NON-NLS-1$
-
-		} finally // CErrar conexion con BBDD
-		{
-			try {
-				sentenciapre.close(); // NOS FALTA EN TODO
-				conexion.close();
-
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-	}
-
-	public void insertarMed(Medicamento med) {
-
-		try {
-			conexion = conectar();
-			// Sentencia preparada
-			sentenciapre = conexion
-					.prepareStatement("insert into medicamentos (nombre, codnac, codbar, rutaimg, idcorte)"
-							+ "	VALUES (?,?,?,?,?)");
-			sentenciapre.setString(1, med.getNombre());
-			sentenciapre.setInt(2, med.getCodnac());
-			sentenciapre.setLong(3, med.getCodbar());
-			sentenciapre.setString(4, med.getRutaimg());
-			sentenciapre.setInt(5, med.getIdcorte());
-
-			int filasAfectadas = sentenciapre.executeUpdate();
-			if (filasAfectadas == 0) {
-				throw new SQLException(
-						"Creacion de medicamento fallida, no se modificó ninguna fila.");
-			}
-			ResultSet generatedKeys = sentenciapre.getGeneratedKeys();
-			if (generatedKeys.next()) {
-				med.setId(generatedKeys.getInt(1));
-			} else {
-				throw new SQLException(
-						"Creacion de medicamento fallida, no se obtuvo la clave generada.");
-			}
-
-		} catch (SQLException | ClassNotFoundException e) {
-
-			e.printStackTrace();
-			System.out.println(Messages.getString("DBFacade.ErrorNuevoMed")); //$NON-NLS-1$
-
-		} finally // Cerrar conexion con BBDD
-		{
-			if (sentenciapre != null)
-				try {
-					sentenciapre.close();
-				} catch (SQLException logOrIgnore) {
-				}
-			if (conexion != null)
-				try {
-					conexion.close();
-				} catch (SQLException logOrIgnore) {
-				}
-		}
-	}
-
-	public void borrarMed(String nombre) {
-		try {
-			conexion = conectar();
-			// Sentencia preparada
-			sentenciapre = conexion
-					.prepareStatement("delete from medicamentos where nombre=?");
-			sentenciapre.setString(1, nombre);
-
-			sentenciapre.executeUpdate();
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-			System.out.println(Messages.getString("DBFacade.ErrorBorraMed")); //$NON-NLS-1$
-
-		} finally // Cerrar conexion con BBDD
-		{
-			if (sentenciapre != null)
-				try {
-					sentenciapre.close();
-				} catch (SQLException logOrIgnore) {
-				}
-			if (conexion != null)
-				try {
-					conexion.close();
-				} catch (SQLException logOrIgnore) {
-				}
-		}
-	}
-
-	public void modificarMed(Medicamento med) {
-		ResultSet generatedKeys = null;
-		try {
-			conexion = conectar();
-			// Sentencia preparada
-			sentenciapre = conexion
-					.prepareStatement(
-							"UPDATE `medicamentos` SET "
-									+ "`nombre`=?, `codnac`=?,`codbar`=?, `rutaimg`=?,  `idcorte`=? WHERE `medicamentos_id`=?",
-							Statement.RETURN_GENERATED_KEYS);
-			sentenciapre.setString(1, med.getNombre());
-			sentenciapre.setInt(2, med.getCodnac());
-			sentenciapre.setLong(3, med.getCodbar());
-			sentenciapre.setString(4, med.getRutaimg());
-			sentenciapre.setInt(5, med.getIdcorte());
-			sentenciapre.setInt(6, med.getId());
-
-			int filasAfectadas = sentenciapre.executeUpdate();
-
-			if (filasAfectadas == 0) {
-				throw new SQLException(
-						"Modificación de medicamento fallida, no se modificó ninguna fila.");
-			}
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-			System.out.println(Messages.getString("DBFacade.ErrorModMed")); //$NON-NLS-1$
-
-		} finally // Cerrar conexion con BBDD
-		{
-			if (generatedKeys != null)
-				try {
-					generatedKeys.close();
-				} catch (SQLException logOrIgnore) {
-				}
-			if (sentenciapre != null)
-				try {
-					sentenciapre.close();
-				} catch (SQLException logOrIgnore) {
-				}
-			if (conexion != null)
-				try {
-					conexion.close();
-				} catch (SQLException logOrIgnore) {
-				}
-		}
-
-	}
-
+	// USUARIOS
 	public void insertarUsr(Usuario user, char[] password) {
 		ResultSet generatedKeys = null;
 		try {
@@ -617,12 +148,9 @@ public class DBFacade implements TableModelListener {
 				throw new SQLException(
 						"Creacion de usuario fallida, no se obtuvo la clave generada.");
 			}
-
 		} catch (Exception e) {
-
 			e.printStackTrace();
 			System.out.println(Messages.getString("DBFacade.ErrorNuevoUsr")); //$NON-NLS-1$
-
 		} finally // CErrar conexion con BBDD
 		{
 			if (generatedKeys != null)
@@ -643,6 +171,7 @@ public class DBFacade implements TableModelListener {
 		}
 	}
 
+	// USUARIOS
 	public void borrarUsr(String nombre) {
 		try {
 			conexion = conectar();
@@ -671,6 +200,7 @@ public class DBFacade implements TableModelListener {
 		}
 	}
 
+	// USUARIOS
 	public void modificarUsr(Usuario user, char[] password) {
 		ResultSet generatedKeys = null;
 		try {
@@ -724,7 +254,444 @@ public class DBFacade implements TableModelListener {
 				} catch (SQLException logOrIgnore) {
 				}
 		}
+	}
+
+	public boolean comprobarLogin(String user, char[] pass) {
+
+		// Aki comprobaríamos con la BBDD
+
+		try {
+			String contraseña = leerBBDD(user);
+			String pwd = new String(pass);
+			return (contraseña.contentEquals(pwd));
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(Messages.getString("DBFacade.ErrorLogin")); //$NON-NLS-1$
+			return false;
+		} finally // CErrar conexion con BBDD
+		{
+			try {
+				conexion.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	// CORTES
+	public void getRecorteMedicamento(Medicamento med) {
+		try {
+			conexion = conectar();
+			// Sentencia preparada
+			sentenciapre = conexion
+					.prepareStatement("select * from cortes WHERE idcorte=?;");
+			sentenciapre.setInt(1, med.getIdcorte());
+			resultados = sentenciapre.executeQuery();
+
+			while (resultados.next()) {
+				Corte c = new Corte();
+
+				c.setId(resultados.getInt("idcorte"));
+				c.setGcode(resultados.getString("gcode"));
+
+				med.setMicorte(c);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println(Messages.getString("DBFacade.ErrorRecorte")); //$NON-NLS-1$
+		} finally // CErrar conexion con BBDD
+		{
+			try {
+				conexion.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	// CORTES
+	public void getIdCorte(DefaultComboBoxModel modeloCombo) {
+
+		try {
+			conexion = conectar();
+			// Sentencia preparada
+			sentenciapre = conexion
+					.prepareStatement("select idcorte from cortes;");
+			resultados = sentenciapre.executeQuery();
+
+			while (resultados.next()) {
+				modeloCombo.addElement(resultados.getInt("idcorte"));
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println(Messages
+					.getString("DBFacade.ErrorMedicamntosTabla")); //$NON-NLS-1$
+		} finally // CErrar conexion con BBDD
+		{
+			try {
+				conexion.close();
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	// CORTES
+	public int insertarIdCorte(String gcode) {
+
+		int i = 0;
+
+		try {
+			conexion = conectar();
+			// Sentencia preparada
+			sentenciapre = conexion.prepareStatement(
+					"insert into cortes (gcode)" + "	VALUES (?)",
+					Statement.RETURN_GENERATED_KEYS);
+
+			sentenciapre.setString(1, gcode);
+			sentenciapre.executeUpdate();
+
+			ResultSet res = sentenciapre.getGeneratedKeys();
+			res.last();
+			i = res.getInt(1);
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			System.out.println(Messages.getString("DBFacade.ErrorID")); //$NON-NLS-1$
+
+		} finally // CErrar conexion con BBDD
+		{
+			try {
+				sentenciapre.close(); // NOS FALTA EN TODO
+				conexion.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return i;
+	}
+
+	// Escuchador de eventos de cambio en el modelo de la tabla
+	@Override
+	public void tableChanged(TableModelEvent e) {
+		// TODO Auto-generated method stub
+		if (e.getType() == TableModelEvent.UPDATE) {
+			System.out.println("DFacade ha escuchado cambio en el modelo");
+			Usuario aux = ((ModeloTablaUsr) e.getSource()).getUsr(e
+					.getLastRow());
+
+			System.out.println(aux.getNombre());
+		}
+	}
+
+	// HISTORICO
+	public void getHistorico(ModeloTablaHistorico modelotablao) {
+		try {
+			conexion = conectar();
+			// Sentencia preparada
+			sentenciapre = conexion
+					.prepareStatement("select * from historico;");
+			resultados = sentenciapre.executeQuery();
+
+			// Vector<Medicamento> vmed;
+			// Vector<String> idcolumns = new Vector<String>();
+
+			// COLUMNAS
+			// idcolumns.add("ID");
+			// idcolumns.add("Nombre");
+			// idcolumns.add("Código Nacional");
+			// idcolumns.add("Ruta");
+			// idcolumns.add("Corte");
+			// modelotabla.setColumnIdentifiers(idcolumns);
+
+			// FILAS
+			while (resultados.next()) {
+				Historico hist = new Historico();
+
+				String S = new SimpleDateFormat("MM/dd/yyyy hh:mm")
+						.format(resultados.getTimestamp("fecha"));
+
+				hist.setId(resultados.getInt("id"));
+				hist.setFecha(S);
+				hist.setUsuario(resultados.getString("usuario"));
+				hist.setMedicamento(resultados.getString("medicamento"));
+				hist.setCodNac(resultados.getInt("codigonacional"));
+				hist.setIdCorte(resultados.getInt("idcorte"));
+				hist.setEvento(resultados.getString("evento"));
+				hist.setIncidencia(resultados.getString("incidencia"));
+
+				modelotablao.anadeHistorico(hist);
+
+			}
+		} catch (Exception e) {
+
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println(Messages.getString("DBFacade.ErrorHistorico")); //$NON-NLS-1$
+		} finally // Cerrar conexion con BBDD
+		{
+			try {
+				conexion.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	// HISTORICO
+	public void insertarHistorico(String usuario, String nombre, int codnac,
+			int idcorte, String evento, String incidencia) {
+
+		try {
+			conexion = conectar();
+			// Sentencia preparada
+			sentenciapre = conexion
+					.prepareStatement("insert into historico (usuario, medicamento, codigonacional, idcorte, evento, incidencia)"
+							+ "	VALUES (?,?,?,?,?,?)");
+			sentenciapre.setString(1, usuario);
+			sentenciapre.setString(2, nombre);
+			sentenciapre.setInt(3, codnac);
+			sentenciapre.setInt(4, idcorte);
+			sentenciapre.setString(5, evento);
+			sentenciapre.setString(6, incidencia);
+
+			sentenciapre.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(Messages.getString("DBFacade.ErrorHistorico")); //$NON-NLS-1$
+		} finally // CErrar conexion con BBDD
+		{
+			try {
+				sentenciapre.close(); // NOS FALTA EN TODO
+				conexion.close();
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 
 	}
 
+	// MEDICAMENTOS
+	public void getMedicamentos(DefaultListModel<Medicamento> modelolista) {
+		try {
+			conexion = conectar();
+			// Sentencia preparada
+			sentenciapre = conexion
+					.prepareStatement("select * from medicamentos;");
+			resultados = sentenciapre.executeQuery();
+
+			while (resultados.next()) {
+				Medicamento medicamento = new Medicamento();
+
+				medicamento.setId(resultados.getInt("medicamentos_id"));
+				medicamento.setNombre(resultados.getString("nombre"));
+				medicamento.setCodnac(resultados.getInt("codnac"));
+				medicamento.setCodbar(resultados.getLong("codbar"));
+				medicamento.setRutaimg(resultados.getString("rutaimg"));
+				medicamento.setIdcorte(resultados.getInt("idcorte"));
+
+				modelolista.addElement(medicamento);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println(Messages.getString("DBFacade.ErrorMedicamento")); //$NON-NLS-1$
+		} finally // CErrar conexion con BBDD
+		{
+			try {
+				conexion.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	// MEDICAMENTOS
+	public void getMedicamentos(ModeloTablaMeds modelotablao) {
+
+		try {
+			conexion = conectar();
+			// Sentencia preparada
+			sentenciapre = conexion
+					.prepareStatement("select * from medicamentos;");
+			resultados = sentenciapre.executeQuery();
+
+			// Vector<Medicamento> vmed;
+			// Vector<String> idcolumns = new Vector<String>();
+
+			// COLUMNAS
+			// idcolumns.add("ID");
+			// idcolumns.add("Nombre");
+			// idcolumns.add("Código Nacional");
+			// idcolumns.add("Ruta");
+			// idcolumns.add("Corte");
+			// modelotabla.setColumnIdentifiers(idcolumns);
+
+			// FILAS
+			while (resultados.next()) {
+				Medicamento medicamento = new Medicamento();
+
+				medicamento.setId(resultados.getInt("medicamentos_id"));
+				medicamento.setNombre(resultados.getString("nombre"));
+				medicamento.setCodnac(resultados.getInt("codnac"));
+				medicamento.setCodbar(resultados.getLong("codbar"));
+				medicamento.setRutaimg(resultados.getString("rutaimg"));
+				medicamento.setIdcorte(resultados.getInt("idcorte"));
+				System.out.println(medicamento);
+				modelotablao.anademed(medicamento);
+
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println(Messages
+					.getString("DBFacade.ErrorMedicamntosTabla")); //$NON-NLS-1$
+		} finally // CErrar conexion con BBDD
+		{
+			// if (generatedKeys != null) try { generatedKeys.close(); } catch
+			// (SQLException logOrIgnore) {}
+			if (sentenciapre != null)
+				try {
+					sentenciapre.close();
+				} catch (SQLException logOrIgnore) {
+				}
+			if (conexion != null)
+				try {
+					conexion.close();
+				} catch (SQLException logOrIgnore) {
+				}
+		}
+	}
+
+	// MEDICAMENTOS
+	public void insertarMed(Medicamento med) {
+
+		try {
+			conexion = conectar();
+			// Sentencia preparada
+			sentenciapre = conexion
+					.prepareStatement("insert into medicamentos (nombre, codnac, codbar, rutaimg, idcorte)"
+							+ "	VALUES (?,?,?,?,?)");
+			sentenciapre.setString(1, med.getNombre());
+			sentenciapre.setInt(2, med.getCodnac());
+			sentenciapre.setLong(3, med.getCodbar());
+			sentenciapre.setString(4, med.getRutaimg());
+			sentenciapre.setInt(5, med.getIdcorte());
+
+			int filasAfectadas = sentenciapre.executeUpdate();
+			if (filasAfectadas == 0) {
+				throw new SQLException(
+						"Creacion de medicamento fallida, no se modificó ninguna fila.");
+			}
+			ResultSet generatedKeys = sentenciapre.getGeneratedKeys();
+			if (generatedKeys.next()) {
+				med.setId(generatedKeys.getInt(1));
+			} else {
+				throw new SQLException(
+						"Creacion de medicamento fallida, no se obtuvo la clave generada.");
+			}
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
+			System.out.println(Messages.getString("DBFacade.ErrorNuevoMed")); //$NON-NLS-1$
+		} finally // Cerrar conexion con BBDD
+		{
+			if (sentenciapre != null)
+				try {
+					sentenciapre.close();
+				} catch (SQLException logOrIgnore) {
+				}
+			if (conexion != null)
+				try {
+					conexion.close();
+				} catch (SQLException logOrIgnore) {
+				}
+		}
+	}
+
+	// MEDICAMENTOS
+	public void borrarMed(String nombre) {
+		try {
+			conexion = conectar();
+			// Sentencia preparada
+			sentenciapre = conexion
+					.prepareStatement("delete from medicamentos where nombre=?");
+			sentenciapre.setString(1, nombre);
+
+			sentenciapre.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(Messages.getString("DBFacade.ErrorBorraMed")); //$NON-NLS-1$
+		} finally // Cerrar conexion con BBDD
+		{
+			if (sentenciapre != null)
+				try {
+					sentenciapre.close();
+				} catch (SQLException logOrIgnore) {
+				}
+			if (conexion != null)
+				try {
+					conexion.close();
+				} catch (SQLException logOrIgnore) {
+				}
+		}
+	}
+
+	// MEDICAMENTOS
+	public void modificarMed(Medicamento med) {
+		ResultSet generatedKeys = null;
+		try {
+			conexion = conectar();
+			// Sentencia preparada
+			sentenciapre = conexion
+					.prepareStatement(
+							"UPDATE `medicamentos` SET "
+									+ "`nombre`=?, `codnac`=?,`codbar`=?, `rutaimg`=?,  `idcorte`=? WHERE `medicamentos_id`=?",
+							Statement.RETURN_GENERATED_KEYS);
+			sentenciapre.setString(1, med.getNombre());
+			sentenciapre.setInt(2, med.getCodnac());
+			sentenciapre.setLong(3, med.getCodbar());
+			sentenciapre.setString(4, med.getRutaimg());
+			sentenciapre.setInt(5, med.getIdcorte());
+			sentenciapre.setInt(6, med.getId());
+
+			int filasAfectadas = sentenciapre.executeUpdate();
+
+			if (filasAfectadas == 0) {
+				throw new SQLException(
+						"Modificación de medicamento fallida, no se modificó ninguna fila.");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(Messages.getString("DBFacade.ErrorModMed")); //$NON-NLS-1$
+		} finally // Cerrar conexion con BBDD
+		{
+			if (generatedKeys != null)
+				try {
+					generatedKeys.close();
+				} catch (SQLException logOrIgnore) {
+				}
+			if (sentenciapre != null)
+				try {
+					sentenciapre.close();
+				} catch (SQLException logOrIgnore) {
+				}
+			if (conexion != null)
+				try {
+					conexion.close();
+				} catch (SQLException logOrIgnore) {
+				}
+		}
+	}
 }
