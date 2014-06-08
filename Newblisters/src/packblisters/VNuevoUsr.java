@@ -50,21 +50,20 @@ public class VNuevoUsr extends JDialog {
 	private JTextField textNombre;
 	private JCheckBox chkAdministrador;
 	private JPasswordField pfContraseña;
-	
-	
+
 	private DBFacade dbFacade;
-	//private Class<? extends VTablaUsuarios> vTablaUsr;
+	// private Class<? extends VTablaUsuarios> vTablaUsr;
 	private JOptionPane warninUsuario;
 	private ModeloTablaUsr mtu;
 
 	public VNuevoUsr(ModeloTablaUsr modelotablao) {
-                
-	    URL pathIcon = this.getClass().getClassLoader().getResource("iconos/1 (14).jpg");
-	    Toolkit kit = Toolkit.getDefaultToolkit();
-	    Image img = kit.createImage(pathIcon);
-	    this.setIconImage(img);
-	    
-	    
+
+		URL pathIcon = this.getClass().getClassLoader()
+				.getResource("iconos/1 (14).jpg");
+		Toolkit kit = Toolkit.getDefaultToolkit();
+		Image img = kit.createImage(pathIcon);
+		this.setIconImage(img);
+
 		mtu = modelotablao;
 
 		setTitle("Nuevo Usuario");
@@ -75,7 +74,7 @@ public class VNuevoUsr extends JDialog {
 			JPanel panel = new JPanel();
 			getContentPane().add(panel, BorderLayout.CENTER);
 			panel.setLayout(null);
-			
+
 			JLabel lblNombre = new JLabel("Nombre");
 			lblNombre.setBounds(10, 12, 217, 15);
 			panel.add(lblNombre);
@@ -84,26 +83,24 @@ public class VNuevoUsr extends JDialog {
 			textNombre.setBounds(13, 33, 202, 19);
 			panel.add(textNombre);
 			textNombre.setColumns(10);
-			
-			
-			//			JLabel contraseña2 = new JLabel("Reescriba Contraseña");
-			//			nombre.setBounds(25, 30, 202, 15);
-			//			panel.add(nombre);
+
+			// JLabel contraseña2 = new JLabel("Reescriba Contraseña");
+			// nombre.setBounds(25, 30, 202, 15);
+			// panel.add(nombre);
 			//
-			//			pfContraseña2 = new JPasswordField(5);
-			//			pfContraseña2.setBounds(25, 50, 202, 19);
-			//			panel.add(pfContraseña2);
-			//			
-						
-			
-						JLabel administrador = new JLabel("Administrador");
-						administrador.setBounds(13, 128, 141, 15);
-						panel.add(administrador);
-			
-						chkAdministrador= new JCheckBox();
-						chkAdministrador.setBounds(186, 124, 35, 19);
-						panel.add(chkAdministrador);
-			
+			// pfContraseña2 = new JPasswordField(5);
+			// pfContraseña2.setBounds(25, 50, 202, 19);
+			// panel.add(pfContraseña2);
+			//
+
+			JLabel administrador = new JLabel("Administrador");
+			administrador.setBounds(13, 128, 141, 15);
+			panel.add(administrador);
+
+			chkAdministrador = new JCheckBox();
+			chkAdministrador.setBounds(186, 124, 35, 19);
+			panel.add(chkAdministrador);
+
 			JLabel label = new JLabel("Contraseña");
 			label.setBounds(10, 64, 202, 27);
 			panel.add(label);
@@ -111,31 +108,34 @@ public class VNuevoUsr extends JDialog {
 			pfContraseña = new JPasswordField(5);
 			pfContraseña.setBounds(13, 90, 202, 19);
 			panel.add(pfContraseña);
-						
+
 			JButton guardar = new JButton("Guardar");
 			guardar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 
-					// Guardar el nuevo usuario en bbdd:crear objerto y darselo al facade
-					
+					// Guardar el nuevo usuario en bbdd:crear objerto y darselo
+					// al facade
+
 					Usuario nuevoUsr = new Usuario();
 					nuevoUsr.setNombre(textNombre.getText());
 					nuevoUsr.setRoot(chkAdministrador.isSelected());
 					char[] pass = pfContraseña.getPassword();
-					dbFacade= new DBFacade();
-					dbFacade.insertarUsr(nuevoUsr, pass);//rellena el id de ususario
-					//seguridad de contraseña
-					 Arrays.fill(pass, '0');
+					dbFacade = new DBFacade();
+					dbFacade.insertarUsr(nuevoUsr, pass);// rellena el id de
+															// ususario
+					// seguridad de contraseña
+					Arrays.fill(pass, '0');
 					// Guardar en el modelo
 					mtu.anadeUsr(nuevoUsr);
 
 					// Cierro ventana
 					dispose();
 
-					//dbFacade.getUsuarios(mtu);
+					// dbFacade.getUsuarios(mtu);
 
 					// Para repintar VTABLAUSR NOVA
-					Window vPadre = SwingUtilities.getWindowAncestor((Component) e.getSource());
+					Window vPadre = SwingUtilities
+							.getWindowAncestor((Component) e.getSource());
 					vPadre.repaint();
 
 					JOptionPane.showMessageDialog(warninUsuario,
@@ -143,7 +143,7 @@ public class VNuevoUsr extends JDialog {
 							JOptionPane.INFORMATION_MESSAGE);
 
 				}
-			});			
+			});
 			guardar.setBounds(10, 173, 92, 25);
 			panel.add(guardar);
 

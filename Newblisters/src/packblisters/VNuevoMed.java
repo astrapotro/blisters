@@ -30,8 +30,9 @@ public class VNuevoMed extends JDialog implements ItemListener {
 	 * foto subida? TODO: campo de gcode con mayor tamaño
 	 */
 	private static final long serialVersionUID = 1L;
-	private JTextField jtfNombre, jtfCodNac, jtfCodBar, jtfIdCorte, jtfRutaImg, jtfMiCorte, jtfRecorte;
-	
+	private JTextField jtfNombre, jtfCodNac, jtfCodBar, jtfIdCorte, jtfRutaImg,
+			jtfMiCorte, jtfRecorte;
+
 	private String idModificadoCorte;
 
 	private DBFacade dbfacade;
@@ -49,120 +50,117 @@ public class VNuevoMed extends JDialog implements ItemListener {
 				(Principal.d.height / 2) - 150, 250, 347);
 		{
 			JPanel panel = new JPanel();
-    	    getContentPane().add(panel, BorderLayout.CENTER);
-    	    panel.setLayout(null);
+			getContentPane().add(panel, BorderLayout.CENTER);
+			panel.setLayout(null);
 
-    	    JLabel lblNombre = new JLabel("Nombre");
-    	    lblNombre.setBounds(25, 12, 202, 15);
-    	    panel.add(lblNombre);
+			JLabel lblNombre = new JLabel("Nombre");
+			lblNombre.setBounds(25, 12, 202, 15);
+			panel.add(lblNombre);
 
-    	    jtfNombre = new JTextField();
-    	    jtfNombre.setBounds(25, 32, 202, 19);
-    	    jtfNombre.setDocument(new DocumentoLimitado(20));
-    	    panel.add(jtfNombre);
-    	    
-    	 
-    	    JLabel lblCodnac = new JLabel("Código Nacional");
-    	    lblCodnac.setBounds(25, 63, 141, 15);
-    	    panel.add(lblCodnac);
-    	    
-    	    jtfCodNac = new JTextField();
-    	    jtfCodNac.setBounds(25, 90, 202, 19);
-    	    jtfCodNac.setDocument(new DocumentoLimitado(11));
-    	    jtfCodNac.addKeyListener(new KeyAdapter() {
+			jtfNombre = new JTextField();
+			jtfNombre.setBounds(25, 32, 202, 19);
+			jtfNombre.setDocument(new DocumentoLimitado(20));
+			panel.add(jtfNombre);
+
+			JLabel lblCodnac = new JLabel("Código Nacional");
+			lblCodnac.setBounds(25, 63, 141, 15);
+			panel.add(lblCodnac);
+
+			jtfCodNac = new JTextField();
+			jtfCodNac.setBounds(25, 90, 202, 19);
+			jtfCodNac.setDocument(new DocumentoLimitado(11));
+			jtfCodNac.addKeyListener(new KeyAdapter() {
 				// Para que sólo lea números !
 				public void keyTyped(KeyEvent e) {
-				    char caracter = e.getKeyChar();
-				    if (((caracter < '0') || (caracter > '9'))
-					    && ((caracter != KeyEvent.VK_BACK_SPACE) || (caracter != KeyEvent.VK_DELETE))
-					    || (jtfCodNac.getText().length() >= 9))
-				
-					e.consume();
+					char caracter = e.getKeyChar();
+					if (((caracter < '0') || (caracter > '9'))
+							&& ((caracter != KeyEvent.VK_BACK_SPACE) || (caracter != KeyEvent.VK_DELETE))
+							|| (jtfCodNac.getText().length() >= 9))
+
+						e.consume();
 				}
-    	    });
-    	    panel.add(jtfCodNac);
-    	    
-    	    JLabel lblCodBarras = new JLabel("Código barras");
-    	    lblCodBarras.setBounds(25, 118, 141, 15);
-    	    panel.add(lblCodBarras);
-    	    
-    	    jtfCodBar = new JTextField();
-    	    jtfCodBar.setText("0");
-    	    jtfCodBar.setBounds(25, 142, 202, 19);
-    	    jtfCodBar.setDocument(new DocumentoLimitado(11));
-    	    jtfCodBar.addKeyListener(new KeyAdapter() {
+			});
+			panel.add(jtfCodNac);
+
+			JLabel lblCodBarras = new JLabel("Código barras");
+			lblCodBarras.setBounds(25, 118, 141, 15);
+			panel.add(lblCodBarras);
+
+			jtfCodBar = new JTextField();
+			jtfCodBar.setText("0");
+			jtfCodBar.setBounds(25, 142, 202, 19);
+			jtfCodBar.setDocument(new DocumentoLimitado(11));
+			jtfCodBar.addKeyListener(new KeyAdapter() {
 				// Para que sólo lea números !
 				public void keyTyped(KeyEvent e) {
-				    char caracter = e.getKeyChar();
-				    if (((caracter < '0') || (caracter > '9'))
-					    && ((caracter != KeyEvent.VK_BACK_SPACE) || (caracter != KeyEvent.VK_DELETE))
-					    || (jtfCodBar.getText().length() >= 11))
-				
-					e.consume();
+					char caracter = e.getKeyChar();
+					if (((caracter < '0') || (caracter > '9'))
+							&& ((caracter != KeyEvent.VK_BACK_SPACE) || (caracter != KeyEvent.VK_DELETE))
+							|| (jtfCodBar.getText().length() >= 11))
+
+						e.consume();
 				}
-    	    });
-    	    panel.add(jtfCodBar);
-    	    
-    	    JLabel lblIdCorte = new JLabel("ID Corte");
-    	    lblIdCorte.setBounds(25, 173, 70, 15);
-    	    panel.add(lblIdCorte);
-    	    
-    	    modeloCombo = new DefaultComboBoxModel<String>();
+			});
+			panel.add(jtfCodBar);
 
-    	    // Poblar modelo
-    	    String newcorte = "Nuevo Corte";
-    	    modeloCombo.addElement(newcorte);
-    	    dbfacade.getIdCorte(modeloCombo);
+			JLabel lblIdCorte = new JLabel("ID Corte");
+			lblIdCorte.setBounds(25, 173, 70, 15);
+			panel.add(lblIdCorte);
 
-    	    JComboBox<String> comboBoxcorte = new JComboBox<String>();
-    	    modeloCombo.addListDataListener(comboBoxcorte);    	    
-    	    comboBoxcorte.addItemListener(this);
-    	    comboBoxcorte.setModel(modeloCombo);
-    	    comboBoxcorte.setBounds(25, 189, 202, 24);
-    	    panel.add(comboBoxcorte);
-    	    
+			modeloCombo = new DefaultComboBoxModel<String>();
 
-    	    
-    	    JLabel lblRutaImg = new JLabel("Ruta de imagen");
-    	    lblRutaImg.setBounds(25, 225, 114, 15);
-    	    panel.add(lblRutaImg);
+			// Poblar modelo
+			String newcorte = "Nuevo Corte";
+			modeloCombo.addElement(newcorte);
+			dbfacade.getIdCorte(modeloCombo);
 
-    	    jtfRutaImg = new JTextField();
-    	    jtfRutaImg.setBounds(25, 242, 202, 19);
-    	    jtfRutaImg.setDocument(new DocumentoLimitado(100));
-    	    jtfRutaImg.addMouseListener(new MouseAdapter() {
+			JComboBox<String> comboBoxcorte = new JComboBox<String>();
+			modeloCombo.addListDataListener(comboBoxcorte);
+			comboBoxcorte.addItemListener(this);
+			comboBoxcorte.setModel(modeloCombo);
+			comboBoxcorte.setBounds(25, 189, 202, 24);
+			panel.add(comboBoxcorte);
+
+			JLabel lblRutaImg = new JLabel("Ruta de imagen");
+			lblRutaImg.setBounds(25, 225, 114, 15);
+			panel.add(lblRutaImg);
+
+			jtfRutaImg = new JTextField();
+			jtfRutaImg.setBounds(25, 242, 202, 19);
+			jtfRutaImg.setDocument(new DocumentoLimitado(100));
+			jtfRutaImg.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-			
-					// Que salga el explorador de archivos
-				    JFileChooser chooser = new JFileChooser();
-				    FileNameExtensionFilter filter = new FileNameExtensionFilter(
-					    "Imagenes PNG", "png");
-				    chooser.setFileFilter(filter);
-				    int returnVal = chooser.showOpenDialog(getParent());
-				    if (returnVal == JFileChooser.APPROVE_OPTION) {
-					jtfRutaImg.setText(chooser.getSelectedFile().getPath());
-					jtfNombre.requestFocus();
-				    }
-				}
-    	    });
-    	    panel.add(jtfRutaImg);
 
-    		JButton guardar = new JButton("Guardar");
+					// Que salga el explorador de archivos
+					JFileChooser chooser = new JFileChooser();
+					FileNameExtensionFilter filter = new FileNameExtensionFilter(
+							"Imagenes PNG", "png");
+					chooser.setFileFilter(filter);
+					int returnVal = chooser.showOpenDialog(getParent());
+					if (returnVal == JFileChooser.APPROVE_OPTION) {
+						jtfRutaImg.setText(chooser.getSelectedFile().getPath());
+						jtfNombre.requestFocus();
+					}
+				}
+			});
+			panel.add(jtfRutaImg);
+
+			JButton guardar = new JButton("Guardar");
 			guardar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					 Medicamento nuevoMed = new Medicamento();
-					 nuevoMed.setNombre(jtfNombre.getText());
-					 nuevoMed.setCodnac(Integer.valueOf(jtfCodNac.getText()));
-					 nuevoMed.setCodbar(Long.valueOf(jtfCodBar.getText()));
-					 nuevoMed.setIdcorte(Integer.valueOf(idModificadoCorte));
-					 nuevoMed.setRutaimg(jtfRutaImg.getText());
+					Medicamento nuevoMed = new Medicamento();
+					nuevoMed.setNombre(jtfNombre.getText());
+					nuevoMed.setCodnac(Integer.valueOf(jtfCodNac.getText()));
+					nuevoMed.setCodbar(Long.valueOf(jtfCodBar.getText()));
+					nuevoMed.setIdcorte(Integer.valueOf(idModificadoCorte));
+					nuevoMed.setRutaimg(jtfRutaImg.getText());
 
 					// Guardar el nuevo usuario en bbdd
 					dbfacade.insertarMed(nuevoMed);
 					// Guardar en el modelo
 					mt.anademed(nuevoMed);
-					//dbfacade.getMedicamentos(mt);
+					// dbfacade.getMedicamentos(mt);
 
 					// Cierro ventana
 					dispose();
@@ -195,20 +193,20 @@ public class VNuevoMed extends JDialog implements ItemListener {
 
 	@Override
 	public void itemStateChanged(ItemEvent e) {
-	
+
 		if (e.getStateChange() == ItemEvent.SELECTED) {
 			Object item = e.getItem();
 
 			if (item.toString() == "Nuevo Corte") {
-				//VNuevoMed.this.setModal(false);
-				nuevocorte = new VCorte(modeloCombo);    		
-	    		nuevocorte.setVisible(true);
+				// VNuevoMed.this.setModal(false);
+				nuevocorte = new VCorte(modeloCombo);
+				nuevocorte.setVisible(true);
 			} else {
 
 				idModificadoCorte = item.toString();
 
 			}
 		}
-		
+
 	}
 }

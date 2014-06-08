@@ -25,7 +25,7 @@ public class VLogin extends JPanel {
 	 * TODO: poner marco y logo de la aplicación
 	 */
     // Consigo la resolución de la pantalla
-    public static Dimension d;
+ public static Dimension d;
 
     private static final long serialVersionUID = 1L;
 

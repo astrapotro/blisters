@@ -18,83 +18,83 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
 public class VCorte extends JDialog {
-	
+
 	private static final long serialVersionUID = 1L;
 	private JPanel jpContentPanel;
-	
+
 	private JTextArea jtaGcode;
 	private JOptionPane warnincorte;
 	private DefaultComboBoxModel mc;
-	 
-	
+
 	/**
-     * Create the frame.
-     */
-    public VCorte(DefaultComboBoxModel modeloCombo) {
-    	mc=modeloCombo;
-    	
-    	setModal(true);
+	 * Create the frame.
+	 */
+	public VCorte(DefaultComboBoxModel modeloCombo) {
+		mc = modeloCombo;
+
+		setModal(true);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setTitle("Nuevo Corte");
 		setBounds((Principal.d.width / 2) - 175,
-			(Principal.d.height / 2) - 150, 350, 347);
-		
+				(Principal.d.height / 2) - 150, 350, 347);
+
 		jpContentPanel = new JPanel();
 		jpContentPanel.setLayout(null);
 		getContentPane().add(jpContentPanel, BorderLayout.CENTER);
-		
+
 		JLabel lblNombre = new JLabel("Añadir nuevo corte "
-			+ ((int) mc.getSize() + 1));
+				+ ((int) mc.getSize() + 1));
 		lblNombre.setBounds(25, 25, 202, 15);
 		jpContentPanel.add(lblNombre);
 
 		jtaGcode = new JTextArea();
 		jtaGcode.setText("gcode");
 		jtaGcode.setBounds(25, 52, 300, 215);
-		
+
 		JScrollPane scroll = new JScrollPane(jtaGcode);
 		scroll.setBounds(25, 52, 300, 215);
 		jpContentPanel.add(scroll);
 
 		JButton guardar = new JButton("Guardar");
 		guardar.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-			
-			Window vPadre = SwingUtilities.getWindowAncestor((Component) e.getSource());
-			if (jtaGcode.getText().isEmpty() || jtaGcode.getText().contentEquals("gcode")) {
-			    JOptionPane.showMessageDialog(null,
-				    "Debes introducir un código GCODE",
-				    "Warning", JOptionPane.WARNING_MESSAGE);
-			 // Cierro ventana
-				dispose();
-			} else {
-				DBFacade dbfacade = new DBFacade();
-			    int i= dbfacade.insertarIdCorte(jtaGcode.getText());
-				JOptionPane.showMessageDialog(null,
-					    "Nuevo corte añadido",
-					    "Corte Guardaro", JOptionPane.INFORMATION_MESSAGE);
-				
-				mc.addElement(i);
-				// Cierro ventana
-				vPadre.repaint();
-				dispose();
+			public void actionPerformed(ActionEvent e) {
+
+				Window vPadre = SwingUtilities.getWindowAncestor((Component) e
+						.getSource());
+				if (jtaGcode.getText().isEmpty()
+						|| jtaGcode.getText().contentEquals("gcode")) {
+					JOptionPane.showMessageDialog(null,
+							"Debes introducir un código GCODE", "Warning",
+							JOptionPane.WARNING_MESSAGE);
+					// Cierro ventana
+					dispose();
+				} else {
+					DBFacade dbfacade = new DBFacade();
+					int i = dbfacade.insertarIdCorte(jtaGcode.getText());
+					JOptionPane.showMessageDialog(null, "Nuevo corte añadido",
+							"Corte Guardaro", JOptionPane.INFORMATION_MESSAGE);
+
+					mc.addElement(i);
+					// Cierro ventana
+					vPadre.repaint();
+					dispose();
+				}
+
 			}
-			
-		    }
 		});
 		guardar.setBounds(75, 279, 92, 25);
 		jpContentPanel.add(guardar);
 
 		JButton cancelar = new JButton("Cancelar");
 		cancelar.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-			// Cierro ventana
-			dispose();
-		    }
+			public void actionPerformed(ActionEvent e) {
+				// Cierro ventana
+				dispose();
+			}
 		});
 		cancelar.setBounds(200, 279, 98, 25);
 		jpContentPanel.add(cancelar);
 
-    }
-    
+	}
+
 }
