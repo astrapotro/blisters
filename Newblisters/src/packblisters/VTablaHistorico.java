@@ -84,7 +84,7 @@ public class VTablaHistorico extends JPanel implements ListSelectionListener {
 		scrollPane.setViewportView(table);
 
 		// Fuerzo a varias columnas a tener un ancho determinado
-		TableColumn columnafecha = table.getColumn("Fecha");
+		TableColumn columnafecha = table.getColumn("Fecha y hora");
 		TableColumn columnausuario = table.getColumn("Usuario");
 		TableColumn columnacorte = table.getColumn("Corte");
 		columnacorte.setPreferredWidth(30);
@@ -106,6 +106,19 @@ public class VTablaHistorico extends JPanel implements ListSelectionListener {
 		btnAtras.setHorizontalTextPosition(SwingConstants.RIGHT);
 		btnAtras.setVerticalTextPosition(SwingConstants.CENTER);
 		add(btnAtras);
+
+		JLabel lblCortesTotales = new JLabel(
+				Messages.getString("VTablaHistorico.lblCortesTotales.text")); //$NON-NLS-1$
+		lblCortesTotales.setForeground(new Color(107, 142, 35));
+		lblCortesTotales
+				.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 14));
+		lblCortesTotales.setBounds(14, 426, 149, 15);
+		add(lblCortesTotales);
+
+		JLabel jlbTotal = new JLabel(consultahist.getCortesTotales());
+		jlbTotal.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 14));
+		jlbTotal.setBounds(141, 426, 149, 15);
+		add(jlbTotal);
 
 	}
 

@@ -2,9 +2,8 @@ package packblisters;
 
 public class Historico {
 
-	private String Usuario, Medicamento, Evento, Incidencia;
-	private String fecha;
-	private int id;
+	private String fecha, usuario, medicamento, evento, incidencia;
+	private int id, codNac, codBar, idCorte;
 
 	public int getId() {
 		return id;
@@ -14,30 +13,28 @@ public class Historico {
 		this.id = id;
 	}
 
-	private int CodNac, IdCorte;
-
 	public String getUsuario() {
-		return Usuario;
+		return usuario;
 	}
 
 	public void setUsuario(String usuario) {
-		Usuario = usuario;
+		this.usuario = usuario;
 	}
 
 	public String getMedicamento() {
-		return Medicamento;
+		return medicamento;
 	}
 
 	public void setMedicamento(String medicamento) {
-		Medicamento = medicamento;
+		this.medicamento = medicamento;
 	}
 
 	public String getEvento() {
-		return Evento;
+		return evento;
 	}
 
 	public void setEvento(String evento) {
-		Evento = evento;
+		this.evento = evento;
 	}
 
 	public String getFecha() {
@@ -49,27 +46,35 @@ public class Historico {
 	}
 
 	public int getCodNac() {
-		return CodNac;
+		return codNac;
 	}
 
 	public void setCodNac(int codNac) {
-		CodNac = codNac;
+		this.codNac = codNac;
+	}
+	
+	public int getCodBar() {
+		return codBar;
 	}
 
+	public void setCodBar(int codBar) {
+		this.codBar = codBar;
+	}
 	public int getIdCorte() {
-		return IdCorte;
+		return idCorte;
 	}
 
 	public void setIdCorte(int idCorte) {
-		IdCorte = idCorte;
+		this.idCorte = idCorte;
 	}
 
 	public String getIncidencia() {
-		return Incidencia;
+		return incidencia;
 	}
 
 	public void setIncidencia(String incidencia) {
-		Incidencia = incidencia;
+		this.incidencia = incidencia;
 	}
+
 
 }

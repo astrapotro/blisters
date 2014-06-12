@@ -1,6 +1,5 @@
 package packblisters;
 
-import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -294,6 +293,8 @@ public class DBFacade implements TableModelListener {
 
 				c.setId(resultados.getInt("idcorte"));
 				c.setGcode(resultados.getString("gcode"));
+				c.setAgujeros(resultados.getInt("agujeros"));
+				c.setAgujerosTotales(resultados.getInt("agujeros totales"));
 
 				med.setMicorte(c);
 			}
@@ -329,7 +330,7 @@ public class DBFacade implements TableModelListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println(Messages
-					.getString("DBFacade.ErrorMedicamntosTabla")); //$NON-NLS-1$
+					.getString("DBFacade.ErrorMedicamentosTabla")); //$NON-NLS-1$
 		} finally // CErrar conexion con BBDD
 		{
 			try {
@@ -343,7 +344,7 @@ public class DBFacade implements TableModelListener {
 	}
 
 	// CORTES
-	public int insertarIdCorte(String gcode) {
+	public int insertarIdCorte(String gcode, Integer perforaciones) {
 
 		int i = 0;
 
@@ -351,10 +352,11 @@ public class DBFacade implements TableModelListener {
 			conexion = conectar();
 			// Sentencia preparada
 			sentenciapre = conexion.prepareStatement(
-					"insert into cortes (gcode)" + "	VALUES (?)",
+					"insert into cortes (gcode,agujeros)	VALUES (?,?)",
 					Statement.RETURN_GENERATED_KEYS);
 
 			sentenciapre.setString(1, gcode);
+			sentenciapre.setInt(2, perforaciones);
 			sentenciapre.executeUpdate();
 
 			ResultSet res = sentenciapre.getGeneratedKeys();
@@ -379,6 +381,42 @@ public class DBFacade implements TableModelListener {
 		return i;
 	}
 
+	// CORTES
+	public void modificarAgujerosTotalesCorte(Corte corte) {
+
+		try {
+			conexion = conectar();
+			// Sentencia preparada
+			sentenciapre = conexion.prepareStatement("UPDATE `cortes` SET "
+					+ "`agujeros totales`=?  WHERE `idcorte`=?");
+			sentenciapre.setInt(1,
+					(corte.getAgujeros() + corte.getAgujerosTotales()));
+			sentenciapre.setInt(2, corte.getId());
+
+			int filasAfectadas = sentenciapre.executeUpdate();
+			if (filasAfectadas == 0) {
+				throw new SQLException(
+						"Modificación de cortes fallida, no se modificó ninguna fila.");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(Messages
+					.getString("DBFacade.ErrorAgujerosCorte")); //$NON-NLS-1$
+		} finally // Cerrar conexion con BBDD
+		{
+			if (sentenciapre != null)
+				try {
+					sentenciapre.close();
+				} catch (SQLException logOrIgnore) {
+				}
+			if (conexion != null)
+				try {
+					conexion.close();
+				} catch (SQLException logOrIgnore) {
+				}
+		}
+	}
+
 	// Escuchador de eventos de cambio en el modelo de la tabla
 	@Override
 	public void tableChanged(TableModelEvent e) {
@@ -401,17 +439,6 @@ public class DBFacade implements TableModelListener {
 					.prepareStatement("select * from historico;");
 			resultados = sentenciapre.executeQuery();
 
-			// Vector<Medicamento> vmed;
-			// Vector<String> idcolumns = new Vector<String>();
-
-			// COLUMNAS
-			// idcolumns.add("ID");
-			// idcolumns.add("Nombre");
-			// idcolumns.add("Código Nacional");
-			// idcolumns.add("Ruta");
-			// idcolumns.add("Corte");
-			// modelotabla.setColumnIdentifiers(idcolumns);
-
 			// FILAS
 			while (resultados.next()) {
 				Historico hist = new Historico();
@@ -424,6 +451,7 @@ public class DBFacade implements TableModelListener {
 				hist.setUsuario(resultados.getString("usuario"));
 				hist.setMedicamento(resultados.getString("medicamento"));
 				hist.setCodNac(resultados.getInt("codigonacional"));
+				hist.setCodBar(resultados.getInt("codbarras"));
 				hist.setIdCorte(resultados.getInt("idcorte"));
 				hist.setEvento(resultados.getString("evento"));
 				hist.setIncidencia(resultados.getString("incidencia"));
@@ -431,13 +459,22 @@ public class DBFacade implements TableModelListener {
 				modelotablao.anadeHistorico(hist);
 
 			}
-		} catch (Exception e) {
-
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println(Messages.getString("DBFacade.ErrorHistorico")); //$NON-NLS-1$
+		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println(Messages.getString("DBFacade.ErrorHistorico")); //$NON-NLS-1$
 		} finally // Cerrar conexion con BBDD
 		{
+			if (sentenciapre != null)
+				try {
+					sentenciapre.close();
+				} catch (SQLException logOrIgnore) {
+				}
+			if (conexion != null)
 			try {
 				conexion.close();
 			} catch (SQLException e) {
@@ -449,25 +486,27 @@ public class DBFacade implements TableModelListener {
 
 	// HISTORICO
 	public void insertarHistorico(String usuario, String nombre, int codnac,
-			int idcorte, String evento, String incidencia) {
+			long codbar, int idcorte, String evento, String incidencia) {
 
 		try {
 			conexion = conectar();
 			// Sentencia preparada
 			sentenciapre = conexion
-					.prepareStatement("insert into historico (usuario, medicamento, codigonacional, idcorte, evento, incidencia)"
-							+ "	VALUES (?,?,?,?,?,?)");
+					.prepareStatement("insert into historico (usuario, medicamento, codigonacional, codbarras, idcorte, evento, incidencia)"
+							+ "	VALUES (?,?,?,?,?,?,?)");
 			sentenciapre.setString(1, usuario);
 			sentenciapre.setString(2, nombre);
 			sentenciapre.setInt(3, codnac);
-			sentenciapre.setInt(4, idcorte);
-			sentenciapre.setString(5, evento);
-			sentenciapre.setString(6, incidencia);
+			sentenciapre.setLong(4, codbar);
+			sentenciapre.setInt(5, idcorte);
+			sentenciapre.setString(6, evento);
+			sentenciapre.setString(7, incidencia);
 
 			sentenciapre.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println(Messages.getString("DBFacade.ErrorHistorico")); //$NON-NLS-1$
+			System.out.println(Messages
+					.getString("DBFacade.ErrorInsertarHistorico")); //$NON-NLS-1$
 		} finally // CErrar conexion con BBDD
 		{
 			try {
@@ -693,5 +732,87 @@ public class DBFacade implements TableModelListener {
 				} catch (SQLException logOrIgnore) {
 				}
 		}
+
+	}
+
+	// TOTALES
+	public String getCortesTotales() {
+		try {
+			conexion = conectar();
+			// Sentencia preparada
+			sentenciapre = conexion
+					.prepareStatement("select cortes from totales;");
+			resultados = sentenciapre.executeQuery();
+
+			// FILAS
+			while (resultados.next()) {
+				return Integer.toString(resultados.getInt("cortes"));
+			}
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println(Messages.getString("DBFacade.CortesTotales")); //$NON-NLS-1$
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println(Messages.getString("DBFacade.CortesTotales")); //$NON-NLS-1$
+		} finally // Cerrar conexion con BBDD
+		{
+			if (sentenciapre != null)
+				try {
+					sentenciapre.close();
+				} catch (SQLException logOrIgnore) {
+				}
+			if (conexion != null)
+				try {
+					conexion.close();
+				} catch (SQLException logOrIgnore) {
+				}
+		}
+		return null;
+
+	}
+
+	// TOTALES
+	private void modificarTotales(Corte micorte) {
+
+		try {
+			conexion = conectar();
+			// Sentencia preparada
+			sentenciapre = conexion.prepareStatement("UPDATE `totales` SET "
+					+ "`cortes`= `cortes`+ ?", Statement.RETURN_GENERATED_KEYS);
+			sentenciapre.setInt(1, micorte.getAgujeros());
+
+			int filasAfectadas = sentenciapre.executeUpdate();
+
+			if (filasAfectadas == 0) {
+				throw new SQLException(
+						"Modificación de usuario fallida, no se modificó ninguna fila.");
+			}
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			System.out.println(Messages
+					.getString("DBFacade.ErrorModificarTotales")); //$NON-NLS-1$
+
+		} finally // Cerrar conexion con BBDD
+		{
+			if (sentenciapre != null)
+				try {
+					sentenciapre.close();
+				} catch (SQLException logOrIgnore) {
+				}
+			if (conexion != null)
+				try {
+					conexion.close();
+				} catch (SQLException logOrIgnore) {
+				}
+		}
+	}
+
+	public void actualizarCortes(Corte micorte) {
+		modificarAgujerosTotalesCorte(micorte);
+		modificarTotales(micorte);
 	}
 }

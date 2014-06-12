@@ -16,15 +16,13 @@ class ModeloTablaHistorico extends AbstractTableModel implements TableModel {
 
 	public void setValueAt(Object dato, int fila, int columna) {
 		System.out.println("MODELTABLAHISTORICO entrando en setvalueat");
-		// Obtenemos la persona de la fila indicada
+
 		aux = (Historico) ModeloTablaHistorico.Datos.get(fila);
 
 		switch (columna) {
-		// Nos pasan el apellido.
 		case 0:
 			aux.setFecha((String) dato);
 			break;
-		// Nos pasan la edad.
 		case 1:
 			aux.setUsuario((String) dato);
 			break;
@@ -38,16 +36,18 @@ class ModeloTablaHistorico extends AbstractTableModel implements TableModel {
 			break;
 
 		case 4:
-			aux.setIdCorte((Integer) dato);
+			aux.setCodBar((Integer) dato);
 			break;
 
 		case 5:
-			aux.setEvento((String) dato);
+			aux.setIdCorte((Integer) dato);
 			break;
 
 		case 6:
-			aux.setIncidencia((String) dato);
+			aux.setEvento((String) dato);
 			break;
+		case 7:
+			aux.setIncidencia((String) dato);
 
 		}
 
@@ -61,9 +61,7 @@ class ModeloTablaHistorico extends AbstractTableModel implements TableModel {
 	}
 
 	public Object getValueAt(int fila, int columna) {
-		System.out.println("MODELTABLAHISTORICO entrando en getvalueat");
-		// Obtenemos la historia de la fila indicada
-		Historico aux = (Historico) ModeloTablaHistorico.Datos.get(fila);
+		Historico aux = getHistorico(fila);
 
 		switch (columna) {
 
@@ -76,17 +74,19 @@ class ModeloTablaHistorico extends AbstractTableModel implements TableModel {
 		case 3:
 			return aux.getCodNac();
 		case 4:
-			return aux.getIdCorte();
+			return aux.getCodBar();
 		case 5:
-			return aux.getEvento();
+			return aux.getIdCorte();
 		case 6:
+			return aux.getEvento();
+		case 7:
 			return aux.getIncidencia();
 		}
 		return null;
 	}
 
 	public Historico getHistorico(int fila) {
-		// Obtenemos la persona de la fila indicada
+		// Obtenemos el historia de la fila indicada
 		Historico aux = (Historico) ModeloTablaHistorico.Datos.get(fila);
 		return aux;
 	}
@@ -132,8 +132,7 @@ class ModeloTablaHistorico extends AbstractTableModel implements TableModel {
 
 	@Override
 	public int getColumnCount() {
-		// TODO Auto-generated method stub
-		return 7;
+		return 8;
 	}
 
 	@Override
@@ -142,18 +141,20 @@ class ModeloTablaHistorico extends AbstractTableModel implements TableModel {
 		// cabecera de la tabla.
 		switch (columnIndex) {
 		case 0:
-			return "Fecha";
+			return "Fecha y hora";
 		case 1:
 			return "Usuario";
 		case 2:
 			return "Medicamento";
 		case 3:
-			return "Cod Nac";
+			return "Cód. Nacional";
 		case 4:
-			return "Corte";
+			return "Cód. Barras";
 		case 5:
-			return "Evento";
+			return "Corte";
 		case 6:
+			return "Evento";
+		case 7:
 			return "Incidencia";
 		default:
 			return null;
@@ -175,8 +176,10 @@ class ModeloTablaHistorico extends AbstractTableModel implements TableModel {
 		case 4:
 			return Integer.class;
 		case 5:
-			return String.class;
+			return Integer.class;
 		case 6:
+			return String.class;
+		case 7:
 			return String.class;
 		default:
 			// Devuelve una clase Object por defecto.

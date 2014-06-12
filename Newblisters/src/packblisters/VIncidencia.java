@@ -49,10 +49,14 @@ public class VIncidencia extends JDialog {
 			JButton okButton = new JButton("OK");
 			okButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-
+					if (!textArea.getText().isEmpty()) {
+						// guardar cortes totales
+						dbf.actualizarCortes(m.getMicorte());
+					}
 					dbf.insertarHistorico(VLogin.UsuarioLogueado.getNombre(),
-							m.getNombre(), m.getCodnac(), m.getIdcorte(),
-							"incidencia", textArea.getText());
+							m.getNombre(), m.getCodnac(), m.getCodbar(),
+							m.getIdcorte(), "incidencia", textArea.getText());
+
 					JOptionPane.showMessageDialog(incidenciaok,
 							"Incidencia guardada", "Info",
 							JOptionPane.INFORMATION_MESSAGE);

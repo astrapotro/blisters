@@ -16,6 +16,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 public class VCorte extends JDialog {
 
@@ -23,6 +25,7 @@ public class VCorte extends JDialog {
 	private JPanel jpContentPanel;
 
 	private JTextArea jtaGcode;
+	private JSpinner jsPerforaciones;
 	private JOptionPane warnincorte;
 	private DefaultComboBoxModel mc;
 
@@ -47,12 +50,22 @@ public class VCorte extends JDialog {
 		lblNombre.setBounds(25, 25, 202, 15);
 		jpContentPanel.add(lblNombre);
 
+		
+		JLabel lblPerforaciones = new JLabel("Perforaciones:");
+		lblPerforaciones.setBounds(25, 52, 120, 15);
+		jpContentPanel.add(lblPerforaciones);
+		
+		jsPerforaciones = new JSpinner();
+		jsPerforaciones.setModel(new SpinnerNumberModel(1, 1, 100, 1));
+		jsPerforaciones.setBounds(200, 49, 28, 20);
+		jpContentPanel.add(jsPerforaciones);
+		
 		jtaGcode = new JTextArea();
 		jtaGcode.setText("gcode");
 		jtaGcode.setBounds(25, 52, 300, 215);
 
 		JScrollPane scroll = new JScrollPane(jtaGcode);
-		scroll.setBounds(25, 52, 300, 215);
+		scroll.setBounds(25, 79, 300, 188);
 		jpContentPanel.add(scroll);
 
 		JButton guardar = new JButton("Guardar");
@@ -70,9 +83,9 @@ public class VCorte extends JDialog {
 					dispose();
 				} else {
 					DBFacade dbfacade = new DBFacade();
-					int i = dbfacade.insertarIdCorte(jtaGcode.getText());
+					int i = dbfacade.insertarIdCorte(jtaGcode.getText(),(Integer)jsPerforaciones.getValue());
 					JOptionPane.showMessageDialog(null, "Nuevo corte añadido",
-							"Corte Guardaro", JOptionPane.INFORMATION_MESSAGE);
+							"Corte Guardado", JOptionPane.INFORMATION_MESSAGE);
 
 					mc.addElement(i);
 					// Cierro ventana
@@ -95,6 +108,6 @@ public class VCorte extends JDialog {
 		cancelar.setBounds(200, 279, 98, 25);
 		jpContentPanel.add(cancelar);
 
-	}
 
+	}
 }

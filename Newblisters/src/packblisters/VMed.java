@@ -223,7 +223,7 @@ public class VMed extends JPanel {
 	public void cortefinalizado() {
 		// /Insert del evento en la tabla HISTORICO
 		dbf.insertarHistorico(VLogin.UsuarioLogueado.getNombre(),
-				m.getNombre(), m.getCodnac(), m.getIdcorte(), "Comienzo corte",
+				m.getNombre(), m.getCodnac(), m.getCodbar(), m.getIdcorte(), "Comienzo corte",
 				null);
 
 		// TODO AKI JDIALOG de incidencia
@@ -233,7 +233,7 @@ public class VMed extends JPanel {
 
 		// /Insert del evento en la tabla HISTORICO
 		dbf.insertarHistorico(VLogin.UsuarioLogueado.getNombre(),
-				m.getNombre(), m.getCodnac(), m.getIdcorte(), "Fin corte", null);
+				m.getNombre(), m.getCodnac(), m.getCodbar(), m.getIdcorte(), "Fin corte", null);
 
 	}
 

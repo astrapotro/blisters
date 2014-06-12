@@ -254,8 +254,10 @@ public class SerialDriver implements Runnable {
 			byte[] buffer = new byte[1024];
 
 			finalizado = false;
+			VLogin.vadmin.vprocesocorte.getVmed()
+			.cortefinalizado();
 
-			while (true) {
+			/*while (true) {
 
 				try {
 					buffer = puerto.readBytes();
@@ -359,7 +361,7 @@ public class SerialDriver implements Runnable {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
+			}*/
 
 		}
 
