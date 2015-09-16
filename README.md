@@ -1,2 +1,3 @@
-# blisters
-Proyecto de cortadora de blisters
+# Blisters
+Proyecto de cortadora de blisters de medicamentos, con la TinyG
+
